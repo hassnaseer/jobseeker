@@ -1,0 +1,6 @@
+export enum ConnectStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  RESTRICTED = 'RESTRICTED',
+}

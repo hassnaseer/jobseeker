@@ -177,8 +177,14 @@ export class ContractsService {
     });
   }
 
-  // ---- Funding (stub: real escrow charging lands with the Payments module) ----
+  // ---- Funding ----
 
+  /**
+   * Called by PaymentsService after a successful Stripe charge for FIXED
+   * contracts. Not exposed directly over HTTP for FIXED (see
+   * ContractsController's activate() for the HOURLY-only bare-transition
+   * path — HOURLY has no upfront escrow, spec §5.2).
+   */
   async fund(client: User, contractId: string): Promise<Contract> {
     const contract = await this.findByIdOrFail(contractId);
     this.assertClient(contract, client);
@@ -206,6 +212,15 @@ export class ContractsService {
     await this.jobRepository.save(job);
 
     return contract;
+  }
+
+  /** HOURLY contracts skip escrow entirely — Hire -> ACTIVE directly (spec §5.2). */
+  async activateHourlyContract(client: User, contractId: string): Promise<Contract> {
+    const contract = await this.findByIdOrFail(contractId);
+    if (contract.type !== JobType.HOURLY) {
+      throw new BadRequestException('FIXED contracts must be funded via the payments endpoint');
+    }
+    return this.fund(client, contractId);
   }
 
   async fundMilestone(client: User, contractId: string, milestoneId: string): Promise<Milestone> {

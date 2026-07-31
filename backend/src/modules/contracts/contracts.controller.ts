@@ -44,18 +44,15 @@ export class ContractsController {
     return this.contractsService.listDeliverables(user, id);
   }
 
-  @Post('contracts/:id/fund')
-  fund(@CurrentUser() client: User, @Param('id', ParseUUIDPipe) id: string) {
-    return this.contractsService.fund(client, id);
-  }
+  // NOTE: FIXED-contract funding/release moved to PaymentsController —
+  // they require a real Stripe charge/wallet credit before the
+  // underlying ContractsService transition can happen. HOURLY contracts
+  // have no upfront escrow (spec §5.2 goes straight Hire -> ACTIVE), so
+  // they activate here with no payment involved.
 
-  @Post('contracts/:id/milestones/:milestoneId/fund')
-  fundMilestone(
-    @CurrentUser() client: User,
-    @Param('id', ParseUUIDPipe) id: string,
-    @Param('milestoneId', ParseUUIDPipe) milestoneId: string,
-  ) {
-    return this.contractsService.fundMilestone(client, id, milestoneId);
+  @Post('contracts/:id/activate')
+  activateHourly(@CurrentUser() client: User, @Param('id', ParseUUIDPipe) id: string) {
+    return this.contractsService.activateHourlyContract(client, id);
   }
 
   @Post('contracts/:id/deliverables')
@@ -84,20 +81,6 @@ export class ContractsController {
     @Body() dto: RequestRevisionDto,
   ) {
     return this.contractsService.requestRevision(client, id, deliverableId, dto);
-  }
-
-  @Post('contracts/:id/milestones/:milestoneId/release')
-  releaseMilestone(
-    @CurrentUser() client: User,
-    @Param('id', ParseUUIDPipe) id: string,
-    @Param('milestoneId', ParseUUIDPipe) milestoneId: string,
-  ) {
-    return this.contractsService.releaseMilestone(client, id, milestoneId);
-  }
-
-  @Post('contracts/:id/release')
-  releaseLump(@CurrentUser() client: User, @Param('id', ParseUUIDPipe) id: string) {
-    return this.contractsService.releaseLump(client, id);
   }
 
   @Post('contracts/:id/complete-hourly')

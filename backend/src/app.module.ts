@@ -14,6 +14,7 @@ import { ContractsModule } from '@/modules/contracts/contracts.module';
 import { JobsModule } from '@/modules/jobs/jobs.module';
 import { TimesheetsModule } from '@/modules/timesheets/timesheets.module';
 import { MailModule } from '@/modules/mail/mail.module';
+import { PaymentsModule } from '@/modules/payments/payments.module';
 import { ProfilesModule } from '@/modules/profiles/profiles.module';
 import { UsersModule } from '@/modules/users/users.module';
 
@@ -59,6 +60,7 @@ import { UsersModule } from '@/modules/users/users.module';
     ApplicationsModule,
     ContractsModule,
     TimesheetsModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [

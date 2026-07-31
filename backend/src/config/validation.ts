@@ -31,5 +31,8 @@ export const validationSchema = Joi.object({
   MAIL_FROM: Joi.string().default('JobLinxs <no-reply@joblinxs.com>'),
   MAIL_PROVIDER: Joi.string().default('console'),
 
+  STRIPE_SECRET_KEY: Joi.string().required(),
+  STRIPE_WEBHOOK_SECRET: Joi.string().allow('').default(''),
+
   WEB_APP_URL: Joi.string().default('http://localhost:3001'),
 });

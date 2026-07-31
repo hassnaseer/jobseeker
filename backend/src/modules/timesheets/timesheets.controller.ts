@@ -94,14 +94,9 @@ export class TimesheetsController {
     return this.timesheetsService.closePeriod(seeker, contractId, periodId);
   }
 
-  @Post('timesheet-periods/:periodId/approve')
-  approvePeriod(
-    @CurrentUser() client: User,
-    @Param('contractId', ParseUUIDPipe) contractId: string,
-    @Param('periodId', ParseUUIDPipe) periodId: string,
-  ) {
-    return this.timesheetsService.approvePeriod(client, contractId, periodId);
-  }
+  // NOTE: approving a period now triggers real hourly billing (a Stripe
+  // charge + wallet credit), so that endpoint moved to
+  // PaymentsController — see payments.controller.ts.
 
   @Post('timesheet-periods/:periodId/dispute')
   disputePeriod(
