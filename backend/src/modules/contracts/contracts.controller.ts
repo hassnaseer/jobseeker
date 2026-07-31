@@ -99,4 +99,9 @@ export class ContractsController {
   releaseLump(@CurrentUser() client: User, @Param('id', ParseUUIDPipe) id: string) {
     return this.contractsService.releaseLump(client, id);
   }
+
+  @Post('contracts/:id/complete-hourly')
+  completeHourly(@CurrentUser() client: User, @Param('id', ParseUUIDPipe) id: string) {
+    return this.contractsService.completeHourlyContract(client, id);
+  }
 }

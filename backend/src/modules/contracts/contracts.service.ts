@@ -378,6 +378,24 @@ export class ContractsService {
     return contract;
   }
 
+  /**
+   * HOURLY contracts have no single "last milestone" to trigger completion
+   * off of — billing periods just repeat until the client decides the
+   * engagement is done (spec §5.2 "...repeat -> COMPLETED"). Exposed here
+   * for the timesheets module to call.
+   */
+  async completeHourlyContract(client: User, contractId: string): Promise<Contract> {
+    const contract = await this.findByIdOrFail(contractId);
+    this.assertClient(contract, client);
+    if (contract.type !== JobType.HOURLY) {
+      throw new BadRequestException('This action is only for HOURLY contracts');
+    }
+    if (contract.status !== ContractStatus.ACTIVE) {
+      throw new ConflictException('Only an ACTIVE contract can be completed');
+    }
+    return this.completeContract(contract);
+  }
+
   async releaseMilestone(
     client: User,
     contractId: string,
