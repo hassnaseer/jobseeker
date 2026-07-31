@@ -1,0 +1,6 @@
+export enum ProfileStatus {
+  INCOMPLETE = 'INCOMPLETE',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
