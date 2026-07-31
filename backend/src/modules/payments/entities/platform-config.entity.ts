@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { decimalTransformer } from '@/common/transformers/decimal.transformer';
+import { AiAutonomyLevel } from '@/modules/ai/enums/ai-autonomy-level.enum';
 
 /** Spec §19.33. Singleton table — always exactly one row, id='default'. */
 @Entity('platform_config')
@@ -58,6 +59,34 @@ export class PlatformConfig {
     transformer: decimalTransformer,
   })
   featuredJobPrice: number;
+
+  /** Spec §21.5 — AI recruiter config; defaults keep a human confirming every hire/reject. */
+  @Column({
+    name: 'ai_autonomy_level',
+    type: 'enum',
+    enum: AiAutonomyLevel,
+    default: AiAutonomyLevel.SHORTLIST,
+  })
+  aiAutonomyLevel: AiAutonomyLevel;
+
+  @Column({ name: 'ai_provider', type: 'varchar', nullable: true })
+  aiProvider: string | null;
+
+  @Column({ name: 'ai_model', type: 'varchar', nullable: true })
+  aiModel: string | null;
+
+  @Column({
+    name: 'ai_monthly_spend_cap',
+    type: 'numeric',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+    transformer: decimalTransformer,
+  })
+  aiMonthlySpendCap: number | null;
+
+  @Column({ name: 'ai_enabled_features', type: 'text', array: true, default: '{}' })
+  aiEnabledFeatures: string[];
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt: Date;
