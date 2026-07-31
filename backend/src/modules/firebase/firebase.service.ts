@@ -47,6 +47,21 @@ export class FirebaseService implements OnModuleInit {
     return FieldValue;
   }
 
+  /**
+   * The Admin SDK's HTTP calls have no built-in timeout, so a blocked or
+   * slow network path (as in this sandbox) hangs the caller indefinitely —
+   * and callers here are request handlers (e.g. sending a chat message),
+   * not background jobs. Race against a hard deadline instead.
+   */
+  withTimeout<T>(promise: Promise<T>, label: string, ms = 8_000): Promise<T> {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms),
+      ),
+    ]);
+  }
+
   async sendMulticastPush(
     tokens: string[],
     notification: { title: string; body: string },
@@ -56,7 +71,10 @@ export class FirebaseService implements OnModuleInit {
       return;
     }
     try {
-      await getMessaging(this.app).sendEachForMulticast({ tokens, notification, data });
+      await this.withTimeout(
+        getMessaging(this.app).sendEachForMulticast({ tokens, notification, data }),
+        'FCM push',
+      );
     } catch (error) {
       this.logger.warn(`FCM push failed: ${(error as Error).message}`);
     }

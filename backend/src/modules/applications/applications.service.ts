@@ -17,6 +17,8 @@ import { ApplicationStatus } from '@/modules/applications/enums/application-stat
 import { Job } from '@/modules/jobs/entities/job.entity';
 import { JobStatus } from '@/modules/jobs/enums/job-status.enum';
 import { JobType } from '@/modules/jobs/enums/job-type.enum';
+import { NotificationEventType } from '@/modules/notifications/enums/notification-event-type.enum';
+import { NotificationsService } from '@/modules/notifications/notifications.service';
 import { User } from '@/modules/users/entities/user.entity';
 import { UsersService } from '@/modules/users/users.service';
 
@@ -35,6 +37,7 @@ export class ApplicationsService {
     private readonly jobRepository: Repository<Job>,
     private readonly usersService: UsersService,
     private readonly categoriesService: CategoriesService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   private async findJobOrFail(id: string): Promise<Job> {
@@ -131,6 +134,16 @@ export class ApplicationsService {
     job.applicationsCount += 1;
     await this.jobRepository.save(job);
 
+    const client = await this.usersService.findById(job.clientId);
+    if (client) {
+      await this.notificationsService.notify(client, {
+        type: NotificationEventType.APPLICATION_RECEIVED,
+        title: 'New application received',
+        message: `You have a new application for "${job.title}".`,
+        link: `/jobs/${job.id}/applications`,
+      });
+    }
+
     return saved;
   }
 
@@ -182,22 +195,46 @@ export class ApplicationsService {
    */
   async accept(client: User, id: string): Promise<Application> {
     const application = await this.findByIdOrFail(id);
-    await this.assertJobOwner(client, application);
+    const job = await this.assertJobOwner(client, application);
     if (![ApplicationStatus.PENDING, ApplicationStatus.SHORTLISTED].includes(application.status)) {
       throw new ConflictException('Only pending or shortlisted applications can be accepted');
     }
     application.status = ApplicationStatus.ACCEPTED;
-    return this.applicationRepository.save(application);
+    const saved = await this.applicationRepository.save(application);
+
+    const seeker = await this.usersService.findById(application.seekerId);
+    if (seeker) {
+      await this.notificationsService.notify(seeker, {
+        type: NotificationEventType.APPLICATION_ACCEPTED,
+        title: 'Your application was accepted',
+        message: `Your application for "${job.title}" was accepted.`,
+        link: `/applications/${application.id}`,
+      });
+    }
+
+    return saved;
   }
 
   async reject(client: User, id: string): Promise<Application> {
     const application = await this.findByIdOrFail(id);
-    await this.assertJobOwner(client, application);
+    const job = await this.assertJobOwner(client, application);
     if (![ApplicationStatus.PENDING, ApplicationStatus.SHORTLISTED].includes(application.status)) {
       throw new ConflictException('Only pending or shortlisted applications can be rejected');
     }
     application.status = ApplicationStatus.REJECTED;
-    return this.applicationRepository.save(application);
+    const saved = await this.applicationRepository.save(application);
+
+    const seeker = await this.usersService.findById(application.seekerId);
+    if (seeker) {
+      await this.notificationsService.notify(seeker, {
+        type: NotificationEventType.APPLICATION_REJECTED,
+        title: 'Your application was not selected',
+        message: `Your application for "${job.title}" was not selected this time.`,
+        link: `/applications/${application.id}`,
+      });
+    }
+
+    return saved;
   }
 
   async withdraw(seeker: User, id: string): Promise<Application> {

@@ -21,7 +21,10 @@ import { TimesheetPeriod } from '@/modules/timesheets/entities/timesheet-period.
 import { TimeLogEntryStatus } from '@/modules/timesheets/enums/time-log-entry-status.enum';
 import { TimeLogEntryType } from '@/modules/timesheets/enums/time-log-entry-type.enum';
 import { TimesheetPeriodStatus } from '@/modules/timesheets/enums/timesheet-period-status.enum';
+import { NotificationEventType } from '@/modules/notifications/enums/notification-event-type.enum';
+import { NotificationsService } from '@/modules/notifications/notifications.service';
 import { User } from '@/modules/users/entities/user.entity';
+import { UsersService } from '@/modules/users/users.service';
 
 function getWeekBounds(date: Date): { start: string; end: string } {
   const day = date.getUTCDay();
@@ -45,6 +48,8 @@ export class TimesheetsService {
     private readonly checkInRepository: Repository<CheckIn>,
     @InjectRepository(Contract)
     private readonly contractRepository: Repository<Contract>,
+    private readonly usersService: UsersService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   private async findContractOrFail(id: string): Promise<Contract> {
@@ -309,7 +314,19 @@ export class TimesheetsService {
     }
 
     period.status = TimesheetPeriodStatus.PENDING;
-    return this.periodRepository.save(period);
+    const saved = await this.periodRepository.save(period);
+
+    const client = await this.usersService.findById(contract.clientId);
+    if (client) {
+      await this.notificationsService.notify(client, {
+        type: NotificationEventType.TIMESHEET_SUBMITTED,
+        title: 'Timesheet submitted for review',
+        message: 'A timesheet period was closed and is awaiting your review.',
+        link: `/contracts/${contract.id}/timesheets`,
+      });
+    }
+
+    return saved;
   }
 
   async approveEntry(client: User, contractId: string, entryId: string): Promise<TimeLogEntry> {
@@ -402,6 +419,15 @@ export class TimesheetsService {
     }
 
     period.status = TimesheetPeriodStatus.DISPUTED;
+    const seeker = await this.usersService.findById(contract.seekerId);
+    if (seeker) {
+      await this.notificationsService.notify(seeker, {
+        type: NotificationEventType.HOURS_DISPUTED,
+        title: 'A timesheet period was disputed',
+        message: 'The client disputed one of your submitted timesheet periods.',
+        link: `/contracts/${contract.id}/timesheets`,
+      });
+    }
     return this.periodRepository.save(period);
   }
 

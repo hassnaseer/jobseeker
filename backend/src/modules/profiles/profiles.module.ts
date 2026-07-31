@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MailModule } from '@/modules/mail/mail.module';
+import { NotificationsModule } from '@/modules/notifications/notifications.module';
 import { ClientProfile } from '@/modules/profiles/entities/client-profile.entity';
 import { Identity } from '@/modules/profiles/entities/identity.entity';
 import { SeekerProfile } from '@/modules/profiles/entities/seeker-profile.entity';
@@ -12,7 +12,7 @@ import { UsersModule } from '@/modules/users/users.module';
   imports: [
     TypeOrmModule.forFeature([Identity, ClientProfile, SeekerProfile]),
     UsersModule,
-    MailModule,
+    NotificationsModule,
   ],
   controllers: [ProfilesController],
   providers: [ProfilesService],

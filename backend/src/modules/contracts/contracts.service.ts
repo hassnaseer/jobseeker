@@ -23,7 +23,10 @@ import { Job } from '@/modules/jobs/entities/job.entity';
 import { JobStatus } from '@/modules/jobs/enums/job-status.enum';
 import { JobType } from '@/modules/jobs/enums/job-type.enum';
 import { PricingModel } from '@/modules/jobs/enums/pricing-model.enum';
+import { NotificationEventType } from '@/modules/notifications/enums/notification-event-type.enum';
+import { NotificationsService } from '@/modules/notifications/notifications.service';
 import { User } from '@/modules/users/entities/user.entity';
+import { UsersService } from '@/modules/users/users.service';
 
 @Injectable()
 export class ContractsService {
@@ -38,6 +41,8 @@ export class ContractsService {
     private readonly applicationRepository: Repository<Application>,
     @InjectRepository(Job)
     private readonly jobRepository: Repository<Job>,
+    private readonly usersService: UsersService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async findByIdOrFail(id: string): Promise<Contract> {
@@ -305,6 +310,16 @@ export class ContractsService {
     contract.status = ContractStatus.SUBMITTED;
     await this.contractRepository.save(contract);
 
+    const client = await this.usersService.findById(contract.clientId);
+    if (client) {
+      await this.notificationsService.notify(client, {
+        type: NotificationEventType.DELIVERABLE_SUBMITTED,
+        title: 'A deliverable was submitted for your review',
+        message: 'A deliverable is ready for your review.',
+        link: `/contracts/${contract.id}`,
+      });
+    }
+
     return deliverable;
   }
 
@@ -336,6 +351,16 @@ export class ContractsService {
       });
       milestone.status = MilestoneStatus.APPROVED;
       await this.milestoneRepository.save(milestone);
+    }
+
+    const seeker = await this.usersService.findById(contract.seekerId);
+    if (seeker) {
+      await this.notificationsService.notify(seeker, {
+        type: NotificationEventType.DELIVERABLE_APPROVED,
+        title: 'Your deliverable was approved',
+        message: 'The client approved your submitted deliverable.',
+        link: `/contracts/${contract.id}`,
+      });
     }
 
     return deliverable;
@@ -376,6 +401,16 @@ export class ContractsService {
     contract.status = ContractStatus.REVISION;
     await this.contractRepository.save(contract);
 
+    const seeker = await this.usersService.findById(contract.seekerId);
+    if (seeker) {
+      await this.notificationsService.notify(seeker, {
+        type: NotificationEventType.DELIVERABLE_REVISION_REQUESTED,
+        title: 'Revision requested on your deliverable',
+        message: `The client requested changes: ${dto.feedback}`,
+        link: `/contracts/${contract.id}`,
+      });
+    }
+
     return deliverable;
   }
 
@@ -389,6 +424,19 @@ export class ContractsService {
     const job = await this.jobRepository.findOneOrFail({ where: { id: contract.jobId } });
     job.status = JobStatus.COMPLETED;
     await this.jobRepository.save(job);
+
+    const [client, seeker] = await Promise.all([
+      this.usersService.findById(contract.clientId),
+      this.usersService.findById(contract.seekerId),
+    ]);
+    const payload = {
+      type: NotificationEventType.CONTRACT_COMPLETED,
+      title: 'Contract completed',
+      message: `Your contract for "${job.title}" is now complete.`,
+      link: `/contracts/${contract.id}`,
+    };
+    if (client) await this.notificationsService.notify(client, payload);
+    if (seeker) await this.notificationsService.notify(seeker, payload);
 
     return contract;
   }

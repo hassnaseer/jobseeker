@@ -28,11 +28,14 @@ export class ChatEventsEmitter {
       return;
     }
     try {
-      await db.collection(collectionPath).add({
-        event,
-        payload: JSON.parse(JSON.stringify(payload)) as unknown,
-        createdAt: this.firebase.fieldValue.serverTimestamp(),
-      });
+      await this.firebase.withTimeout(
+        db.collection(collectionPath).add({
+          event,
+          payload: JSON.parse(JSON.stringify(payload)) as unknown,
+          createdAt: this.firebase.fieldValue.serverTimestamp(),
+        }),
+        'Firestore mirror write',
+      );
     } catch (error) {
       this.logger.warn(`Failed to mirror "${event}" to Firestore: ${(error as Error).message}`);
     }

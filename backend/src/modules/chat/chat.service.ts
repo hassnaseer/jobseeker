@@ -24,6 +24,8 @@ import { SendMessageDto } from '@/modules/chat/dto/send-message.dto';
 import { ChatEventsEmitter } from '@/modules/chat/gateway/chat-events.emitter';
 import { ContractsService } from '@/modules/contracts/contracts.service';
 import { Job } from '@/modules/jobs/entities/job.entity';
+import { NotificationEventType } from '@/modules/notifications/enums/notification-event-type.enum';
+import { NotificationsService } from '@/modules/notifications/notifications.service';
 import { User } from '@/modules/users/entities/user.entity';
 import { UsersService } from '@/modules/users/users.service';
 
@@ -41,6 +43,7 @@ export class ChatService {
     private readonly contractsService: ContractsService,
     private readonly applicationsService: ApplicationsService,
     private readonly events: ChatEventsEmitter,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   private assertParticipant(conversation: Conversation, userId: string): void {
@@ -216,6 +219,16 @@ export class ChatService {
           conversationId: conversation.id,
           unreadCount: recipient.unreadCount,
         });
+
+        const recipientUser = await this.usersService.findById(recipientId);
+        if (recipientUser) {
+          await this.notificationsService.notify(recipientUser, {
+            type: NotificationEventType.NEW_MESSAGE,
+            title: 'New message',
+            message: fields.content ?? 'You received a new message.',
+            link: `/chat/conversations/${conversation.id}`,
+          });
+        }
       }
     }
 

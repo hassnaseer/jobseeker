@@ -9,7 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProfileStatus } from '@/common/enums/profile-status.enum';
 import { UserRole } from '@/common/enums/user-role.enum';
-import { MailService } from '@/modules/mail/mail.service';
+import { NotificationEventType } from '@/modules/notifications/enums/notification-event-type.enum';
+import { NotificationsService } from '@/modules/notifications/notifications.service';
 import { RejectProfileDto } from '@/modules/profiles/dto/reject-profile.dto';
 import { SubmitKycDto } from '@/modules/profiles/dto/submit-kyc.dto';
 import { UpdateBasicInfoDto } from '@/modules/profiles/dto/update-basic-info.dto';
@@ -34,7 +35,7 @@ export class ProfilesService {
     @InjectRepository(SeekerProfile)
     private readonly seekerProfileRepository: Repository<SeekerProfile>,
     private readonly usersService: UsersService,
-    private readonly mailService: MailService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   private assertHoldsRole(user: User, role: ReviewableRole): void {
@@ -214,7 +215,11 @@ export class ProfilesService {
     }
 
     const user = await this.usersService.findByIdOrFail(userId);
-    await this.mailService.sendProfileApproved(user.email, role);
+    await this.notificationsService.notify(user, {
+      type: NotificationEventType.PROFILE_APPROVED,
+      title: 'Your JobLinxs profile was approved',
+      message: `Good news — your ${role} profile has been approved. You now have full access.`,
+    });
 
     return status;
   }
@@ -247,7 +252,11 @@ export class ProfilesService {
     }
 
     const user = await this.usersService.findByIdOrFail(userId);
-    await this.mailService.sendProfileRejected(user.email, role, dto.reason);
+    await this.notificationsService.notify(user, {
+      type: NotificationEventType.PROFILE_REJECTED,
+      title: 'Your JobLinxs profile needs changes',
+      message: `Your ${role} profile submission was not approved. Reason: ${dto.reason}\nPlease update your profile and resubmit.`,
+    });
 
     return status;
   }

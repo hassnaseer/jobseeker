@@ -39,6 +39,10 @@ export default () => ({
   mail: {
     from: process.env.MAIL_FROM ?? 'JobLinxs <no-reply@joblinxs.com>',
     provider: process.env.MAIL_PROVIDER ?? 'console',
+    smtpHost: process.env.MAIL_HOST,
+    smtpPort: parseInt(process.env.MAIL_PORT ?? '587', 10),
+    smtpUser: process.env.MAIL_USER,
+    smtpPass: process.env.MAIL_PASS,
   },
 
   stripe: {

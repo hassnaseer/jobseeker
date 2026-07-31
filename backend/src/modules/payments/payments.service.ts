@@ -14,6 +14,8 @@ import { ContractsService } from '@/modules/contracts/contracts.service';
 import { Contract } from '@/modules/contracts/entities/contract.entity';
 import { JobType } from '@/modules/jobs/enums/job-type.enum';
 import { PricingModel } from '@/modules/jobs/enums/pricing-model.enum';
+import { NotificationEventType } from '@/modules/notifications/enums/notification-event-type.enum';
+import { NotificationsService } from '@/modules/notifications/notifications.service';
 import { CreatePayoutMethodDto } from '@/modules/payments/dto/create-payout-method.dto';
 import { CreateWithdrawalDto } from '@/modules/payments/dto/create-withdrawal.dto';
 import { FundPaymentDto } from '@/modules/payments/dto/fund-payment.dto';
@@ -35,6 +37,7 @@ import { WithdrawalStatus } from '@/modules/payments/enums/withdrawal-status.enu
 import { StripeService } from '@/modules/payments/stripe.service';
 import { TimesheetsService } from '@/modules/timesheets/timesheets.service';
 import { User } from '@/modules/users/entities/user.entity';
+import { UsersService } from '@/modules/users/users.service';
 
 const PLATFORM_CONFIG_ID = 'default';
 
@@ -61,6 +64,8 @@ export class PaymentsService {
     private readonly contractsService: ContractsService,
     private readonly timesheetsService: TimesheetsService,
     private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   // ---- Platform config (spec §19.33) ----
@@ -206,9 +211,25 @@ export class PaymentsService {
     if (transaction.status === TransactionStatus.COMPLETED) {
       await this.contractsService.fund(client, contractId);
       await this.issueInvoice(contractId, transaction, client.id);
+      await this.notifyEscrowFunded(contract.seekerId, contract.currency, amount);
     }
 
     return transaction;
+  }
+
+  private async notifyEscrowFunded(
+    seekerId: string,
+    currency: string,
+    amount: number,
+  ): Promise<void> {
+    const seeker = await this.usersService.findById(seekerId);
+    if (seeker) {
+      await this.notificationsService.notify(seeker, {
+        type: NotificationEventType.ESCROW_FUNDED,
+        title: 'Escrow funded',
+        message: `The client funded ${amount} ${currency} in escrow for your contract.`,
+      });
+    }
   }
 
   async fundMilestone(
@@ -250,6 +271,7 @@ export class PaymentsService {
     if (transaction.status === TransactionStatus.COMPLETED) {
       await this.contractsService.fundMilestone(client, contractId, milestoneId);
       await this.issueInvoice(contractId, transaction, client.id);
+      await this.notifyEscrowFunded(contract.seekerId, contract.currency, milestone.amount);
     }
 
     return transaction;
@@ -363,7 +385,23 @@ export class PaymentsService {
     );
 
     await this.issueInvoice(contractId, transaction, contract.seekerId);
+    await this.notifyPaymentReleased(contract.seekerId, contract.currency, commission.seekerNet);
     return transaction;
+  }
+
+  private async notifyPaymentReleased(
+    seekerId: string,
+    currency: string,
+    netAmount: number,
+  ): Promise<void> {
+    const seeker = await this.usersService.findById(seekerId);
+    if (seeker) {
+      await this.notificationsService.notify(seeker, {
+        type: NotificationEventType.MILESTONE_RELEASED,
+        title: 'Payment released',
+        message: `${netAmount} ${currency} was released to your wallet.`,
+      });
+    }
   }
 
   async releaseLump(client: User, contractId: string): Promise<Transaction> {
@@ -403,6 +441,7 @@ export class PaymentsService {
     );
 
     await this.issueInvoice(contractId, transaction, contract.seekerId);
+    await this.notifyPaymentReleased(contract.seekerId, contract.currency, commission.seekerNet);
     return transaction;
   }
 
@@ -455,6 +494,15 @@ export class PaymentsService {
       transaction.netAmount = commission.seekerNet;
       await this.transactionRepository.save(transaction);
       await this.issueInvoice(contractId, transaction, client.id);
+
+      const seeker = await this.usersService.findById(contract.seekerId);
+      if (seeker) {
+        await this.notificationsService.notify(seeker, {
+          type: NotificationEventType.HOURS_APPROVED,
+          title: 'Hours approved and paid',
+          message: `${commission.seekerNet} ${contract.currency} was released to your wallet for approved hours.`,
+        });
+      }
     }
 
     return transaction;
@@ -596,7 +644,9 @@ export class PaymentsService {
     if (payoutMethod.type === PayoutMethodType.BANK) {
       // No automated bank payout rail wired in — SA completes these manually for now.
       withdrawal.status = WithdrawalStatus.PROCESSING;
-      return this.withdrawalRepository.save(withdrawal);
+      const saved = await this.withdrawalRepository.save(withdrawal);
+      await this.notifyWithdrawalStatus(withdrawal.userId, withdrawal.status);
+      return saved;
     }
 
     if (payoutMethod.connectStatus !== ConnectStatus.ACTIVE || !payoutMethod.stripeAccountId) {
@@ -605,7 +655,9 @@ export class PaymentsService {
       wallet.balance += withdrawal.amount;
       wallet.pendingBalance -= withdrawal.amount;
       await this.walletRepository.save(wallet);
-      return this.withdrawalRepository.save(withdrawal);
+      const saved = await this.withdrawalRepository.save(withdrawal);
+      await this.notifyWithdrawalStatus(withdrawal.userId, withdrawal.status);
+      return saved;
     }
 
     try {
@@ -637,6 +689,7 @@ export class PaymentsService {
           status: TransactionStatus.COMPLETED,
         }),
       );
+      await this.notifyWithdrawalStatus(withdrawal.userId, withdrawal.status);
     } catch (error) {
       const message = this.stripeService.logStripeError('processWithdrawal', error);
       withdrawal.status = WithdrawalStatus.FAILED;
@@ -645,9 +698,21 @@ export class PaymentsService {
       wallet.pendingBalance -= withdrawal.amount;
       await this.walletRepository.save(wallet);
       await this.withdrawalRepository.save(withdrawal);
+      await this.notifyWithdrawalStatus(withdrawal.userId, withdrawal.status);
     }
 
     return withdrawal;
+  }
+
+  private async notifyWithdrawalStatus(userId: string, status: WithdrawalStatus): Promise<void> {
+    const user = await this.usersService.findById(userId);
+    if (user) {
+      await this.notificationsService.notify(user, {
+        type: NotificationEventType.WITHDRAWAL_STATUS_CHANGED,
+        title: 'Withdrawal status updated',
+        message: `Your withdrawal is now ${status}.`,
+      });
+    }
   }
 
   async listMyWithdrawals(user: User): Promise<WithdrawalRequest[]> {
@@ -676,7 +741,9 @@ export class PaymentsService {
     });
     wallet.pendingBalance -= withdrawal.amount;
     await this.walletRepository.save(wallet);
-    return this.withdrawalRepository.save(withdrawal);
+    const saved = await this.withdrawalRepository.save(withdrawal);
+    await this.notifyWithdrawalStatus(withdrawal.userId, withdrawal.status);
+    return saved;
   }
 
   private assertAdmin(user: User): void {

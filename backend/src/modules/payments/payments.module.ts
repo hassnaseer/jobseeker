@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContractsModule } from '@/modules/contracts/contracts.module';
+import { NotificationsModule } from '@/modules/notifications/notifications.module';
 import { FxRate } from '@/modules/payments/entities/fx-rate.entity';
 import { Invoice } from '@/modules/payments/entities/invoice.entity';
 import { PayoutMethod } from '@/modules/payments/entities/payout-method.entity';
@@ -13,6 +14,7 @@ import { PaymentsService } from '@/modules/payments/payments.service';
 import { PaymentsWebhookService } from '@/modules/payments/payments-webhook.service';
 import { StripeService } from '@/modules/payments/stripe.service';
 import { TimesheetsModule } from '@/modules/timesheets/timesheets.module';
+import { UsersModule } from '@/modules/users/users.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { TimesheetsModule } from '@/modules/timesheets/timesheets.module';
     ]),
     ContractsModule,
     TimesheetsModule,
+    UsersModule,
+    NotificationsModule,
   ],
   controllers: [PaymentsController],
   providers: [PaymentsService, PaymentsWebhookService, StripeService],

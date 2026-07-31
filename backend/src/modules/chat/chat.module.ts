@@ -10,6 +10,7 @@ import { Report } from '@/modules/chat/entities/report.entity';
 import { ChatEventsEmitter } from '@/modules/chat/gateway/chat-events.emitter';
 import { ContractsModule } from '@/modules/contracts/contracts.module';
 import { Job } from '@/modules/jobs/entities/job.entity';
+import { NotificationsModule } from '@/modules/notifications/notifications.module';
 import { UsersModule } from '@/modules/users/users.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { UsersModule } from '@/modules/users/users.module';
     UsersModule,
     ContractsModule,
     ApplicationsModule,
+    NotificationsModule,
   ],
   controllers: [ChatController],
   providers: [ChatService, ChatEventsEmitter],

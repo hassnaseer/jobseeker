@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from '@/app.controller';
@@ -16,6 +17,7 @@ import { FirebaseModule } from '@/modules/firebase/firebase.module';
 import { JobsModule } from '@/modules/jobs/jobs.module';
 import { TimesheetsModule } from '@/modules/timesheets/timesheets.module';
 import { MailModule } from '@/modules/mail/mail.module';
+import { NotificationsModule } from '@/modules/notifications/notifications.module';
 import { PaymentsModule } from '@/modules/payments/payments.module';
 import { ProfilesModule } from '@/modules/profiles/profiles.module';
 import { UsersModule } from '@/modules/users/users.module';
@@ -27,6 +29,7 @@ import { UsersModule } from '@/modules/users/users.module';
       load: [configuration],
       validationSchema,
     }),
+    ScheduleModule.forRoot(),
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -65,6 +68,7 @@ import { UsersModule } from '@/modules/users/users.module';
     TimesheetsModule,
     PaymentsModule,
     ChatModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -46,4 +46,7 @@ export class ConversationParticipant {
 
   @Column({ default: false })
   muted: boolean;
+
+  @Column({ name: 'digest_sent_at', type: 'timestamptz', nullable: true })
+  digestSentAt: Date | null;
 }
