@@ -46,5 +46,9 @@ export default () => ({
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
   },
 
+  firebase: {
+    serviceAccountJson: process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
+  },
+
   webAppUrl: process.env.WEB_APP_URL ?? 'http://localhost:3001',
 });

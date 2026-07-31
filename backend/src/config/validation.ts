@@ -34,5 +34,9 @@ export const validationSchema = Joi.object({
   STRIPE_SECRET_KEY: Joi.string().required(),
   STRIPE_WEBHOOK_SECRET: Joi.string().allow('').default(''),
 
+  // Optional: full Firebase Admin service-account JSON as a single-line
+  // string. Real-time chat mirroring and FCM push are disabled until set.
+  FIREBASE_SERVICE_ACCOUNT_JSON: Joi.string().allow('').default(''),
+
   WEB_APP_URL: Joi.string().default('http://localhost:3001'),
 });

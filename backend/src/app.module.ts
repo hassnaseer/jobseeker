@@ -10,7 +10,9 @@ import { validationSchema } from '@/config/validation';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CategoriesModule } from '@/modules/categories/categories.module';
 import { ApplicationsModule } from '@/modules/applications/applications.module';
+import { ChatModule } from '@/modules/chat/chat.module';
 import { ContractsModule } from '@/modules/contracts/contracts.module';
+import { FirebaseModule } from '@/modules/firebase/firebase.module';
 import { JobsModule } from '@/modules/jobs/jobs.module';
 import { TimesheetsModule } from '@/modules/timesheets/timesheets.module';
 import { MailModule } from '@/modules/mail/mail.module';
@@ -53,6 +55,7 @@ import { UsersModule } from '@/modules/users/users.module';
     }),
     UsersModule,
     MailModule,
+    FirebaseModule,
     AuthModule,
     CategoriesModule,
     ProfilesModule,
@@ -61,6 +64,7 @@ import { UsersModule } from '@/modules/users/users.module';
     ContractsModule,
     TimesheetsModule,
     PaymentsModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [
