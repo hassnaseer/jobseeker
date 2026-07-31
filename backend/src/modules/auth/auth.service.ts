@@ -145,6 +145,20 @@ export class AuthService {
 
   // ---- Login / tokens ----
 
+  /** SA support tool (spec §16 "impersonate") — issues a real session for the target user. */
+  async impersonate(
+    admin: User,
+    targetUserId: string,
+    meta: RequestMeta = {},
+  ): Promise<TokenPair & { user: User }> {
+    if (!admin.roles.includes(UserRole.SUPER_ADMIN)) {
+      throw new ForbiddenException('Super admin only');
+    }
+    const target = await this.usersService.findByIdOrFail(targetUserId);
+    const { accessToken, refreshToken } = await this.issueTokenPair(target, meta);
+    return { accessToken, refreshToken, user: target };
+  }
+
   async login(dto: LoginDto, meta: RequestMeta = {}): Promise<TokenPair & { user: User }> {
     const user = await this.usersService.findByEmail(dto.email);
     if (!user) {

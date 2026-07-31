@@ -157,4 +157,59 @@ export class UsersService {
     const savedUser = await this.usersRepository.save(user);
     return { user: savedUser, isNewRole };
   }
+
+  // ---- SA user management (spec §16) ----
+
+  async searchUsers(options: {
+    q?: string;
+    role?: UserRole;
+    page?: number;
+    limit?: number;
+  }): Promise<{ items: User[]; total: number; page: number; limit: number }> {
+    const page = options.page ?? 1;
+    const limit = options.limit ?? 20;
+
+    const qb = this.usersRepository.createQueryBuilder('u').orderBy('u.createdAt', 'DESC');
+    if (options.q) {
+      qb.andWhere('(u.email ILIKE :q OR u.firstName ILIKE :q OR u.lastName ILIKE :q)', {
+        q: `%${options.q}%`,
+      });
+    }
+    if (options.role) {
+      qb.andWhere(':role = ANY(u.roles)', { role: options.role });
+    }
+
+    const [items, total] = await qb
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return { items, total, page, limit };
+  }
+
+  async suspend(userId: string): Promise<User> {
+    const user = await this.findByIdOrFail(userId);
+    user.isActive = false;
+    return this.usersRepository.save(user);
+  }
+
+  async reactivate(userId: string): Promise<User> {
+    const user = await this.findByIdOrFail(userId);
+    user.isActive = true;
+    user.isBanned = false;
+    return this.usersRepository.save(user);
+  }
+
+  async ban(userId: string): Promise<User> {
+    const user = await this.findByIdOrFail(userId);
+    user.isBanned = true;
+    user.isActive = false;
+    return this.usersRepository.save(user);
+  }
+
+  async verifyEmailManually(userId: string): Promise<User> {
+    const user = await this.findByIdOrFail(userId);
+    user.emailVerified = true;
+    return this.usersRepository.save(user);
+  }
 }

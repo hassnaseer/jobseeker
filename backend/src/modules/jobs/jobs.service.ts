@@ -245,6 +245,15 @@ export class JobsService {
     });
   }
 
+  /** SA moderation queue (spec §16) — every job regardless of status, unlike listPublic. */
+  async listAllForAdmin(status?: JobStatus): Promise<Job[]> {
+    return this.jobRepository.find({
+      where: status ? { status } : {},
+      order: { createdAt: 'DESC' },
+      take: 200,
+    });
+  }
+
   async update(user: User, id: string, dto: UpdateJobDto): Promise<Job> {
     const job = await this.findByIdOrFail(id);
     this.assertOwner(job, user);

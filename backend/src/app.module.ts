@@ -8,6 +8,7 @@ import { AppController } from '@/app.controller';
 import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import configuration from '@/config/configuration';
 import { validationSchema } from '@/config/validation';
+import { AdminModule } from '@/modules/admin/admin.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CatalogsModule } from '@/modules/catalogs/catalogs.module';
 import { CategoriesModule } from '@/modules/categories/categories.module';
@@ -77,6 +78,7 @@ import { UsersModule } from '@/modules/users/users.module';
     ReviewsModule,
     CatalogsModule,
     SavedItemsModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [

@@ -65,7 +65,7 @@ export class CatalogsService {
   }
 
   private async assertOwner(seeker: User, catalog: ProjectCatalog): Promise<void> {
-    if (catalog.seekerId !== seeker.id) {
+    if (catalog.seekerId !== seeker.id && !seeker.roles.includes(UserRole.SUPER_ADMIN)) {
       throw new ForbiddenException('You do not own this catalog');
     }
   }
@@ -144,6 +144,15 @@ export class CatalogsService {
         ? { status: CatalogStatus.ACTIVE, categoryId }
         : { status: CatalogStatus.ACTIVE },
       order: { createdAt: 'DESC' },
+    });
+  }
+
+  /** SA moderation queue (spec §16) — every catalog regardless of status. */
+  async listAllForAdmin(status?: CatalogStatus): Promise<ProjectCatalog[]> {
+    return this.catalogRepository.find({
+      where: status ? { status } : {},
+      order: { createdAt: 'DESC' },
+      take: 200,
     });
   }
 
