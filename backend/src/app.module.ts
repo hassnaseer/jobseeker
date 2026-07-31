@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import configuration from '@/config/configuration';
 import { validationSchema } from '@/config/validation';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { CatalogsModule } from '@/modules/catalogs/catalogs.module';
 import { CategoriesModule } from '@/modules/categories/categories.module';
 import { ApplicationsModule } from '@/modules/applications/applications.module';
 import { ChatModule } from '@/modules/chat/chat.module';
@@ -22,6 +23,7 @@ import { NotificationsModule } from '@/modules/notifications/notifications.modul
 import { PaymentsModule } from '@/modules/payments/payments.module';
 import { ProfilesModule } from '@/modules/profiles/profiles.module';
 import { ReviewsModule } from '@/modules/reviews/reviews.module';
+import { SavedItemsModule } from '@/modules/saved-items/saved-items.module';
 import { UsersModule } from '@/modules/users/users.module';
 
 @Module({
@@ -73,6 +75,8 @@ import { UsersModule } from '@/modules/users/users.module';
     NotificationsModule,
     DisputesModule,
     ReviewsModule,
+    CatalogsModule,
+    SavedItemsModule,
   ],
   controllers: [AppController],
   providers: [
