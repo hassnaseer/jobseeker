@@ -523,4 +523,50 @@ export class ContractsService {
 
     return this.completeContract(contract);
   }
+
+  // ---- Dispute integration (spec §14) — DisputesService drives these ----
+
+  /** Freezes the contract (and milestone, if scoped to one) while a dispute is under review. */
+  async markDisputed(contractId: string, milestoneId: string | null): Promise<void> {
+    const contract = await this.findByIdOrFail(contractId);
+    contract.status = ContractStatus.DISPUTED;
+    await this.contractRepository.save(contract);
+
+    const job = await this.jobRepository.findOneOrFail({ where: { id: contract.jobId } });
+    job.status = JobStatus.DISPUTED;
+    await this.jobRepository.save(job);
+
+    if (milestoneId) {
+      const milestone = await this.milestoneRepository.findOneOrFail({
+        where: { id: milestoneId },
+      });
+      milestone.status = MilestoneStatus.DISPUTED;
+      await this.milestoneRepository.save(milestone);
+    }
+  }
+
+  /** RELEASE_SEEKER / SPLIT resolution: money moved, so the engagement is done. */
+  async completeAfterDispute(contractId: string, milestoneId: string | null): Promise<void> {
+    if (milestoneId) {
+      const milestone = await this.milestoneRepository.findOneOrFail({
+        where: { id: milestoneId },
+      });
+      milestone.status = MilestoneStatus.RELEASED;
+      milestone.releasedAt = new Date();
+      await this.milestoneRepository.save(milestone);
+    }
+    const contract = await this.findByIdOrFail(contractId);
+    await this.completeContract(contract);
+  }
+
+  /** REFUND_CLIENT resolution: nothing delivered, contract ends without payment to the seeker. */
+  async cancelAfterDispute(contractId: string): Promise<void> {
+    const contract = await this.findByIdOrFail(contractId);
+    contract.status = ContractStatus.CANCELLED;
+    await this.contractRepository.save(contract);
+
+    const job = await this.jobRepository.findOneOrFail({ where: { id: contract.jobId } });
+    job.status = JobStatus.CANCELLED;
+    await this.jobRepository.save(job);
+  }
 }

@@ -13,6 +13,7 @@ import { CategoriesModule } from '@/modules/categories/categories.module';
 import { ApplicationsModule } from '@/modules/applications/applications.module';
 import { ChatModule } from '@/modules/chat/chat.module';
 import { ContractsModule } from '@/modules/contracts/contracts.module';
+import { DisputesModule } from '@/modules/disputes/disputes.module';
 import { FirebaseModule } from '@/modules/firebase/firebase.module';
 import { JobsModule } from '@/modules/jobs/jobs.module';
 import { TimesheetsModule } from '@/modules/timesheets/timesheets.module';
@@ -69,6 +70,7 @@ import { UsersModule } from '@/modules/users/users.module';
     PaymentsModule,
     ChatModule,
     NotificationsModule,
+    DisputesModule,
   ],
   controllers: [AppController],
   providers: [

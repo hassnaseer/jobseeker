@@ -8,7 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as crypto from 'crypto';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { UserRole } from '@/common/enums/user-role.enum';
 import { ContractsService } from '@/modules/contracts/contracts.service';
 import { Contract } from '@/modules/contracts/entities/contract.entity';
@@ -798,6 +798,72 @@ export class PaymentsService {
         status: TransactionStatus.COMPLETED,
       }),
     );
+  }
+
+  // ---- Dispute resolution support (spec §14) — DisputesService drives these ----
+
+  /** The COMPLETED escrow charge a dispute is arbitrating over. */
+  async findEscrowTransaction(
+    contractId: string,
+    milestoneId: string | null,
+  ): Promise<Transaction | null> {
+    return this.transactionRepository.findOne({
+      where: {
+        contractId,
+        milestoneId: milestoneId ?? IsNull(),
+        type: TransactionType.ESCROW_FUND,
+        status: TransactionStatus.COMPLETED,
+      },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async computeSeekerNet(baseAmount: number): Promise<number> {
+    return (await this.computeCommission(baseAmount)).seekerNet;
+  }
+
+  /**
+   * SA-arbitrated release: credits the seeker's wallet directly (no
+   * deliverable-approval precondition, unlike the normal releaseMilestone/
+   * releaseLump path) since the dispute resolution itself is the approval.
+   */
+  async releaseForDisputeResolution(
+    admin: User,
+    contract: Contract,
+    milestoneId: string | null,
+    disputeId: string,
+    seekerNetAmount: number,
+  ): Promise<Transaction> {
+    this.assertAdmin(admin);
+    const idempotencyKey = `dispute-release:${disputeId}`;
+    const existing = await this.findExistingByIdempotencyKey(idempotencyKey);
+    if (existing) {
+      return existing;
+    }
+
+    await this.creditWallet(contract.seekerId, contract.currency, seekerNetAmount);
+
+    const transaction = await this.transactionRepository.save(
+      this.transactionRepository.create({
+        contractId: contract.id,
+        milestoneId,
+        payerId: null,
+        payeeId: contract.seekerId,
+        type: TransactionType.ESCROW_RELEASE,
+        amount: seekerNetAmount,
+        clientFee: 0,
+        seekerFee: 0,
+        netAmount: seekerNetAmount,
+        currency: contract.currency,
+        method: TransactionMethod.WALLET,
+        stripeRef: null,
+        idempotencyKey,
+        status: TransactionStatus.COMPLETED,
+      }),
+    );
+
+    await this.issueInvoice(contract.id, transaction, contract.seekerId);
+    return transaction;
   }
 
   async setFxRate(admin: User, dto: SetFxRateDto): Promise<FxRate> {
