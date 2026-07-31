@@ -1,0 +1,5 @@
+export enum DocumentType {
+  PASSPORT = 'PASSPORT',
+  NATIONAL_ID = 'NATIONAL_ID',
+  DRIVERS_LICENSE = 'DRIVERS_LICENSE',
+}

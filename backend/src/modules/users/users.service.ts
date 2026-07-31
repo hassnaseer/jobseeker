@@ -96,6 +96,43 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
+  async updateBasicInfo(
+    user: User,
+    fields: Partial<
+      Pick<
+        User,
+        | 'firstName'
+        | 'lastName'
+        | 'phone'
+        | 'country'
+        | 'city'
+        | 'timezone'
+        | 'language'
+        | 'avatarUrl'
+      >
+    >,
+  ): Promise<User> {
+    Object.assign(user, fields);
+    return this.usersRepository.save(user);
+  }
+
+  async findRoleProfileStatus(userId: string, role: UserRole): Promise<RoleProfileStatus | null> {
+    return this.roleProfileStatusRepository.findOne({ where: { userId, role } });
+  }
+
+  async saveRoleProfileStatus(status: RoleProfileStatus): Promise<RoleProfileStatus> {
+    return this.roleProfileStatusRepository.save(status);
+  }
+
+  async findPendingRoleProfileStatuses(role?: UserRole): Promise<RoleProfileStatus[]> {
+    return this.roleProfileStatusRepository.find({
+      where: role
+        ? { profileStatus: ProfileStatus.PENDING, role }
+        : { profileStatus: ProfileStatus.PENDING },
+      order: { updatedAt: 'ASC' },
+    });
+  }
+
   /**
    * Switches the user's active role. If the target role isn't held yet,
    * adds it with an INCOMPLETE RoleProfileStatus so the client can route

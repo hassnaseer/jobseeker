@@ -53,4 +53,20 @@ export class MailService {
       'Your password was just changed. If this wasn’t you, contact support immediately.',
     );
   }
+
+  async sendProfileApproved(to: string, role: string): Promise<void> {
+    await this.send(
+      to,
+      'Your JobLinxs profile was approved',
+      `Good news — your ${role} profile has been approved. You now have full access.`,
+    );
+  }
+
+  async sendProfileRejected(to: string, role: string, reason: string): Promise<void> {
+    await this.send(
+      to,
+      'Your JobLinxs profile needs changes',
+      `Your ${role} profile submission was not approved. Reason: ${reason}\nPlease update your profile and resubmit.`,
+    );
+  }
 }
