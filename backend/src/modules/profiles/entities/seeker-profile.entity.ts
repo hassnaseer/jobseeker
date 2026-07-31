@@ -112,6 +112,9 @@ export class SeekerProfile {
   })
   avgRating: number;
 
+  @Column({ name: 'total_reviews', type: 'int', default: 0 })
+  totalReviews: number;
+
   @Column({ name: 'total_jobs', type: 'int', default: 0 })
   totalJobs: number;
 

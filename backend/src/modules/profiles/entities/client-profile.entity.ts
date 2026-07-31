@@ -7,6 +7,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { decimalTransformer } from '@/common/transformers/decimal.transformer';
 import { User } from '@/modules/users/entities/user.entity';
 
 /**
@@ -52,6 +53,20 @@ export class ClientProfile {
 
   @Column({ type: 'text', nullable: true })
   about: string | null;
+
+  /** Aggregate fields — computed and written by the Reviews module, not client-editable. */
+  @Column({
+    name: 'avg_rating',
+    type: 'numeric',
+    precision: 3,
+    scale: 2,
+    default: 0,
+    transformer: decimalTransformer,
+  })
+  avgRating: number;
+
+  @Column({ name: 'total_reviews', type: 'int', default: 0 })
+  totalReviews: number;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;

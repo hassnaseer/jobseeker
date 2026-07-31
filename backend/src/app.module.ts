@@ -21,6 +21,7 @@ import { MailModule } from '@/modules/mail/mail.module';
 import { NotificationsModule } from '@/modules/notifications/notifications.module';
 import { PaymentsModule } from '@/modules/payments/payments.module';
 import { ProfilesModule } from '@/modules/profiles/profiles.module';
+import { ReviewsModule } from '@/modules/reviews/reviews.module';
 import { UsersModule } from '@/modules/users/users.module';
 
 @Module({
@@ -71,6 +72,7 @@ import { UsersModule } from '@/modules/users/users.module';
     ChatModule,
     NotificationsModule,
     DisputesModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [

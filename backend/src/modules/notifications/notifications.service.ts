@@ -42,6 +42,7 @@ const DEFAULT_CHANNELS: Record<NotificationEventType, ChannelDefaults> = {
   [NotificationEventType.CHAT_UNREAD_DIGEST]: { email: true, inApp: false, push: false },
   [NotificationEventType.DISPUTE_OPENED]: { email: true, inApp: true, push: true },
   [NotificationEventType.DISPUTE_RESOLVED]: { email: true, inApp: true, push: true },
+  [NotificationEventType.REVIEW_RECEIVED]: { email: true, inApp: true, push: true },
 };
 
 export interface NotifyInput {
