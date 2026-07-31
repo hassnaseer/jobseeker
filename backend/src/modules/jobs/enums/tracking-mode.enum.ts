@@ -1,0 +1,5 @@
+export enum TrackingMode {
+  MANUAL = 'MANUAL',
+  TIMER = 'TIMER',
+  TIMER_WITH_SCREENSHOTS = 'TIMER_WITH_SCREENSHOTS',
+}

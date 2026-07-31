@@ -19,8 +19,8 @@ import {
   PortfolioItemDto,
   WorkHistoryItemDto,
 } from '@/modules/profiles/dto/seeker-profile-items.dto';
+import { ExperienceLevel } from '@/common/enums/experience-level.enum';
 import { SeekerAvailability } from '@/modules/profiles/enums/availability.enum';
-import { ExperienceLevel } from '@/modules/profiles/enums/experience-level.enum';
 
 export class UpdateSeekerProfileDto {
   @ApiProperty()

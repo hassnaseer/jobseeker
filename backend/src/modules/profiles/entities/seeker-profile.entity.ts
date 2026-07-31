@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { decimalTransformer } from '@/common/transformers/decimal.transformer';
+import { ExperienceLevel } from '@/common/enums/experience-level.enum';
 import { SeekerAvailability } from '@/modules/profiles/enums/availability.enum';
-import { ExperienceLevel } from '@/modules/profiles/enums/experience-level.enum';
 import { User } from '@/modules/users/entities/user.entity';
 
 export interface EducationItem {
