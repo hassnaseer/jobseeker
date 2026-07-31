@@ -10,6 +10,7 @@ import { validationSchema } from '@/config/validation';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CategoriesModule } from '@/modules/categories/categories.module';
 import { ApplicationsModule } from '@/modules/applications/applications.module';
+import { ContractsModule } from '@/modules/contracts/contracts.module';
 import { JobsModule } from '@/modules/jobs/jobs.module';
 import { MailModule } from '@/modules/mail/mail.module';
 import { ProfilesModule } from '@/modules/profiles/profiles.module';
@@ -55,6 +56,7 @@ import { UsersModule } from '@/modules/users/users.module';
     ProfilesModule,
     JobsModule,
     ApplicationsModule,
+    ContractsModule,
   ],
   controllers: [AppController],
   providers: [

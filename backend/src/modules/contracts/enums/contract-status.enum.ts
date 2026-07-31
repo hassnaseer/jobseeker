@@ -1,0 +1,10 @@
+/** Spec §5, "Enums" subsection. */
+export enum ContractStatus {
+  PENDING_FUNDING = 'PENDING_FUNDING',
+  ACTIVE = 'ACTIVE',
+  SUBMITTED = 'SUBMITTED',
+  REVISION = 'REVISION',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  DISPUTED = 'DISPUTED',
+}

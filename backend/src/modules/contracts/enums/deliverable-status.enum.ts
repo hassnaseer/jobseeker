@@ -1,0 +1,5 @@
+export enum DeliverableStatus {
+  SUBMITTED = 'SUBMITTED',
+  APPROVED = 'APPROVED',
+  REVISION_REQUESTED = 'REVISION_REQUESTED',
+}
