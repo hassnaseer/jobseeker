@@ -8,6 +8,7 @@ import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import configuration from '@/config/configuration';
 import { validationSchema } from '@/config/validation';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { CategoriesModule } from '@/modules/categories/categories.module';
 import { MailModule } from '@/modules/mail/mail.module';
 import { UsersModule } from '@/modules/users/users.module';
 
@@ -47,6 +48,7 @@ import { UsersModule } from '@/modules/users/users.module';
     UsersModule,
     MailModule,
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [
