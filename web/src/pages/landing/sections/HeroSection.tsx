@@ -7,7 +7,7 @@ export default function HeroSection() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        minHeight: '78vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

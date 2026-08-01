@@ -23,7 +23,59 @@
   "landing": {
     "tagline": "Post jobs, hire talent, and get paid — all in one place.",
     "getStarted": "Get started",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "nav": {
+      "howItWorks": "How it works",
+      "categories": "Categories",
+      "findWork": "Find work"
+    },
+    "howItWorks": {
+      "title": "How JobLinxs works",
+      "subtitle": "Whether you're hiring or looking for work, getting started takes minutes.",
+      "forClients": "For clients",
+      "forTalent": "For talent",
+      "client1Title": "Post a job",
+      "client1Body": "Describe what you need, set a fixed or hourly budget, and publish it in minutes.",
+      "client2Title": "Review applicants",
+      "client2Body": "Shortlist candidates, message them directly, and hire the right fit.",
+      "client3Title": "Pay with confidence",
+      "client3Body": "Funds are held in escrow and released only when you approve the work.",
+      "seeker1Title": "Find work",
+      "seeker1Body": "Browse open jobs and project catalogs that match your skills.",
+      "seeker2Title": "Submit a proposal",
+      "seeker2Body": "Apply with your rate and cover letter, or offer a fixed-price package.",
+      "seeker3Title": "Get paid securely",
+      "seeker3Body": "Track time or deliverables and get paid straight to your wallet."
+    },
+    "categories": {
+      "title": "Browse by category",
+      "subtitle": "Thousands of jobs across every skill and industry."
+    },
+    "jobs": {
+      "title": "Recently posted jobs",
+      "subtitle": "A snapshot of what clients are hiring for right now.",
+      "viewAll": "View all jobs"
+    },
+    "features": {
+      "title": "Built for trust, start to finish",
+      "subtitle": "Everything you need to work with confidence on both sides.",
+      "escrowTitle": "Escrow protection",
+      "escrowBody": "Client funds are held securely and only released when work is approved.",
+      "aiTitle": "AI recruiter",
+      "aiBody": "Get AI-powered shortlists and match scores to find the right talent faster.",
+      "verifiedTitle": "Verified profiles",
+      "verifiedBody": "Identity and KYC verification keeps the marketplace trustworthy.",
+      "chatTitle": "Built-in messaging",
+      "chatBody": "Discuss project details and stay in sync without leaving the platform.",
+      "walletTitle": "Flexible payouts",
+      "walletBody": "Withdraw earnings to your bank or Stripe Connect account whenever you're ready.",
+      "disputeTitle": "Fair dispute resolution",
+      "disputeBody": "If something goes wrong, our team steps in to help resolve it fairly."
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "body": "Join JobLinxs today and start hiring or finding your next opportunity."
+    }
   },
   "auth": {
     "login": {

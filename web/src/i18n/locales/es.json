@@ -23,7 +23,59 @@
   "landing": {
     "tagline": "Publica empleos, contrata talento y cobra — todo en un solo lugar.",
     "getStarted": "Comenzar",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "nav": {
+      "howItWorks": "Cómo funciona",
+      "categories": "Categorías",
+      "findWork": "Buscar trabajo"
+    },
+    "howItWorks": {
+      "title": "Cómo funciona JobLinxs",
+      "subtitle": "Ya sea que contrates o busques trabajo, comenzar toma minutos.",
+      "forClients": "Para clientes",
+      "forTalent": "Para candidatos",
+      "client1Title": "Publica un empleo",
+      "client1Body": "Describe lo que necesitas, define un presupuesto fijo o por hora, y publícalo en minutos.",
+      "client2Title": "Revisa postulantes",
+      "client2Body": "Preselecciona candidatos, escríbeles directamente y contrata al indicado.",
+      "client3Title": "Paga con confianza",
+      "client3Body": "Los fondos se mantienen en depósito en garantía y se liberan solo cuando apruebas el trabajo.",
+      "seeker1Title": "Encuentra trabajo",
+      "seeker1Body": "Explora empleos abiertos y catálogos de proyectos que coincidan con tus habilidades.",
+      "seeker2Title": "Envía una propuesta",
+      "seeker2Body": "Postúlate con tu tarifa y carta de presentación, u ofrece un paquete de precio fijo.",
+      "seeker3Title": "Cobra de forma segura",
+      "seeker3Body": "Registra tu tiempo o entregables y cobra directamente en tu billetera."
+    },
+    "categories": {
+      "title": "Explora por categoría",
+      "subtitle": "Miles de empleos en cada habilidad e industria."
+    },
+    "jobs": {
+      "title": "Empleos publicados recientemente",
+      "subtitle": "Un vistazo a lo que los clientes están contratando ahora mismo.",
+      "viewAll": "Ver todos los empleos"
+    },
+    "features": {
+      "title": "Construido para la confianza, de principio a fin",
+      "subtitle": "Todo lo que necesitas para trabajar con confianza en ambos lados.",
+      "escrowTitle": "Protección de depósito en garantía",
+      "escrowBody": "Los fondos del cliente se mantienen seguros y se liberan solo cuando el trabajo es aprobado.",
+      "aiTitle": "Reclutador con IA",
+      "aiBody": "Obtén listas preseleccionadas y puntajes de coincidencia con IA para encontrar talento más rápido.",
+      "verifiedTitle": "Perfiles verificados",
+      "verifiedBody": "La verificación de identidad y KYC mantiene el mercado confiable.",
+      "chatTitle": "Mensajería integrada",
+      "chatBody": "Discute los detalles del proyecto y mantente sincronizado sin salir de la plataforma.",
+      "walletTitle": "Retiros flexibles",
+      "walletBody": "Retira tus ganancias a tu banco o cuenta de Stripe Connect cuando quieras.",
+      "disputeTitle": "Resolución justa de disputas",
+      "disputeBody": "Si algo sale mal, nuestro equipo interviene para ayudar a resolverlo de forma justa."
+    },
+    "cta": {
+      "title": "¿Listo para comenzar?",
+      "body": "Únete a JobLinxs hoy y comienza a contratar o a buscar tu próxima oportunidad."
+    }
   },
   "auth": {
     "login": {

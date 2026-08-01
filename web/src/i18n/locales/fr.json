@@ -23,7 +23,59 @@
   "landing": {
     "tagline": "Publiez des offres, recrutez des talents et soyez payé — le tout au même endroit.",
     "getStarted": "Commencer",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "nav": {
+      "howItWorks": "Comment ça marche",
+      "categories": "Catégories",
+      "findWork": "Trouver du travail"
+    },
+    "howItWorks": {
+      "title": "Comment fonctionne JobLinxs",
+      "subtitle": "Que vous recrutiez ou cherchiez du travail, commencer prend quelques minutes.",
+      "forClients": "Pour les clients",
+      "forTalent": "Pour les candidats",
+      "client1Title": "Publiez une offre",
+      "client1Body": "Décrivez vos besoins, fixez un budget fixe ou horaire, et publiez en quelques minutes.",
+      "client2Title": "Examinez les candidatures",
+      "client2Body": "Présélectionnez des candidats, contactez-les directement et recrutez le bon profil.",
+      "client3Title": "Payez en toute confiance",
+      "client3Body": "Les fonds sont conservés en séquestre et libérés uniquement lorsque vous approuvez le travail.",
+      "seeker1Title": "Trouvez du travail",
+      "seeker1Body": "Parcourez les offres ouvertes et les catalogues de projets correspondant à vos compétences.",
+      "seeker2Title": "Envoyez une proposition",
+      "seeker2Body": "Postulez avec votre tarif et votre lettre de motivation, ou proposez un forfait à prix fixe.",
+      "seeker3Title": "Soyez payé en toute sécurité",
+      "seeker3Body": "Suivez votre temps ou vos livrables et soyez payé directement sur votre portefeuille."
+    },
+    "categories": {
+      "title": "Parcourir par catégorie",
+      "subtitle": "Des milliers d'offres dans toutes les compétences et industries."
+    },
+    "jobs": {
+      "title": "Offres publiées récemment",
+      "subtitle": "Un aperçu de ce que les clients recrutent en ce moment.",
+      "viewAll": "Voir toutes les offres"
+    },
+    "features": {
+      "title": "Conçu pour la confiance, du début à la fin",
+      "subtitle": "Tout ce dont vous avez besoin pour travailler en toute confiance des deux côtés.",
+      "escrowTitle": "Protection par séquestre",
+      "escrowBody": "Les fonds du client sont conservés en sécurité et libérés uniquement lorsque le travail est approuvé.",
+      "aiTitle": "Recruteur IA",
+      "aiBody": "Obtenez des listes présélectionnées et des scores de correspondance par IA pour trouver des talents plus rapidement.",
+      "verifiedTitle": "Profils vérifiés",
+      "verifiedBody": "La vérification d'identité et KYC maintient la confiance sur la plateforme.",
+      "chatTitle": "Messagerie intégrée",
+      "chatBody": "Discutez des détails du projet et restez synchronisé sans quitter la plateforme.",
+      "walletTitle": "Retraits flexibles",
+      "walletBody": "Retirez vos gains vers votre banque ou votre compte Stripe Connect quand vous le souhaitez.",
+      "disputeTitle": "Résolution équitable des litiges",
+      "disputeBody": "En cas de problème, notre équipe intervient pour aider à le résoudre équitablement."
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "body": "Rejoignez JobLinxs dès aujourd'hui et commencez à recruter ou à trouver votre prochaine opportunité."
+    }
   },
   "auth": {
     "login": {
