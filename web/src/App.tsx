@@ -19,6 +19,15 @@ import DashboardPage from '@/pages/app/DashboardPage';
 import ComingSoonPage from '@/pages/ComingSoonPage';
 import OnboardingPage from '@/pages/app/onboarding/OnboardingPage';
 import ProfilePage from '@/pages/app/profile/ProfilePage';
+import MyJobsPage from '@/pages/app/jobs/MyJobsPage';
+import BrowseJobsPage from '@/pages/app/jobs/BrowseJobsPage';
+import JobDetailPage from '@/pages/app/jobs/JobDetailPage';
+import JobFormPage from '@/pages/app/jobs/JobFormPage';
+import ApplicationsPage from '@/pages/app/applications/ApplicationsPage';
+import CatalogsPage from '@/pages/app/catalogs/CatalogsPage';
+import CatalogDetailPage from '@/pages/app/catalogs/CatalogDetailPage';
+import CatalogFormPage from '@/pages/app/catalogs/CatalogFormPage';
+import SavedItemsPage from '@/pages/app/saved/SavedItemsPage';
 
 const router = createBrowserRouter([
   { path: '/', element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -38,10 +47,12 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: 'dashboard', element: <DashboardPage /> },
-          { path: 'jobs', element: <ComingSoonPage title="My Jobs" /> },
-          { path: 'jobs/:id', element: <ComingSoonPage title="Job details" /> },
-          { path: 'browse', element: <ComingSoonPage title="Find Work" /> },
-          { path: 'applications', element: <ComingSoonPage title="Applications" /> },
+          { path: 'jobs', element: <MyJobsPage /> },
+          { path: 'jobs/new', element: <JobFormPage /> },
+          { path: 'jobs/:id', element: <JobDetailPage /> },
+          { path: 'jobs/:id/edit', element: <JobFormPage /> },
+          { path: 'browse', element: <BrowseJobsPage /> },
+          { path: 'applications', element: <ApplicationsPage /> },
           { path: 'applications/:id', element: <ComingSoonPage title="Application" /> },
           { path: 'ai-recruiter', element: <ComingSoonPage title="AI Recruiter" /> },
           { path: 'contracts', element: <ComingSoonPage title="Contracts" /> },
@@ -49,9 +60,11 @@ const router = createBrowserRouter([
           { path: 'messages', element: <ComingSoonPage title="Messages" /> },
           { path: 'messages/:id', element: <ComingSoonPage title="Conversation" /> },
           { path: 'payments', element: <ComingSoonPage title="Payments" /> },
-          { path: 'catalogs', element: <ComingSoonPage title="Catalogs" /> },
-          { path: 'catalogs/:id', element: <ComingSoonPage title="Catalog" /> },
-          { path: 'saved', element: <ComingSoonPage title="Saved" /> },
+          { path: 'catalogs', element: <CatalogsPage /> },
+          { path: 'catalogs/new', element: <CatalogFormPage /> },
+          { path: 'catalogs/:id', element: <CatalogDetailPage /> },
+          { path: 'catalogs/:id/edit', element: <CatalogFormPage /> },
+          { path: 'saved', element: <SavedItemsPage /> },
           { path: 'disputes', element: <ComingSoonPage title="Disputes" /> },
           { path: 'disputes/:id', element: <ComingSoonPage title="Dispute" /> },
           { path: 'notifications', element: <ComingSoonPage title="Notifications" /> },
