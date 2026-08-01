@@ -6,6 +6,9 @@ import { profileReducer } from '@/features/profile/reducer';
 import { jobsReducer } from '@/features/jobs/reducer';
 import { applicationsReducer } from '@/features/applications/reducer';
 import { catalogsReducer } from '@/features/catalogs/reducer';
+import { contractsReducer } from '@/features/contracts/reducer';
+import { timesheetsReducer } from '@/features/timesheets/reducer';
+import { paymentsReducer } from '@/features/payments/reducer';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,6 +17,9 @@ export const rootReducer = combineReducers({
   jobs: jobsReducer,
   applications: applicationsReducer,
   catalogs: catalogsReducer,
+  contracts: contractsReducer,
+  timesheets: timesheetsReducer,
+  payments: paymentsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

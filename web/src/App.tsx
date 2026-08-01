@@ -28,6 +28,9 @@ import CatalogsPage from '@/pages/app/catalogs/CatalogsPage';
 import CatalogDetailPage from '@/pages/app/catalogs/CatalogDetailPage';
 import CatalogFormPage from '@/pages/app/catalogs/CatalogFormPage';
 import SavedItemsPage from '@/pages/app/saved/SavedItemsPage';
+import ContractsListPage from '@/pages/app/contracts/ContractsListPage';
+import ContractDetailPage from '@/pages/app/contracts/ContractDetailPage';
+import WalletPage from '@/pages/app/payments/WalletPage';
 
 const router = createBrowserRouter([
   { path: '/', element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -55,11 +58,11 @@ const router = createBrowserRouter([
           { path: 'applications', element: <ApplicationsPage /> },
           { path: 'applications/:id', element: <ComingSoonPage title="Application" /> },
           { path: 'ai-recruiter', element: <ComingSoonPage title="AI Recruiter" /> },
-          { path: 'contracts', element: <ComingSoonPage title="Contracts" /> },
-          { path: 'contracts/:id', element: <ComingSoonPage title="Contract" /> },
+          { path: 'contracts', element: <ContractsListPage /> },
+          { path: 'contracts/:id', element: <ContractDetailPage /> },
           { path: 'messages', element: <ComingSoonPage title="Messages" /> },
           { path: 'messages/:id', element: <ComingSoonPage title="Conversation" /> },
-          { path: 'payments', element: <ComingSoonPage title="Payments" /> },
+          { path: 'payments', element: <WalletPage /> },
           { path: 'catalogs', element: <CatalogsPage /> },
           { path: 'catalogs/new', element: <CatalogFormPage /> },
           { path: 'catalogs/:id', element: <CatalogDetailPage /> },

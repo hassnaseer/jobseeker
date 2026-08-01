@@ -83,6 +83,7 @@ export type ContractStatus =
 export interface Contract {
   id: string;
   jobId: string;
+  job?: Job;
   clientId: string;
   seekerId: string;
   applicationId: string;
@@ -91,6 +92,9 @@ export interface Contract {
   agreedAmount: number | null;
   agreedHourlyRate: number | null;
   currency: string;
+  trackingMode: TrackingMode | null;
+  weeklyHourLimit: number | null;
+  checkinRequired: boolean;
   status: ContractStatus;
   startedAt: string | null;
   completedAt: string | null;
@@ -128,6 +132,122 @@ export interface Wallet {
   currency: string;
   balance: number;
   pendingBalance: number;
+}
+
+export type TimeLogEntryType = 'MANUAL' | 'TIMER';
+export type TimeLogEntryStatus = 'PENDING' | 'APPROVED' | 'DISPUTED';
+
+export interface TimeLogEntry {
+  id: string;
+  timesheetId: string;
+  contractId: string;
+  entryType: TimeLogEntryType;
+  startTime: string | null;
+  endTime: string | null;
+  hours: number | null;
+  description: string | null;
+  screenshotUrls: string[];
+  status: TimeLogEntryStatus;
+  createdAt: string;
+}
+
+export type TimesheetPeriodStatus = 'OPEN' | 'CLOSED' | 'APPROVED' | 'DISPUTED';
+
+export interface TimesheetPeriod {
+  id: string;
+  contractId: string;
+  periodStart: string;
+  periodEnd: string;
+  totalHours: number;
+  totalAmount: number;
+  currency: string;
+  status: TimesheetPeriodStatus;
+  approvedAt: string | null;
+}
+
+export type CheckInType = 'IN' | 'OUT';
+
+export interface CheckIn {
+  id: string;
+  contractId: string;
+  type: CheckInType;
+  latitude: number;
+  longitude: number;
+  createdAt: string;
+}
+
+export type PayoutMethodType = 'STRIPE_CONNECT' | 'BANK' | 'WALLET';
+export type ConnectStatus = 'NOT_STARTED' | 'PENDING' | 'ACTIVE' | 'RESTRICTED';
+
+export interface PayoutMethod {
+  id: string;
+  userId: string;
+  type: PayoutMethodType;
+  stripeAccountId: string | null;
+  connectStatus: ConnectStatus | null;
+  bankName: string | null;
+  accountHolder: string | null;
+  accountNumber: string | null;
+  swiftOrRouting: string | null;
+  currency: string | null;
+  isDefault: boolean;
+  createdAt: string;
+}
+
+export type WithdrawalStatus = 'REQUESTED' | 'PROCESSING' | 'PAID' | 'FAILED';
+
+export interface WithdrawalRequest {
+  id: string;
+  userId: string;
+  walletId: string;
+  amount: number;
+  currency: string;
+  payoutMethodId: string;
+  status: WithdrawalStatus;
+  failureReason: string | null;
+  requestedAt: string;
+  processedAt: string | null;
+}
+
+export type TransactionType =
+  | 'ESCROW_FUND'
+  | 'ESCROW_RELEASE'
+  | 'HOURLY_CHARGE'
+  | 'CATALOG_ORDER'
+  | 'REFUND'
+  | 'PARTIAL_REFUND'
+  | 'WITHDRAWAL'
+  | 'COMMISSION';
+export type TransactionStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
+
+export interface Transaction {
+  id: string;
+  contractId: string | null;
+  milestoneId: string | null;
+  payerId: string | null;
+  payeeId: string | null;
+  type: TransactionType;
+  amount: number;
+  clientFee: number;
+  seekerFee: number;
+  netAmount: number;
+  currency: string;
+  status: TransactionStatus;
+  failureReason: string | null;
+  createdAt: string;
+}
+
+export interface Invoice {
+  id: string;
+  contractId: string;
+  transactionId: string;
+  partyId: string;
+  number: string;
+  amount: number;
+  taxAmount: number;
+  currency: string;
+  pdfUrl: string | null;
+  issuedAt: string;
 }
 
 export interface Category {

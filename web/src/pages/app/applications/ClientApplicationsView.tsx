@@ -12,6 +12,7 @@ import {
   rejectApplication,
   shortlistApplication,
 } from '@/features/applications/actions';
+import HireModal from './HireModal';
 import type { Application } from '@/types/domain';
 
 interface Props {
@@ -25,6 +26,7 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
   const { mine: jobs } = useAppSelector((s) => s.jobs);
   const { forJob, status } = useAppSelector((s) => s.applications);
   const [acceptTarget, setAcceptTarget] = useState<Application | null>(null);
+  const [hireTarget, setHireTarget] = useState<Application | null>(null);
 
   useEffect(() => {
     void dispatch(fetchMyJobs());
@@ -117,6 +119,11 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
                   </Button>
                 </Stack>
               )}
+              {app.status === 'ACCEPTED' && (
+                <Button size="small" variant="contained" onClick={() => setHireTarget(app)}>
+                  {t('applications.hire')}
+                </Button>
+              )}
             </Paper>
           ))}
         </Stack>
@@ -136,6 +143,8 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
           setAcceptTarget(null);
         }}
       />
+
+      <HireModal application={hireTarget} onClose={() => setHireTarget(null)} />
     </Box>
   );
 }
