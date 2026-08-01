@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import i18n from '@/i18n/config';
 
 interface Props {
   children: ReactNode;
@@ -33,12 +34,9 @@ export class ErrorBoundary extends Component<Props, State> {
           <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Stack spacing={2} sx={{ alignItems: 'center', textAlign: 'center' }}>
               <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                Something went wrong
+                {i18n.t('errors.somethingWrong')}
               </Typography>
-              <Typography color="text.secondary">
-                An unexpected error occurred while rendering this page. You can try reloading, and if
-                the problem continues, let us know.
-              </Typography>
+              <Typography color="text.secondary">{i18n.t('errors.unexpected')}</Typography>
               {import.meta.env.DEV && (
                 <Typography
                   component="pre"
@@ -56,7 +54,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </Typography>
               )}
               <Button variant="contained" onClick={this.handleReload}>
-                Reload JobLinxs
+                {i18n.t('errors.reload')}
               </Button>
             </Stack>
           </Box>

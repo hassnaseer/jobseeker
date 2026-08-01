@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Chip, Grid, Link, Paper, Stack, Typography } from '@mui/material';
-import { useAppSelector } from '@/app/hooks';
+import { Alert, Box, Button, Chip, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { apiClient } from '@/api/client';
+import { fetchMyProfile } from '@/features/profile/actions';
 import type { Application, Contract, Job, Wallet } from '@/types/domain';
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
@@ -19,7 +21,10 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
 }
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.auth.user);
+  const profile = useAppSelector((s) => s.profile.data);
   const isClient = user?.activeRole === 'CLIENT';
 
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -27,6 +32,12 @@ export default function DashboardPage() {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user?.activeRole === 'CLIENT' || user?.activeRole === 'SEEKER') {
+      void dispatch(fetchMyProfile(user.activeRole));
+    }
+  }, [dispatch, user?.activeRole]);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,42 +78,75 @@ export default function DashboardPage() {
 
   const activeContracts = contracts.filter((c) => ['ACTIVE', 'SUBMITTED', 'REVISION'].includes(c.status));
   const primaryWallet = wallets[0];
+  const roleStatus = profile?.roleStatus?.profileStatus;
 
   return (
     <Box>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
-        Dashboard
+        {t('dashboard.title')}
       </Typography>
+
+      {(roleStatus === 'INCOMPLETE' || roleStatus === undefined) && (
+        <Alert
+          severity="info"
+          sx={{ mb: 3 }}
+          action={
+            <Button component={RouterLink} to="/app/onboarding" color="inherit" size="small">
+              {t('dashboard.completeProfileCta')}
+            </Button>
+          }
+        >
+          {t('dashboard.completeProfileBody')}
+        </Alert>
+      )}
+      {roleStatus === 'PENDING' && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          {t('dashboard.pendingProfileBody')}
+        </Alert>
+      )}
+      {roleStatus === 'REJECTED' && (
+        <Alert
+          severity="warning"
+          sx={{ mb: 3 }}
+          action={
+            <Button component={RouterLink} to="/app/onboarding" color="inherit" size="small">
+              {t('dashboard.completeProfileCta')}
+            </Button>
+          }
+        >
+          {t('dashboard.rejectedProfileBody', { reason: profile?.roleStatus?.rejectionReason ?? '' })}
+        </Alert>
+      )}
 
       <Grid container spacing={2} sx={{ mb: 4 }}>
         {isClient ? (
           <>
             <Grid size={{ xs: 6, md: 3 }}>
-              <StatCard label="Open jobs" value={jobs.filter((j) => j.status === 'OPEN').length} />
+              <StatCard label={t('dashboard.openJobs')} value={jobs.filter((j) => j.status === 'OPEN').length} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
-              <StatCard label="Total jobs posted" value={jobs.length} />
+              <StatCard label={t('dashboard.totalJobsPosted')} value={jobs.length} />
             </Grid>
           </>
         ) : (
           <>
             <Grid size={{ xs: 6, md: 3 }}>
-              <StatCard label="Applications" value={applications.length} />
+              <StatCard label={t('dashboard.applications')} value={applications.length} />
             </Grid>
             <Grid size={{ xs: 6, md: 3 }}>
               <StatCard
-                label="Shortlisted"
+                label={t('dashboard.shortlisted')}
                 value={applications.filter((a) => a.status === 'SHORTLISTED').length}
               />
             </Grid>
           </>
         )}
         <Grid size={{ xs: 6, md: 3 }}>
-          <StatCard label="Contracts" value={contracts.length} />
+          <StatCard label={t('dashboard.contracts')} value={contracts.length} />
         </Grid>
         <Grid size={{ xs: 6, md: 3 }}>
           <StatCard
-            label="Wallet"
+            label={t('dashboard.wallet')}
             value={
               primaryWallet
                 ? `${primaryWallet.balance.toLocaleString(undefined, { style: 'currency', currency: primaryWallet.currency })}`
@@ -113,11 +157,11 @@ export default function DashboardPage() {
       </Grid>
 
       <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-        Active contracts
+        {t('dashboard.activeContracts')}
       </Typography>
       {!loading && activeContracts.length === 0 && (
         <Paper sx={{ p: 3 }}>
-          <Typography color="text.secondary">No active contracts yet.</Typography>
+          <Typography color="text.secondary">{t('dashboard.noActiveContracts')}</Typography>
         </Paper>
       )}
       <Stack spacing={1.5}>
@@ -125,7 +169,7 @@ export default function DashboardPage() {
           <Paper key={c.id} sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box>
               <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
-                {c.type} contract
+                {t('dashboard.contractLabel', { type: c.type })}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {c.currency} {c.agreedAmount ?? c.agreedHourlyRate}
@@ -138,7 +182,7 @@ export default function DashboardPage() {
 
       <Box sx={{ mt: 2 }}>
         <Link component={RouterLink} to="/app/contracts" sx={{ fontWeight: 600 }}>
-          View all contracts
+          {t('dashboard.viewAllContracts')}
         </Link>
       </Box>
     </Box>

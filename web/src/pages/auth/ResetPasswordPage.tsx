@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { Alert, Button, Link, Stack, TextField, Typography } from '@mui/material';
 import AuthLayout from '@/layouts/AuthLayout';
@@ -6,6 +7,7 @@ import { resetPassword } from '@/features/auth/actions';
 import { extractErrorMessage } from '@/api/client';
 
 export default function ResetPasswordPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token') ?? '';
@@ -31,18 +33,26 @@ export default function ResetPasswordPage() {
   return (
     <AuthLayout>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
-        Reset password
+        {t('auth.resetPassword.title')}
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Choose a new password for your account.
+        {t('auth.resetPassword.subtitle')}
       </Typography>
 
-      {!token && <Alert severity="error" sx={{ mb: 2 }}>Missing reset token — use the link from your email.</Alert>}
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {!token && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {t('auth.resetPassword.missingToken')}
+        </Alert>
+      )}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       <Stack component="form" onSubmit={handleSubmit} spacing={2}>
         <TextField
-          label="New password"
+          label={t('auth.resetPassword.newPassword')}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -50,7 +60,7 @@ export default function ResetPasswordPage() {
           fullWidth
         />
         <TextField
-          label="Confirm new password"
+          label={t('auth.resetPassword.confirmPassword')}
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -58,13 +68,13 @@ export default function ResetPasswordPage() {
           fullWidth
         />
         <Button type="submit" variant="contained" size="large" disabled={submitting || !token} fullWidth>
-          {submitting ? 'Resetting…' : 'Reset password'}
+          {submitting ? t('auth.resetPassword.submitting') : t('auth.resetPassword.submit')}
         </Button>
       </Stack>
 
       <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', mt: 2.25 }}>
         <Link component={RouterLink} to="/login" sx={{ fontWeight: 600 }}>
-          Back to sign in
+          {t('auth.resetPassword.backToSignIn')}
         </Link>
       </Typography>
     </AuthLayout>

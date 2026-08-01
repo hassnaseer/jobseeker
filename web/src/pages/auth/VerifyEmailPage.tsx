@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { Alert, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import AuthLayout from '@/layouts/AuthLayout';
@@ -6,6 +7,7 @@ import { verifyEmail } from '@/features/auth/actions';
 import { extractErrorMessage } from '@/api/client';
 
 export default function VerifyEmailPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
@@ -14,7 +16,7 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     if (!token) {
       setStatus('error');
-      setError('Missing verification token.');
+      setError(t('auth.verifyEmail.missingToken'));
       return;
     }
     verifyEmail(token)
@@ -23,21 +25,21 @@ export default function VerifyEmailPage() {
         setStatus('error');
         setError(extractErrorMessage(err));
       });
-  }, [token]);
+  }, [token, t]);
 
   return (
     <AuthLayout>
       {status === 'verifying' && (
-        <Stack spacing={2} sx={{ alignItems: 'center', py: 2 }}>
+        <Stack sx={{ alignItems: 'center', py: 2 }} spacing={2}>
           <CircularProgress />
-          <Typography color="text.secondary">Verifying your email…</Typography>
+          <Typography color="text.secondary">{t('auth.verifyEmail.verifying')}</Typography>
         </Stack>
       )}
       {status === 'success' && (
         <Stack spacing={2}>
-          <Alert severity="success">Your email has been verified.</Alert>
+          <Alert severity="success">{t('auth.verifyEmail.success')}</Alert>
           <Button component={RouterLink} to="/login" variant="contained">
-            Sign in
+            {t('auth.verifyEmail.signIn')}
           </Button>
         </Stack>
       )}
@@ -45,7 +47,7 @@ export default function VerifyEmailPage() {
         <Stack spacing={2}>
           <Alert severity="error">{error}</Alert>
           <Button component={RouterLink} to="/check-email" variant="outlined">
-            Resend verification email
+            {t('auth.verifyEmail.resend')}
           </Button>
         </Stack>
       )}

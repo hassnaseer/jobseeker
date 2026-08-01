@@ -5,7 +5,7 @@ import { fetchMe } from '@/features/auth/actions';
 import GlobalSnackbar from '@/components/GlobalSnackbar';
 import ErrorPage from '@/pages/ErrorPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import LandingPage from '@/pages/LandingPage';
+import LandingPage from '@/pages/landing/LandingPage';
 import LoginPage from '@/pages/auth/LoginPage';
 import SignupPage from '@/pages/auth/SignupPage';
 import CheckEmailPage from '@/pages/auth/CheckEmailPage';
@@ -17,6 +17,8 @@ import ProtectedRoute from '@/routes/ProtectedRoute';
 import RoleRoute from '@/routes/RoleRoute';
 import DashboardPage from '@/pages/app/DashboardPage';
 import ComingSoonPage from '@/pages/ComingSoonPage';
+import OnboardingPage from '@/pages/app/onboarding/OnboardingPage';
+import ProfilePage from '@/pages/app/profile/ProfilePage';
 
 const router = createBrowserRouter([
   { path: '/', element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -53,8 +55,8 @@ const router = createBrowserRouter([
           { path: 'disputes', element: <ComingSoonPage title="Disputes" /> },
           { path: 'disputes/:id', element: <ComingSoonPage title="Dispute" /> },
           { path: 'notifications', element: <ComingSoonPage title="Notifications" /> },
-          { path: 'profile', element: <ComingSoonPage title="Profile & settings" /> },
-          { path: 'onboarding', element: <ComingSoonPage title="Complete your profile" /> },
+          { path: 'profile', element: <ProfilePage /> },
+          { path: 'onboarding', element: <OnboardingPage /> },
           {
             path: 'admin',
             element: <RoleRoute allow={['SUPER_ADMIN']} />,

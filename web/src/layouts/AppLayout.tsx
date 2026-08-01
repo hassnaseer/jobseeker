@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Badge,
@@ -17,17 +18,21 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { logout, switchRole } from '@/features/auth/actions';
-import { navForRole } from './navConfig';
+import { useNavForRole } from './navConfig';
 import { apiClient } from '@/api/client';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import PageTransition from '@/components/PageTransition';
 
 const SIDEBAR_WIDTH = 236;
 
 export default function AppLayout() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((s) => s.auth.user);
   const [unreadCount, setUnreadCount] = useState(0);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const navItems = useNavForRole(user?.activeRole ?? 'SEEKER');
 
   useEffect(() => {
     apiClient
@@ -37,8 +42,6 @@ export default function AppLayout() {
   }, []);
 
   if (!user) return null;
-
-  const navItems = navForRole(user.activeRole);
   const initials = `${user.firstName?.[0] ?? user.email[0]}${user.lastName?.[0] ?? ''}`.toUpperCase();
 
   const handleLogout = async () => {
@@ -96,7 +99,7 @@ export default function AppLayout() {
             className="jl-sidebar-label"
             sx={{ fontWeight: 700, fontSize: 18, letterSpacing: '-0.02em' }}
           >
-            JobLinxs
+            {t('common.appName')}
           </Typography>
         </Stack>
 
@@ -120,7 +123,11 @@ export default function AppLayout() {
                     py: 1.1,
                     borderRadius: 2.5,
                     bgcolor: isActive ? 'rgba(91,95,239,0.08)' : 'transparent',
-                    '&:hover': { bgcolor: isActive ? 'rgba(91,95,239,0.08)' : 'action.hover' },
+                    transition: 'background-color 160ms ease, transform 120ms ease',
+                    '&:hover': {
+                      bgcolor: isActive ? 'rgba(91,95,239,0.08)' : 'action.hover',
+                      transform: 'translateX(2px)',
+                    },
                   }}
                 >
                   <item.icon fontSize="small" />
@@ -147,12 +154,13 @@ export default function AppLayout() {
             alignItems: 'center',
             gap: 1.5,
             color: 'text.secondary',
+            transition: 'background-color 160ms ease',
             '&:hover': { bgcolor: 'action.hover' },
           }}
         >
           <LogoutOutlinedIcon fontSize="small" />
           <Typography className="jl-sidebar-label" sx={{ fontSize: 14, fontWeight: 600 }}>
-            Sign out
+            {t('shell.signOut')}
           </Typography>
         </Box>
       </Box>
@@ -179,8 +187,9 @@ export default function AppLayout() {
             />
           </Stack>
           <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+            <LanguageSwitcher />
             {otherRole && (
-              <Tooltip title={`Switch to ${otherRole}`}>
+              <Tooltip title={t('shell.switchTo', { role: otherRole })}>
                 <IconButton onClick={handleSwitchRole} size="small">
                   <SwapHorizOutlinedIcon />
                 </IconButton>
@@ -203,15 +212,15 @@ export default function AppLayout() {
                   navigate('/app/profile');
                 }}
               >
-                Profile & settings
+                {t('shell.profileSettings')}
               </MenuItem>
-              <MenuItem onClick={handleLogout}>Sign out</MenuItem>
+              <MenuItem onClick={handleLogout}>{t('shell.signOut')}</MenuItem>
             </Menu>
           </Stack>
         </Stack>
 
         <Box className="jl-main" sx={{ flex: 1, overflowY: 'auto', p: '28px 32px 60px' }}>
-          <Outlet />
+          <PageTransition />
         </Box>
       </Box>
     </Box>
