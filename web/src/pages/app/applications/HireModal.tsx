@@ -6,10 +6,12 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import Modal from '@/components/feedback/Modal';
 import FormTextField from '@/components/form/FormTextField';
-import { getJobDetail } from '@/api/jobs';
-import { hire, type MilestoneInput } from '@/api/contracts';
+import type { MilestoneInput } from '@/api/contracts';
 import { extractErrorMessage } from '@/api/client';
-import type { Application, Job } from '@/types/domain';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchJobDetail } from '@/features/jobs/actions';
+import { hireApplication } from '@/features/applications/actions';
+import type { Application } from '@/types/domain';
 
 interface Props {
   application: Application | null;
@@ -19,7 +21,8 @@ interface Props {
 export default function HireModal({ application, onClose }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [job, setJob] = useState<Job | null>(null);
+  const dispatch = useAppDispatch();
+  const job = useAppSelector((s) => s.jobs.detail);
   const [milestones, setMilestones] = useState<MilestoneInput[]>([]);
   const [weeklyHourLimit, setWeeklyHourLimit] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -27,12 +30,11 @@ export default function HireModal({ application, onClose }: Props) {
 
   useEffect(() => {
     if (application) {
-      setJob(null);
       setMilestones([]);
       setError(null);
-      void getJobDetail(application.jobId).then(setJob).catch(() => undefined);
+      void dispatch(fetchJobDetail(application.jobId));
     }
-  }, [application]);
+  }, [application, dispatch]);
 
   const needsMilestones = job?.jobType === 'FIXED' && job.pricingModel === 'MILESTONE';
   const isHourly = job?.jobType === 'HOURLY';
@@ -42,10 +44,12 @@ export default function HireModal({ application, onClose }: Props) {
     setSaving(true);
     setError(null);
     try {
-      const contract = await hire(application.id, {
-        milestones: needsMilestones ? milestones : undefined,
-        weeklyHourLimit: isHourly && weeklyHourLimit ? Number(weeklyHourLimit) : undefined,
-      });
+      const contract = await dispatch(
+        hireApplication(application.id, {
+          milestones: needsMilestones ? milestones : undefined,
+          weeklyHourLimit: isHourly && weeklyHourLimit ? Number(weeklyHourLimit) : undefined,
+        }),
+      );
       onClose();
       navigate(`/app/contracts/${contract.id}`);
     } catch (err) {

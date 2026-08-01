@@ -301,3 +301,78 @@ export interface SavedItem {
   targetId: string;
   createdAt: string;
 }
+
+export type MessageType = 'TEXT' | 'IMAGE' | 'FILE' | 'SYSTEM';
+
+export interface Conversation {
+  id: string;
+  jobId: string | null;
+  contractId: string | null;
+  clientId: string;
+  seekerId: string;
+  initiatedBy: string;
+  isBlocked: boolean;
+  blockedBy: string | null;
+  lastMessageAt: string | null;
+  createdAt: string;
+  unreadCount: number;
+}
+
+export interface Message {
+  id: string;
+  conversationId: string;
+  senderId: string | null;
+  content: string | null;
+  type: MessageType;
+  attachments: string[];
+  isRead: boolean;
+  readAt: string | null;
+  isEdited: boolean;
+  isDeleted: boolean;
+  replyToId: string | null;
+  createdAt: string;
+}
+
+export type ReportTargetType = 'MESSAGE' | 'CONVERSATION' | 'REVIEW';
+
+export type NotificationEventType =
+  | 'PROFILE_APPROVED'
+  | 'PROFILE_REJECTED'
+  | 'APPLICATION_RECEIVED'
+  | 'APPLICATION_ACCEPTED'
+  | 'APPLICATION_REJECTED'
+  | 'ESCROW_FUNDED'
+  | 'DELIVERABLE_SUBMITTED'
+  | 'DELIVERABLE_APPROVED'
+  | 'DELIVERABLE_REVISION_REQUESTED'
+  | 'MILESTONE_RELEASED'
+  | 'TIMESHEET_SUBMITTED'
+  | 'HOURS_DISPUTED'
+  | 'HOURS_APPROVED'
+  | 'CONTRACT_COMPLETED'
+  | 'WITHDRAWAL_STATUS_CHANGED'
+  | 'NEW_MESSAGE'
+  | 'CHAT_UNREAD_DIGEST'
+  | 'DISPUTE_OPENED'
+  | 'DISPUTE_RESOLVED'
+  | 'REVIEW_RECEIVED';
+
+export interface Notification {
+  id: string;
+  userId: string;
+  type: NotificationEventType;
+  title: string;
+  message: string;
+  link: string | null;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export interface NotificationPreference {
+  id: string;
+  userId: string;
+  eventType: NotificationEventType;
+  emailEnabled: boolean;
+  inAppEnabled: boolean;
+  pushEnabled: boolean;
+}

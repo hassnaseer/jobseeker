@@ -1,8 +1,10 @@
 import type { Dispatch } from 'redux';
 import * as applicationsApi from '@/api/applications';
 import type { CreateApplicationInput } from '@/api/applications';
+import * as contractsApi from '@/api/contracts';
+import type { CreateContractInput } from '@/api/contracts';
 import { extractErrorMessage } from '@/api/client';
-import type { Application, ApplicationStatus } from '@/types/domain';
+import type { Application, ApplicationStatus, Contract } from '@/types/domain';
 import {
   APPLICATIONS_DETAIL_REQUEST,
   APPLICATIONS_DETAIL_SUCCESS,
@@ -73,3 +75,18 @@ export const shortlistApplication = (id: string) => mutateThunk(() => applicatio
 export const acceptApplication = (id: string) => mutateThunk(() => applicationsApi.acceptApplication(id));
 export const rejectApplication = (id: string) => mutateThunk(() => applicationsApi.rejectApplication(id));
 export const withdrawApplication = (id: string) => mutateThunk(() => applicationsApi.withdrawApplication(id));
+
+export function hireApplication(applicationId: string, dto: CreateContractInput) {
+  return async (dispatch: Dispatch<ApplicationsAction>): Promise<Contract> => {
+    dispatch({ type: APPLICATIONS_MUTATE_REQUEST });
+    try {
+      const contract = await contractsApi.hire(applicationId, dto);
+      const application = await applicationsApi.getApplicationDetail(applicationId);
+      dispatch({ type: APPLICATIONS_MUTATE_SUCCESS, payload: application });
+      return contract;
+    } catch (error) {
+      dispatch({ type: APPLICATIONS_FAILURE, payload: extractErrorMessage(error) });
+      throw error;
+    }
+  };
+}

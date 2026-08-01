@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import FormSelectField from '@/components/form/FormSelectField';
 import StatusChip from '@/components/StatusChip';
 import ConfirmDialog from '@/components/feedback/ConfirmDialog';
@@ -12,6 +14,7 @@ import {
   rejectApplication,
   shortlistApplication,
 } from '@/features/applications/actions';
+import { startInquiry } from '@/features/chat/actions';
 import HireModal from './HireModal';
 import type { Application } from '@/types/domain';
 
@@ -23,10 +26,16 @@ interface Props {
 export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { mine: jobs } = useAppSelector((s) => s.jobs);
   const { forJob, status } = useAppSelector((s) => s.applications);
   const [acceptTarget, setAcceptTarget] = useState<Application | null>(null);
   const [hireTarget, setHireTarget] = useState<Application | null>(null);
+
+  const handleMessage = async (app: Application) => {
+    const conversation = await dispatch(startInquiry(app.jobId, app.seekerId));
+    navigate(`/app/messages/${conversation.id}`);
+  };
 
   useEffect(() => {
     void dispatch(fetchMyJobs());
@@ -86,6 +95,9 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
               </Typography>
               {app.status === 'PENDING' && (
                 <Stack direction="row" spacing={1}>
+                  <Button size="small" startIcon={<ChatBubbleOutlineIcon />} onClick={() => void handleMessage(app)}>
+                    {t('chat.message')}
+                  </Button>
                   <Button
                     size="small"
                     onClick={async () => {
@@ -108,6 +120,9 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
               )}
               {app.status === 'SHORTLISTED' && (
                 <Stack direction="row" spacing={1}>
+                  <Button size="small" startIcon={<ChatBubbleOutlineIcon />} onClick={() => void handleMessage(app)}>
+                    {t('chat.message')}
+                  </Button>
                   <Button size="small" color="error" onClick={async () => {
                     await dispatch(rejectApplication(app.id));
                     if (jobId) void dispatch(fetchApplicationsForJob(jobId));
@@ -120,9 +135,14 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
                 </Stack>
               )}
               {app.status === 'ACCEPTED' && (
-                <Button size="small" variant="contained" onClick={() => setHireTarget(app)}>
-                  {t('applications.hire')}
-                </Button>
+                <Stack direction="row" spacing={1}>
+                  <Button size="small" startIcon={<ChatBubbleOutlineIcon />} onClick={() => void handleMessage(app)}>
+                    {t('chat.message')}
+                  </Button>
+                  <Button size="small" variant="contained" onClick={() => setHireTarget(app)}>
+                    {t('applications.hire')}
+                  </Button>
+                </Stack>
               )}
             </Paper>
           ))}

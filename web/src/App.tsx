@@ -31,6 +31,8 @@ import SavedItemsPage from '@/pages/app/saved/SavedItemsPage';
 import ContractsListPage from '@/pages/app/contracts/ContractsListPage';
 import ContractDetailPage from '@/pages/app/contracts/ContractDetailPage';
 import WalletPage from '@/pages/app/payments/WalletPage';
+import ChatPage from '@/pages/app/chat/ChatPage';
+import NotificationsPage from '@/pages/app/notifications/NotificationsPage';
 
 const router = createBrowserRouter([
   { path: '/', element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -60,8 +62,8 @@ const router = createBrowserRouter([
           { path: 'ai-recruiter', element: <ComingSoonPage title="AI Recruiter" /> },
           { path: 'contracts', element: <ContractsListPage /> },
           { path: 'contracts/:id', element: <ContractDetailPage /> },
-          { path: 'messages', element: <ComingSoonPage title="Messages" /> },
-          { path: 'messages/:id', element: <ComingSoonPage title="Conversation" /> },
+          { path: 'messages', element: <ChatPage /> },
+          { path: 'messages/:id', element: <ChatPage /> },
           { path: 'payments', element: <WalletPage /> },
           { path: 'catalogs', element: <CatalogsPage /> },
           { path: 'catalogs/new', element: <CatalogFormPage /> },
@@ -70,7 +72,7 @@ const router = createBrowserRouter([
           { path: 'saved', element: <SavedItemsPage /> },
           { path: 'disputes', element: <ComingSoonPage title="Disputes" /> },
           { path: 'disputes/:id', element: <ComingSoonPage title="Dispute" /> },
-          { path: 'notifications', element: <ComingSoonPage title="Notifications" /> },
+          { path: 'notifications', element: <NotificationsPage /> },
           { path: 'profile', element: <ProfilePage /> },
           { path: 'onboarding', element: <OnboardingPage /> },
           {

@@ -19,27 +19,33 @@ import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { logout, switchRole } from '@/features/auth/actions';
 import { useNavForRole } from './navConfig';
-import { apiClient } from '@/api/client';
+import { fetchUnreadCount } from '@/features/notifications/actions';
+import { fetchTotalUnread } from '@/features/chat/actions';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import PageTransition from '@/components/PageTransition';
 
 const SIDEBAR_WIDTH = 236;
+const UNREAD_POLL_MS = 20000;
 
 export default function AppLayout() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((s) => s.auth.user);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const unreadCount = useAppSelector((s) => s.notifications.unreadCount);
+  const chatUnread = useAppSelector((s) => s.chat.totalUnread);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const navItems = useNavForRole(user?.activeRole ?? 'SEEKER');
 
   useEffect(() => {
-    apiClient
-      .get<{ count: number }>('/notifications/unread-count')
-      .then(({ data }) => setUnreadCount(data.count))
-      .catch(() => undefined);
-  }, []);
+    void dispatch(fetchUnreadCount());
+    void dispatch(fetchTotalUnread());
+    const interval = setInterval(() => {
+      void dispatch(fetchUnreadCount());
+      void dispatch(fetchTotalUnread());
+    }, UNREAD_POLL_MS);
+    return () => clearInterval(interval);
+  }, [dispatch]);
 
   if (!user) return null;
   const initials = `${user.firstName?.[0] ?? user.email[0]}${user.lastName?.[0] ?? ''}`.toUpperCase();
@@ -137,6 +143,9 @@ export default function AppLayout() {
                   >
                     {item.label}
                   </Typography>
+                  {item.key === 'messages' && chatUnread > 0 && (
+                    <Badge badgeContent={chatUnread} color="error" />
+                  )}
                 </Stack>
               )}
             </NavLink>

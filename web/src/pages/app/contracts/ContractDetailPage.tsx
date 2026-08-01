@@ -3,9 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, CircularProgress, Paper, Stack, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBackOutlined';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import StatusChip from '@/components/StatusChip';
+import { extractErrorMessage } from '@/api/client';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchContractDetail } from '@/features/contracts/actions';
+import { openContractWorkroom } from '@/features/chat/actions';
 import FixedContractSection from './FixedContractSection';
 import HourlyContractSection from './HourlyContractSection';
 
@@ -20,6 +23,17 @@ export default function ContractDetailPage() {
   useEffect(() => {
     if (id) void dispatch(fetchContractDetail(id));
   }, [dispatch, id]);
+
+  const handleMessage = async () => {
+    if (!id) return;
+    try {
+      const conversation = await dispatch(openContractWorkroom(id));
+      navigate(`/app/messages/${conversation.id}`);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(extractErrorMessage(err));
+    }
+  };
 
   if (status === 'loading' || !detail) {
     return (
@@ -43,7 +57,12 @@ export default function ContractDetailPage() {
           <Typography variant="h5" sx={{ fontWeight: 700 }}>
             {detail.type === 'FIXED' ? 'Fixed-price' : 'Hourly'} contract
           </Typography>
-          <StatusChip status={detail.status} />
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Button size="small" startIcon={<ChatBubbleOutlineIcon />} onClick={() => void handleMessage()}>
+              {t('chat.message')}
+            </Button>
+            <StatusChip status={detail.status} />
+          </Stack>
         </Stack>
         <Typography color="text.secondary">
           {t('contracts.amount')}: {detail.currency}{' '}
