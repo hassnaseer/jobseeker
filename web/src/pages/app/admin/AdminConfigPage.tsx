@@ -20,6 +20,9 @@ export default function AdminConfigPage() {
     baseCurrency: '',
     featuredJobPrice: '',
     aiAutonomyLevel: 'SHORTLIST',
+    aiProvider: '',
+    aiModel: '',
+    aiMonthlySpendCap: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -39,6 +42,9 @@ export default function AdminConfigPage() {
         baseCurrency: config.baseCurrency,
         featuredJobPrice: String(config.featuredJobPrice),
         aiAutonomyLevel: config.aiAutonomyLevel,
+        aiProvider: config.aiProvider ?? '',
+        aiModel: config.aiModel ?? '',
+        aiMonthlySpendCap: config.aiMonthlySpendCap != null ? String(config.aiMonthlySpendCap) : '',
       });
     }
   }, [config]);
@@ -57,6 +63,9 @@ export default function AdminConfigPage() {
           baseCurrency: form.baseCurrency,
           featuredJobPrice: Number(form.featuredJobPrice),
           aiAutonomyLevel: form.aiAutonomyLevel as never,
+          aiProvider: form.aiProvider || undefined,
+          aiModel: form.aiModel || undefined,
+          aiMonthlySpendCap: form.aiMonthlySpendCap ? Number(form.aiMonthlySpendCap) : undefined,
         }),
       );
       setSaved(true);
@@ -124,10 +133,33 @@ export default function AdminConfigPage() {
             onChange={(v) => setForm((f) => ({ ...f, aiAutonomyLevel: v }))}
             allowEmpty={false}
             options={[
-              { value: 'SUGGEST', label: 'SUGGEST' },
+              { value: 'ASSIST', label: 'ASSIST' },
               { value: 'SHORTLIST', label: 'SHORTLIST' },
-              { value: 'AUTO_HIRE', label: 'AUTO_HIRE' },
+              { value: 'AUTO', label: 'AUTO' },
             ]}
+          />
+          <FormSelectField
+            label={t('admin.aiProvider')}
+            value={form.aiProvider}
+            onChange={(v) => setForm((f) => ({ ...f, aiProvider: v }))}
+            emptyLabel={t('admin.aiProviderHeuristic')}
+            options={[{ value: 'anthropic', label: 'Anthropic (Claude)' }]}
+            helperText={t('admin.aiProviderHelp')}
+          />
+          {form.aiProvider === 'anthropic' && (
+            <FormTextField
+              label={t('admin.aiModel')}
+              value={form.aiModel}
+              onChange={(v) => setForm((f) => ({ ...f, aiModel: v }))}
+              placeholder="claude-sonnet-4-5"
+              helperText={t('admin.aiModelHelp')}
+            />
+          )}
+          <FormTextField
+            label={t('admin.aiMonthlySpendCap')}
+            type="number"
+            value={form.aiMonthlySpendCap}
+            onChange={(v) => setForm((f) => ({ ...f, aiMonthlySpendCap: v }))}
           />
           <Button variant="contained" onClick={() => void handleSave()} sx={{ alignSelf: 'flex-start' }}>
             {t('admin.saveConfig')}

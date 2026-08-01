@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AiController } from '@/modules/ai/ai.controller';
 import { AiService } from '@/modules/ai/ai.service';
+import { ClaudeService } from '@/modules/ai/claude.service';
 import { AIDecisionLog } from '@/modules/ai/entities/ai-decision-log.entity';
 import { AIMatchScore } from '@/modules/ai/entities/ai-match-score.entity';
 import { AISuggestion } from '@/modules/ai/entities/ai-suggestion.entity';
@@ -20,7 +21,7 @@ import { SeekerProfile } from '@/modules/profiles/entities/seeker-profile.entity
     PaymentsModule,
   ],
   controllers: [AiController],
-  providers: [AiService, MatchScoringService],
+  providers: [AiService, MatchScoringService, ClaudeService],
   exports: [AiService],
 })
 export class AiModule {}

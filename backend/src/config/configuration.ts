@@ -54,5 +54,10 @@ export default () => ({
     serviceAccountJson: process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
   },
 
+  anthropic: {
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5',
+  },
+
   webAppUrl: process.env.WEB_APP_URL ?? 'http://localhost:3001',
 });

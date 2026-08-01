@@ -632,6 +632,12 @@
     "baseCurrency": "Base currency",
     "featuredJobPrice": "Featured job price",
     "aiAutonomyLevel": "AI autonomy level",
+    "aiProvider": "AI provider",
+    "aiProviderHeuristic": "Heuristic (free, no AI)",
+    "aiProviderHelp": "Selecting Anthropic uses Claude for match scoring when ANTHROPIC_API_KEY is configured on the server; otherwise the free heuristic scorer is used automatically.",
+    "aiModel": "Claude model",
+    "aiModelHelp": "Leave blank to use the server's default model.",
+    "aiMonthlySpendCap": "AI monthly spend cap (USD)",
     "saveConfig": "Save configuration"
   }
 }

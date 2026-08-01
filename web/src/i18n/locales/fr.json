@@ -632,6 +632,12 @@
     "baseCurrency": "Devise de base",
     "featuredJobPrice": "Prix de l'emploi en vedette",
     "aiAutonomyLevel": "Niveau d'autonomie de l'IA",
+    "aiProvider": "Fournisseur d'IA",
+    "aiProviderHeuristic": "Heuristique (gratuit, sans IA)",
+    "aiProviderHelp": "Sélectionner Anthropic utilise Claude pour la notation de correspondance lorsque ANTHROPIC_API_KEY est configurée sur le serveur ; sinon, l'évaluateur heuristique gratuit est utilisé automatiquement.",
+    "aiModel": "Modèle Claude",
+    "aiModelHelp": "Laissez vide pour utiliser le modèle par défaut du serveur.",
+    "aiMonthlySpendCap": "Plafond de dépenses IA mensuel (USD)",
     "saveConfig": "Enregistrer la configuration"
   }
 }
