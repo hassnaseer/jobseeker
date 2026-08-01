@@ -33,6 +33,15 @@ import ContractDetailPage from '@/pages/app/contracts/ContractDetailPage';
 import WalletPage from '@/pages/app/payments/WalletPage';
 import ChatPage from '@/pages/app/chat/ChatPage';
 import NotificationsPage from '@/pages/app/notifications/NotificationsPage';
+import AdminDashboardPage from '@/pages/app/admin/AdminDashboardPage';
+import AdminUsersPage from '@/pages/app/admin/AdminUsersPage';
+import AdminApprovalsPage from '@/pages/app/admin/AdminApprovalsPage';
+import AdminModerationPage from '@/pages/app/admin/AdminModerationPage';
+import AdminReportsPage from '@/pages/app/admin/AdminReportsPage';
+import AdminDisputesPage from '@/pages/app/admin/AdminDisputesPage';
+import AdminCategoriesPage from '@/pages/app/admin/AdminCategoriesPage';
+import AdminAnalyticsPage from '@/pages/app/admin/AdminAnalyticsPage';
+import AdminConfigPage from '@/pages/app/admin/AdminConfigPage';
 
 const router = createBrowserRouter([
   { path: '/', element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -79,15 +88,15 @@ const router = createBrowserRouter([
             path: 'admin',
             element: <RoleRoute allow={['SUPER_ADMIN']} />,
             children: [
-              { index: true, element: <ComingSoonPage title="Admin dashboard" /> },
-              { path: 'users', element: <ComingSoonPage title="Users" /> },
-              { path: 'approvals', element: <ComingSoonPage title="Approvals queue" /> },
-              { path: 'moderation', element: <ComingSoonPage title="Moderation" /> },
-              { path: 'reports', element: <ComingSoonPage title="Reports" /> },
-              { path: 'disputes', element: <ComingSoonPage title="Disputes" /> },
-              { path: 'categories', element: <ComingSoonPage title="Categories" /> },
-              { path: 'analytics', element: <ComingSoonPage title="Analytics" /> },
-              { path: 'config', element: <ComingSoonPage title="Commission & config" /> },
+              { index: true, element: <AdminDashboardPage /> },
+              { path: 'users', element: <AdminUsersPage /> },
+              { path: 'approvals', element: <AdminApprovalsPage /> },
+              { path: 'moderation', element: <AdminModerationPage /> },
+              { path: 'reports', element: <AdminReportsPage /> },
+              { path: 'disputes', element: <AdminDisputesPage /> },
+              { path: 'categories', element: <AdminCategoriesPage /> },
+              { path: 'analytics', element: <AdminAnalyticsPage /> },
+              { path: 'config', element: <AdminConfigPage /> },
             ],
           },
         ],

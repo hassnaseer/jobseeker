@@ -23,6 +23,12 @@ const STATUS_COLOR_MAP: Record<string, ChipProps['color']> = {
   FUNDED: 'info',
   RELEASED: 'success',
   REVISION_REQUESTED: 'warning',
+  REVIEWED: 'success',
+  DISMISSED: 'default',
+  UNDER_REVIEW: 'info',
+  RESOLVED: 'success',
+  BANNED: 'error',
+  SUSPENDED: 'warning',
 };
 
 interface Props {
