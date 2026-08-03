@@ -46,6 +46,7 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
   }, [dispatch, jobId]);
 
   const jobOptions = jobs.map((j) => ({ value: j.id, label: `${j.title} (${j.applicationsCount})` }));
+  const selectedJob = jobs.find((j) => j.id === jobId) ?? null;
 
   if (jobs.length === 0) {
     return (
@@ -65,6 +66,15 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
           options={jobOptions}
         />
       </Box>
+
+      {selectedJob && (
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {t('applications.openingsFilled', {
+            hired: selectedJob.hiredCount,
+            total: selectedJob.numberOfOpenings,
+          })}
+        </Typography>
+      )}
 
       {jobId && status !== 'loading' && forJob.length === 0 && (
         <Paper sx={{ p: 4, textAlign: 'center' }}>
@@ -135,13 +145,23 @@ export default function ClientApplicationsView({ jobId, onSelectJob }: Props) {
                 </Stack>
               )}
               {app.status === 'ACCEPTED' && (
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <Button size="small" startIcon={<ChatBubbleOutlineIcon />} onClick={() => void handleMessage(app)}>
                     {t('chat.message')}
                   </Button>
-                  <Button size="small" variant="contained" onClick={() => setHireTarget(app)}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    disabled={!!selectedJob && selectedJob.hiredCount >= selectedJob.numberOfOpenings}
+                    onClick={() => setHireTarget(app)}
+                  >
                     {t('applications.hire')}
                   </Button>
+                  {selectedJob && selectedJob.hiredCount >= selectedJob.numberOfOpenings && (
+                    <Typography variant="caption" color="text.secondary">
+                      {t('applications.allOpeningsFilled')}
+                    </Typography>
+                  )}
                 </Stack>
               )}
             </Paper>

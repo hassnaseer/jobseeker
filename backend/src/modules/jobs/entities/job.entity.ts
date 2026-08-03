@@ -152,6 +152,10 @@ export class Job {
   @Column({ name: 'number_of_openings', type: 'int', default: 1 })
   numberOfOpenings: number;
 
+  /** Openings filled so far (incremented on each hire()); job stays OPEN to new applicants until this reaches numberOfOpenings. */
+  @Column({ name: 'hired_count', type: 'int', default: 0 })
+  hiredCount: number;
+
   @Column({ type: 'enum', enum: JobStatus, default: JobStatus.DRAFT })
   @Index()
   status: JobStatus;

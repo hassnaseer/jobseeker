@@ -351,6 +351,7 @@ export class JobsService {
       featured: false,
       viewsCount: 0,
       applicationsCount: 0,
+      hiredCount: 0,
       title: `${source.title} (copy)`,
       createdAt: undefined,
       updatedAt: undefined,

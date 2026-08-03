@@ -59,6 +59,7 @@ export default function MyJobsPage() {
           : `${job.currency} ${job.hourlyRateMin ?? 0}-${job.hourlyRateMax ?? 0}/hr`,
     },
     { key: 'applicants', header: t('jobs.applicants'), render: (job) => job.applicationsCount },
+    { key: 'hired', header: t('jobs.hired'), render: (job) => `${job.hiredCount}/${job.numberOfOpenings}` },
     {
       key: 'posted',
       header: t('jobs.posted'),

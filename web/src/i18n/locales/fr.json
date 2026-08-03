@@ -302,6 +302,7 @@
     "status": "Statut",
     "budget": "Budget",
     "applicants": "Candidats",
+    "hired": "Embauchés",
     "posted": "Publié",
     "actions": "Actions",
     "publish": "Publier",
@@ -384,7 +385,9 @@
     "estimatedDuration": "Durée estimée",
     "submitApplication": "Envoyer la candidature",
     "job": "Offre",
-    "hire": "Embaucher"
+    "hire": "Embaucher",
+    "openingsFilled": "{{hired}} poste(s) pourvu(s) sur {{total}}",
+    "allOpeningsFilled": "Tous les postes sont pourvus"
   },
   "catalogs": {
     "browseTitle": "Catalogues",

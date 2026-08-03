@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserRole } from '@/common/enums/user-role.enum';
 import { Application } from '@/modules/applications/entities/application.entity';
 import { ApplicationStatus } from '@/modules/applications/enums/application-status.enum';
@@ -99,6 +99,9 @@ export class ContractsService {
     if (job.clientId !== client.id && !client.roles.includes(UserRole.SUPER_ADMIN)) {
       throw new ForbiddenException('You do not own this job');
     }
+    if (job.hiredCount >= job.numberOfOpenings) {
+      throw new ConflictException('All openings for this job have already been filled');
+    }
 
     const existing = await this.contractRepository.findOne({ where: { applicationId } });
     if (existing) {
@@ -154,6 +157,9 @@ export class ContractsService {
       );
       await this.milestoneRepository.save(milestones);
     }
+
+    job.hiredCount += 1;
+    await this.jobRepository.save(job);
 
     return saved;
   }
@@ -213,8 +219,10 @@ export class ContractsService {
     }
 
     const job = await this.jobRepository.findOneOrFail({ where: { id: contract.jobId } });
-    job.status = JobStatus.IN_PROGRESS;
-    await this.jobRepository.save(job);
+    if (job.hiredCount >= job.numberOfOpenings) {
+      job.status = JobStatus.IN_PROGRESS;
+      await this.jobRepository.save(job);
+    }
 
     return contract;
   }
@@ -422,8 +430,24 @@ export class ContractsService {
     await this.contractRepository.save(contract);
 
     const job = await this.jobRepository.findOneOrFail({ where: { id: contract.jobId } });
-    job.status = JobStatus.COMPLETED;
-    await this.jobRepository.save(job);
+    // Multi-opening jobs can have several concurrent contracts — only close
+    // out the job once every other contract on it has also finished.
+    const stillUnfinished = await this.contractRepository.count({
+      where: {
+        jobId: job.id,
+        status: In([
+          ContractStatus.PENDING_FUNDING,
+          ContractStatus.ACTIVE,
+          ContractStatus.SUBMITTED,
+          ContractStatus.REVISION,
+          ContractStatus.DISPUTED,
+        ]),
+      },
+    });
+    if (stillUnfinished === 0) {
+      job.status = JobStatus.COMPLETED;
+      await this.jobRepository.save(job);
+    }
 
     const [client, seeker] = await Promise.all([
       this.usersService.findById(contract.clientId),

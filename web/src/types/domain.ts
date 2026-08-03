@@ -44,6 +44,7 @@ export interface Job {
   experienceLevel: ExperienceLevel | null;
   attachments: string[];
   numberOfOpenings: number;
+  hiredCount: number;
   status: JobStatus;
   isPaused: boolean;
   featured: boolean;

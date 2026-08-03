@@ -302,6 +302,7 @@
     "status": "Estado",
     "budget": "Presupuesto",
     "applicants": "Postulantes",
+    "hired": "Contratados",
     "posted": "Publicado",
     "actions": "Acciones",
     "publish": "Publicar",
@@ -384,7 +385,9 @@
     "estimatedDuration": "Duración estimada",
     "submitApplication": "Enviar postulación",
     "job": "Empleo",
-    "hire": "Contratar"
+    "hire": "Contratar",
+    "openingsFilled": "{{hired}} de {{total}} vacantes cubiertas",
+    "allOpeningsFilled": "Todas las vacantes cubiertas"
   },
   "catalogs": {
     "browseTitle": "Catálogos",

@@ -302,6 +302,7 @@
     "status": "Status",
     "budget": "Budget",
     "applicants": "Applicants",
+    "hired": "Hired",
     "posted": "Posted",
     "actions": "Actions",
     "publish": "Publish",
@@ -384,7 +385,9 @@
     "estimatedDuration": "Estimated duration",
     "submitApplication": "Submit application",
     "job": "Job",
-    "hire": "Hire"
+    "hire": "Hire",
+    "openingsFilled": "{{hired}} of {{total}} openings filled",
+    "allOpeningsFilled": "All openings filled"
   },
   "catalogs": {
     "browseTitle": "Catalogs",
