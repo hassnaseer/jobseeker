@@ -376,3 +376,27 @@ export interface NotificationPreference {
   inAppEnabled: boolean;
   pushEnabled: boolean;
 }
+
+export interface RecommendedJob {
+  job: Job;
+  score: number;
+  reasons: string[];
+}
+
+export interface ScoredApplicant {
+  applicationId: string;
+  seekerId: string;
+  score: number;
+  reasons: string[];
+  autoShortlisted: boolean;
+}
+
+export interface AiMatchScore {
+  id: string;
+  seekerId: string;
+  jobId: string;
+  score: number;
+  reasons: string[];
+  modelVersion: string;
+  computedAt: string;
+}

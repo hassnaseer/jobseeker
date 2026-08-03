@@ -639,5 +639,15 @@
     "aiModelHelp": "Deja en blanco para usar el modelo predeterminado del servidor.",
     "aiMonthlySpendCap": "Límite de gasto mensual de IA (USD)",
     "saveConfig": "Guardar configuración"
+  },
+  "ai": {
+    "recommendedTitle": "Recomendado para ti",
+    "noRecommendations": "Todavía no hay recomendaciones — completa tu perfil y selecciona categorías para recibir coincidencias de empleos.",
+    "shortlistTitle": "Preselección con IA",
+    "runShortlist": "Ejecutar preselección con IA",
+    "shortlistRanNote": "La puntuación se basa en habilidades, experiencia, coincidencia de categoría y compatibilidad de tarifa — nunca en nombre, género o ubicación.",
+    "noCandidates": "No hay postulantes pendientes para evaluar en este empleo.",
+    "autoShortlisted": "Preseleccionado automáticamente",
+    "previousScores": "Puntuaciones calculadas anteriormente"
   }
 }

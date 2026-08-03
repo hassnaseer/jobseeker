@@ -639,5 +639,15 @@
     "aiModelHelp": "Laissez vide pour utiliser le modèle par défaut du serveur.",
     "aiMonthlySpendCap": "Plafond de dépenses IA mensuel (USD)",
     "saveConfig": "Enregistrer la configuration"
+  },
+  "ai": {
+    "recommendedTitle": "Recommandé pour vous",
+    "noRecommendations": "Aucune recommandation pour le moment — complétez votre profil et sélectionnez des catégories pour être mis en correspondance avec des offres.",
+    "shortlistTitle": "Présélection IA",
+    "runShortlist": "Lancer la présélection IA",
+    "shortlistRanNote": "La notation est basée sur les compétences, l'expérience, la correspondance de catégorie et la compatibilité tarifaire — jamais le nom, le genre ou la localisation.",
+    "noCandidates": "Aucun candidat en attente à évaluer pour cette offre.",
+    "autoShortlisted": "Présélectionné automatiquement",
+    "previousScores": "Scores précédemment calculés"
   }
 }

@@ -639,5 +639,15 @@
     "aiModelHelp": "Leave blank to use the server's default model.",
     "aiMonthlySpendCap": "AI monthly spend cap (USD)",
     "saveConfig": "Save configuration"
+  },
+  "ai": {
+    "recommendedTitle": "Recommended for you",
+    "noRecommendations": "No recommendations yet — complete your profile and select categories to get matched with jobs.",
+    "shortlistTitle": "AI Shortlist",
+    "runShortlist": "Run AI shortlist",
+    "shortlistRanNote": "Scoring is based on skills, experience, category fit, and rate compatibility — never name, gender, or location.",
+    "noCandidates": "No pending applicants to score for this job.",
+    "autoShortlisted": "Auto-shortlisted",
+    "previousScores": "Previously computed scores"
   }
 }
