@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Length, Max, Min } from 'class-validator';
 import { ExperienceLevel } from '@/common/enums/experience-level.enum';
 import { JobType } from '@/modules/jobs/enums/job-type.enum';
 import { LocationType } from '@/modules/jobs/enums/location-type.enum';
@@ -31,6 +31,12 @@ export class QueryJobsDto {
   @IsOptional()
   @IsEnum(LocationType)
   locationType?: LocationType;
+
+  @ApiProperty({ required: false, description: '2-letter country code' })
+  @IsOptional()
+  @IsString()
+  @Length(2, 2)
+  country?: string;
 
   @ApiProperty({ enum: ExperienceLevel, required: false })
   @IsOptional()

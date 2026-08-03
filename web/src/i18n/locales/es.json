@@ -315,6 +315,7 @@
     "closeConfirmBody": "Este empleo dejará de aceptar postulaciones. Esta acción no se puede deshacer.",
     "keywordSearch": "Buscar empleos",
     "category": "Categoría",
+    "country": "País",
     "jobType": "Tipo de empleo",
     "jobTypeFixed": "Precio fijo",
     "jobTypeHourly": "Por hora",

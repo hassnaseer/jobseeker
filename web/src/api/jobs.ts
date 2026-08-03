@@ -6,6 +6,7 @@ export interface QueryJobsParams {
   categoryId?: string;
   jobType?: string;
   locationType?: string;
+  country?: string;
   experienceLevel?: string;
   budgetMin?: number;
   budgetMax?: number;

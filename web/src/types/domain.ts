@@ -29,6 +29,7 @@ export interface Job {
   pricingModel: PricingModel | null;
   trackingMode: TrackingMode | null;
   locationType: LocationType;
+  country: string | null;
   address: string | null;
   latitude: number | null;
   longitude: number | null;

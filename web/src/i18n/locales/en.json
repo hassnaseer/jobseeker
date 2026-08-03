@@ -315,6 +315,7 @@
     "closeConfirmBody": "This job will stop accepting applications. This cannot be undone.",
     "keywordSearch": "Search jobs",
     "category": "Category",
+    "country": "Country",
     "jobType": "Job type",
     "jobTypeFixed": "Fixed price",
     "jobTypeHourly": "Hourly",

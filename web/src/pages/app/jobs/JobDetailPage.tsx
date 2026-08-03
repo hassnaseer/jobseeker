@@ -62,7 +62,13 @@ export default function JobDetailPage() {
             }
             size="small"
           />
-          <Chip label={detail.locationType === 'REMOTE' ? t('jobs.locationRemote') : t('jobs.locationPhysical')} size="small" />
+          <Chip
+            label={
+              (detail.locationType === 'REMOTE' ? t('jobs.locationRemote') : t('jobs.locationPhysical')) +
+              (detail.country ? ` (${detail.country})` : '')
+            }
+            size="small"
+          />
           {detail.experienceLevel && <Chip label={detail.experienceLevel} size="small" />}
         </Stack>
 

@@ -315,6 +315,7 @@
     "closeConfirmBody": "Cette offre n'acceptera plus de candidatures. Cette action est irréversible.",
     "keywordSearch": "Rechercher des offres",
     "category": "Catégorie",
+    "country": "Pays",
     "jobType": "Type d'offre",
     "jobTypeFixed": "Prix fixe",
     "jobTypeHourly": "À l'heure",

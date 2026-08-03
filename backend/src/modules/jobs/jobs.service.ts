@@ -154,6 +154,7 @@ export class JobsService {
     const job = this.jobRepository.create({
       ...jobFields,
       clientId: client.id,
+      country: client.country ?? null,
       deadline: dto.deadline ? new Date(dto.deadline) : null,
       status: strict ? JobStatus.OPEN : JobStatus.DRAFT,
     });
@@ -208,6 +209,9 @@ export class JobsService {
     }
     if (query.locationType) {
       qb.andWhere('job.locationType = :locationType', { locationType: query.locationType });
+    }
+    if (query.country) {
+      qb.andWhere('job.country = :country', { country: query.country.toUpperCase() });
     }
     if (query.experienceLevel) {
       qb.andWhere('job.experienceLevel = :experienceLevel', {

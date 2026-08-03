@@ -63,6 +63,11 @@ export class Job {
   @Column({ name: 'location_type', type: 'enum', enum: LocationType })
   locationType: LocationType;
 
+  /** Snapshotted from the posting client's profile country at creation time; lets seekers filter/browse by country regardless of locationType. */
+  @Column({ type: 'varchar', length: 2, nullable: true })
+  @Index()
+  country: string | null;
+
   @Column({ type: 'varchar', nullable: true })
   address: string | null;
 
