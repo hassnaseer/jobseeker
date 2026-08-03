@@ -400,3 +400,21 @@ export interface AiMatchScore {
   modelVersion: string;
   computedAt: string;
 }
+
+export type DisputeStatus = 'OPEN' | 'UNDER_REVIEW' | 'RESOLVED';
+export type DisputeResolutionType = 'REFUND_CLIENT' | 'RELEASE_SEEKER' | 'SPLIT';
+
+export interface Dispute {
+  id: string;
+  contractId: string;
+  milestoneId: string | null;
+  raisedBy: string;
+  reason: string;
+  evidence: string[];
+  status: DisputeStatus;
+  resolutionType: DisputeResolutionType | null;
+  resolutionNote: string | null;
+  resolvedBy: string | null;
+  resolvedAt: string | null;
+  createdAt: string;
+}

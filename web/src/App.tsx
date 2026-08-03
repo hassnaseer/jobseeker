@@ -43,6 +43,8 @@ import AdminCategoriesPage from '@/pages/app/admin/AdminCategoriesPage';
 import AdminAnalyticsPage from '@/pages/app/admin/AdminAnalyticsPage';
 import AdminConfigPage from '@/pages/app/admin/AdminConfigPage';
 import AiRecruiterPage from '@/pages/app/ai/AiRecruiterPage';
+import DisputesListPage from '@/pages/app/disputes/DisputesListPage';
+import DisputeDetailPage from '@/pages/app/disputes/DisputeDetailPage';
 
 const router = createBrowserRouter([
   { path: '/', element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -80,8 +82,8 @@ const router = createBrowserRouter([
           { path: 'catalogs/:id', element: <CatalogDetailPage /> },
           { path: 'catalogs/:id/edit', element: <CatalogFormPage /> },
           { path: 'saved', element: <SavedItemsPage /> },
-          { path: 'disputes', element: <ComingSoonPage title="Disputes" /> },
-          { path: 'disputes/:id', element: <ComingSoonPage title="Dispute" /> },
+          { path: 'disputes', element: <DisputesListPage /> },
+          { path: 'disputes/:id', element: <DisputeDetailPage /> },
           { path: 'notifications', element: <NotificationsPage /> },
           { path: 'profile', element: <ProfilePage /> },
           { path: 'onboarding', element: <OnboardingPage /> },

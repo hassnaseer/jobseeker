@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, CircularProgress, Paper, Stack, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBackOutlined';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
 import StatusChip from '@/components/StatusChip';
 import { extractErrorMessage } from '@/api/client';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -11,6 +12,9 @@ import { fetchContractDetail } from '@/features/contracts/actions';
 import { openContractWorkroom } from '@/features/chat/actions';
 import FixedContractSection from './FixedContractSection';
 import HourlyContractSection from './HourlyContractSection';
+import RaiseDisputeModal from '@/pages/app/disputes/RaiseDisputeModal';
+
+const DISPUTABLE_STATUSES = ['ACTIVE', 'SUBMITTED', 'REVISION'];
 
 export default function ContractDetailPage() {
   const { t } = useTranslation();
@@ -19,6 +23,7 @@ export default function ContractDetailPage() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.auth.user);
   const { detail, milestones, deliverables, status } = useAppSelector((s) => s.contracts);
+  const [disputeOpen, setDisputeOpen] = useState(false);
 
   useEffect(() => {
     if (id) void dispatch(fetchContractDetail(id));
@@ -61,6 +66,11 @@ export default function ContractDetailPage() {
             <Button size="small" startIcon={<ChatBubbleOutlineIcon />} onClick={() => void handleMessage()}>
               {t('chat.message')}
             </Button>
+            {DISPUTABLE_STATUSES.includes(detail.status) && (
+              <Button size="small" color="error" startIcon={<GavelOutlinedIcon />} onClick={() => setDisputeOpen(true)}>
+                {t('disputes.raiseDispute')}
+              </Button>
+            )}
             <StatusChip status={detail.status} />
           </Stack>
         </Stack>
@@ -88,6 +98,13 @@ export default function ContractDetailPage() {
           <HourlyContractSection contract={detail} isOwner={isOwner} isSeeker={isSeeker} />
         )}
       </Paper>
+
+      <RaiseDisputeModal
+        open={disputeOpen}
+        onClose={() => setDisputeOpen(false)}
+        contractId={detail.id}
+        milestones={detail.type === 'FIXED' && detail.pricingModel === 'MILESTONE' ? milestones : undefined}
+      />
     </Box>
   );
 }

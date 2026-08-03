@@ -649,5 +649,16 @@
     "noCandidates": "No hay postulantes pendientes para evaluar en este empleo.",
     "autoShortlisted": "Preseleccionado automáticamente",
     "previousScores": "Puntuaciones calculadas anteriormente"
+  },
+  "disputes": {
+    "title": "Disputas",
+    "noDisputes": "No tienes disputas.",
+    "contract": "Contrato",
+    "backToDisputes": "Volver a disputas",
+    "evidence": "Evidencia",
+    "resolution": "Resolución",
+    "raiseDispute": "Abrir disputa",
+    "wholeContract": "Todo el contrato",
+    "reason": "Motivo"
   }
 }

@@ -13,6 +13,7 @@ import { chatReducer } from '@/features/chat/reducer';
 import { notificationsReducer } from '@/features/notifications/reducer';
 import { adminReducer } from '@/features/admin/reducer';
 import { aiReducer } from '@/features/ai/reducer';
+import { disputesReducer } from '@/features/disputes/reducer';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -28,6 +29,7 @@ export const rootReducer = combineReducers({
   notifications: notificationsReducer,
   admin: adminReducer,
   ai: aiReducer,
+  disputes: disputesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

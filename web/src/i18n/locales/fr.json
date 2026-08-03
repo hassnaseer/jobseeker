@@ -649,5 +649,16 @@
     "noCandidates": "Aucun candidat en attente à évaluer pour cette offre.",
     "autoShortlisted": "Présélectionné automatiquement",
     "previousScores": "Scores précédemment calculés"
+  },
+  "disputes": {
+    "title": "Litiges",
+    "noDisputes": "Vous n'avez aucun litige.",
+    "contract": "Contrat",
+    "backToDisputes": "Retour aux litiges",
+    "evidence": "Preuves",
+    "resolution": "Résolution",
+    "raiseDispute": "Ouvrir un litige",
+    "wholeContract": "Contrat entier",
+    "reason": "Motif"
   }
 }

@@ -649,5 +649,16 @@
     "noCandidates": "No pending applicants to score for this job.",
     "autoShortlisted": "Auto-shortlisted",
     "previousScores": "Previously computed scores"
+  },
+  "disputes": {
+    "title": "Disputes",
+    "noDisputes": "You have no disputes.",
+    "contract": "Contract",
+    "backToDisputes": "Back to disputes",
+    "evidence": "Evidence",
+    "resolution": "Resolution",
+    "raiseDispute": "Raise dispute",
+    "wholeContract": "Whole contract",
+    "reason": "Reason"
   }
 }
