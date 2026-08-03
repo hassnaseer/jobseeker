@@ -14,6 +14,7 @@ import { notificationsReducer } from '@/features/notifications/reducer';
 import { adminReducer } from '@/features/admin/reducer';
 import { aiReducer } from '@/features/ai/reducer';
 import { disputesReducer } from '@/features/disputes/reducer';
+import { reviewsReducer } from '@/features/reviews/reducer';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -30,6 +31,7 @@ export const rootReducer = combineReducers({
   admin: adminReducer,
   ai: aiReducer,
   disputes: disputesReducer,
+  reviews: reviewsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

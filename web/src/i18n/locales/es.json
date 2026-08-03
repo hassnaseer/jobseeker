@@ -664,5 +664,18 @@
     "raiseDispute": "Abrir disputa",
     "wholeContract": "Todo el contrato",
     "reason": "Motivo"
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "yourReview": "Tu reseña",
+    "theirReview": "Su reseña",
+    "leaveReview": "Dejar una reseña",
+    "editReview": "Editar reseña",
+    "noReviewYet": "Aún no has reseñado este contrato.",
+    "waitingForReview": "Esperando la reseña de la otra parte.",
+    "rating": "Calificación",
+    "comment": "Comentario",
+    "noReviewsReceived": "Aún no has recibido reseñas.",
+    "reviewCount": "{{count}} reseñas"
   }
 }

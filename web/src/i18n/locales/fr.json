@@ -664,5 +664,18 @@
     "raiseDispute": "Ouvrir un litige",
     "wholeContract": "Contrat entier",
     "reason": "Motif"
+  },
+  "reviews": {
+    "title": "Avis",
+    "yourReview": "Votre avis",
+    "theirReview": "Son avis",
+    "leaveReview": "Laisser un avis",
+    "editReview": "Modifier l'avis",
+    "noReviewYet": "Vous n'avez pas encore évalué ce contrat.",
+    "waitingForReview": "En attente de l'avis de l'autre partie.",
+    "rating": "Note",
+    "comment": "Commentaire",
+    "noReviewsReceived": "Aucun avis reçu pour le moment.",
+    "reviewCount": "{{count}} avis"
   }
 }

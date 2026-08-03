@@ -664,5 +664,18 @@
     "raiseDispute": "Raise dispute",
     "wholeContract": "Whole contract",
     "reason": "Reason"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "yourReview": "Your review",
+    "theirReview": "Their review",
+    "leaveReview": "Leave a review",
+    "editReview": "Edit review",
+    "noReviewYet": "You haven't reviewed this contract yet.",
+    "waitingForReview": "Waiting for the other party's review.",
+    "rating": "Rating",
+    "comment": "Comment",
+    "noReviewsReceived": "No reviews received yet.",
+    "reviewCount": "{{count}} reviews"
   }
 }

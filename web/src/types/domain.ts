@@ -420,3 +420,14 @@ export interface Dispute {
   resolvedAt: string | null;
   createdAt: string;
 }
+
+export interface Review {
+  id: string;
+  contractId: string;
+  reviewerId: string;
+  revieweeId: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  editedAt: string | null;
+}

@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { Alert, Box, Button, CircularProgress, Paper, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Paper, Rating, Stack, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchMyProfile } from '@/features/profile/actions';
+import { fetchReceivedReviews } from '@/features/reviews/actions';
 import StatusChip from '@/components/StatusChip';
 import BasicInfoForm from './BasicInfoForm';
 import KycForm from './KycForm';
@@ -16,6 +17,7 @@ export default function ProfilePage() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.auth.user);
   const { data, status } = useAppSelector((s) => s.profile);
+  const { receivedBy: receivedReviews } = useAppSelector((s) => s.reviews);
 
   const role = user?.activeRole === 'CLIENT' ? 'CLIENT' : 'SEEKER';
 
@@ -24,6 +26,10 @@ export default function ProfilePage() {
       void dispatch(fetchMyProfile(role));
     }
   }, [dispatch, role]);
+
+  useEffect(() => {
+    if (user) void dispatch(fetchReceivedReviews(user.id));
+  }, [dispatch, user]);
 
   if (status === 'loading' || !data) {
     return (
@@ -34,6 +40,7 @@ export default function ProfilePage() {
   }
 
   const roleStatus = data.roleStatus?.profileStatus ?? 'INCOMPLETE';
+  const roleProfile = data.roleProfile as ClientProfile | SeekerProfile | null;
 
   return (
     <Box sx={{ maxWidth: 760, mx: 'auto' }}>
@@ -72,6 +79,33 @@ export default function ProfilePage() {
             <ClientProfileForm initial={data.roleProfile as ClientProfile | null} />
           ) : (
             <SeekerProfileForm initial={data.roleProfile as SeekerProfile | null} />
+          )}
+        </Section>
+        <Section title={t('reviews.title')}>
+          {roleProfile && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
+              <Rating value={roleProfile.avgRating} precision={0.1} readOnly />
+              <Typography color="text.secondary">
+                {roleProfile.avgRating.toFixed(1)} ({t('reviews.reviewCount', { count: roleProfile.totalReviews })})
+              </Typography>
+            </Stack>
+          )}
+          {receivedReviews.length === 0 ? (
+            <Typography color="text.secondary">{t('reviews.noReviewsReceived')}</Typography>
+          ) : (
+            <Stack spacing={2}>
+              {receivedReviews.map((r) => (
+                <Box key={r.id}>
+                  <Rating value={r.rating} readOnly size="small" />
+                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                    {r.comment}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {new Date(r.createdAt).toLocaleDateString()}
+                  </Typography>
+                </Box>
+              ))}
+            </Stack>
           )}
         </Section>
       </Stack>

@@ -13,6 +13,7 @@ import { openContractWorkroom } from '@/features/chat/actions';
 import FixedContractSection from './FixedContractSection';
 import HourlyContractSection from './HourlyContractSection';
 import RaiseDisputeModal from '@/pages/app/disputes/RaiseDisputeModal';
+import ReviewsSection from './ReviewsSection';
 
 const DISPUTABLE_STATUSES = ['ACTIVE', 'SUBMITTED', 'REVISION'];
 
@@ -98,6 +99,8 @@ export default function ContractDetailPage() {
           <HourlyContractSection contract={detail} isOwner={isOwner} isSeeker={isSeeker} />
         )}
       </Paper>
+
+      {detail.status === 'COMPLETED' && user && <ReviewsSection contract={detail} currentUserId={user.id} />}
 
       <RaiseDisputeModal
         open={disputeOpen}
