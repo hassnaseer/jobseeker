@@ -14,6 +14,15 @@ export type AppTabParamList = {
   Profile: undefined;
 };
 
+export type JobsStackParamList = {
+  JobsList: undefined;
+  MyJobs: undefined;
+  JobDetail: { jobId: string };
+  PostJob: undefined;
+  JobApply: { jobId: string };
+  JobApplicants: { jobId: string };
+};
+
 export type RootStackParamList = {
   Auth: undefined;
   App: undefined;
