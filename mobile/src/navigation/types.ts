@@ -23,6 +23,11 @@ export type ProfileStackParamList = {
   Favorites: undefined;
   Support: undefined;
   Settings: undefined;
+  Catalogs: undefined;
+  CatalogDetail: { catalogId: string };
+  CatalogForm: { catalogId?: string };
+  Disputes: undefined;
+  DisputeDetail: { disputeId: string };
   AdminDashboard: undefined;
   AdminApprovals: undefined;
   AdminDisputes: undefined;

@@ -15,6 +15,11 @@ import { AdminDisputesScreen } from '@/screens/app/admin/AdminDisputesScreen';
 import { AdminCategoriesScreen } from '@/screens/app/admin/AdminCategoriesScreen';
 import { AdminConfigScreen } from '@/screens/app/admin/AdminConfigScreen';
 import { AdminTeamScreen } from '@/screens/app/admin/AdminTeamScreen';
+import { CatalogsScreen } from '@/screens/app/catalogs/CatalogsScreen';
+import { CatalogDetailScreen } from '@/screens/app/catalogs/CatalogDetailScreen';
+import { CatalogFormScreen } from '@/screens/app/catalogs/CatalogFormScreen';
+import { DisputesListScreen } from '@/screens/app/disputes/DisputesListScreen';
+import { DisputeDetailScreen } from '@/screens/app/disputes/DisputeDetailScreen';
 
 const Stack = createStackNavigator<ProfileStackParamList>();
 
@@ -29,6 +34,11 @@ export function ProfileNavigator() {
       <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="Support" component={SupportScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Catalogs" component={CatalogsScreen} />
+      <Stack.Screen name="CatalogDetail" component={CatalogDetailScreen} />
+      <Stack.Screen name="CatalogForm" component={CatalogFormScreen} />
+      <Stack.Screen name="Disputes" component={DisputesListScreen} />
+      <Stack.Screen name="DisputeDetail" component={DisputeDetailScreen} />
       <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} />
       <Stack.Screen name="AdminApprovals" component={AdminApprovalsScreen} />
       <Stack.Screen name="AdminDisputes" component={AdminDisputesScreen} />

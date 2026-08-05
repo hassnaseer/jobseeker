@@ -6,8 +6,10 @@ import {
   Grid3x3,
   Heart,
   LifeBuoy,
+  Scale,
   Settings as SettingsIcon,
   Shield,
+  Store,
   User,
   Wallet as WalletIcon,
 } from 'lucide-react-native';
@@ -86,8 +88,18 @@ export function ProfileHomeScreen({ navigation }: Props) {
         <View style={styles.section}>
           <Row icon={User} label="Edit profile" onPress={() => navigation.navigate('EditProfile')} />
           <Row icon={WalletIcon} label="Wallet & payments" onPress={() => navigation.navigate('Wallet')} />
+          <Row
+            icon={Store}
+            label={user?.activeRole === 'SEEKER' ? 'My catalogs' : 'Browse catalogs'}
+            onPress={() => navigation.navigate('Catalogs')}
+          />
           <Row icon={Grid3x3} label="Categories" onPress={() => navigation.navigate('Categories')} />
-          <Row icon={Heart} label="Favorites" onPress={() => navigation.navigate('Favorites')} />
+          <Row
+            icon={Heart}
+            label={user?.activeRole === 'CLIENT' ? 'Saved talent' : 'Favorites'}
+            onPress={() => navigation.navigate('Favorites')}
+          />
+          <Row icon={Scale} label="Disputes" onPress={() => navigation.navigate('Disputes')} />
           <Row icon={LifeBuoy} label="Support" onPress={() => navigation.navigate('Support')} />
           <Row icon={SettingsIcon} label="Settings" onPress={() => navigation.navigate('Settings')} />
         </View>

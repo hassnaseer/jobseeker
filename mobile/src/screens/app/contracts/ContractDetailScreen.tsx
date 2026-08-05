@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
@@ -6,13 +6,18 @@ import { useTheme } from '@/theme/ThemeProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
+import { Button } from '@/components/Button';
 import { useContractsStore } from '@/store/contractsStore';
 import { useTimesheetsStore } from '@/store/timesheetsStore';
 import { useAuthStore } from '@/store/authStore';
 import { formatMoney } from '@/utils/format';
 import { FixedContractSection } from './FixedContractSection';
 import { HourlyContractSection } from './HourlyContractSection';
+import { ReviewsSection } from './ReviewsSection';
+import { RaiseDisputeModal } from './RaiseDisputeModal';
 import type { ContractsStackParamList } from '@/navigation/types';
+
+const DISPUTABLE_STATUSES = ['ACTIVE', 'SUBMITTED', 'REVISION'];
 
 type Props = StackScreenProps<ContractsStackParamList, 'ContractDetail'>;
 
@@ -22,6 +27,7 @@ export function ContractDetailScreen({ route }: Props) {
   const user = useAuthStore((s) => s.user);
   const { detail, milestones, deliverables, status, fetchDetail, clearDetail } = useContractsStore();
   const clearTimesheets = useTimesheetsStore((s) => s.clear);
+  const [disputeOpen, setDisputeOpen] = useState(false);
 
   useEffect(() => {
     fetchDetail(contractId).catch(() => undefined);
@@ -52,6 +58,14 @@ export function ContractDetailScreen({ route }: Props) {
             </Text>
             <Badge label={detail.status.replace(/_/g, ' ')} />
           </View>
+          {DISPUTABLE_STATUSES.includes(detail.status) ? (
+            <Button
+              title="Raise dispute"
+              variant="ghost"
+              onPress={() => setDisputeOpen(true)}
+              style={styles.disputeButton}
+            />
+          ) : null}
           <Text style={[styles.headerMeta, { color: theme.textSecondary }]}>
             Amount:{' '}
             {detail.type === 'FIXED'
@@ -70,7 +84,16 @@ export function ContractDetailScreen({ route }: Props) {
         ) : (
           <HourlyContractSection contract={detail} isOwner={isOwner} isSeeker={isSeeker} />
         )}
+
+        {detail.status === 'COMPLETED' && user ? <ReviewsSection contract={detail} currentUserId={user.id} /> : null}
       </ScrollView>
+
+      <RaiseDisputeModal
+        visible={disputeOpen}
+        onClose={() => setDisputeOpen(false)}
+        contractId={detail.id}
+        milestones={detail.type === 'FIXED' && detail.pricingModel === 'MILESTONE' ? milestones : undefined}
+      />
     </SafeAreaView>
   );
 }
@@ -82,5 +105,6 @@ const styles = StyleSheet.create({
   header: { borderWidth: 1, borderRadius: radius.lg, padding: spacing.lg, marginBottom: spacing.xl },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.xs },
   headerTitle: { fontSize: typography.sizes.lg, fontWeight: typography.weights.bold },
+  disputeButton: { alignSelf: 'flex-start', height: 32, paddingHorizontal: spacing.sm, marginBottom: spacing.xs },
   headerMeta: { fontSize: typography.sizes.sm },
 });
