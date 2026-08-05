@@ -17,6 +17,8 @@ import BarChartIcon from '@mui/icons-material/BarChartOutlined';
 import TuneIcon from '@mui/icons-material/TuneOutlined';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUserOutlined';
 import GroupsIcon from '@mui/icons-material/GroupsOutlined';
+import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutlineOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 import type { UserRole } from '@/types/user';
 
@@ -44,6 +46,8 @@ export const CLIENT_NAV: NavItemConfig[] = [
   { key: 'payments', labelKey: 'nav.payments', to: '/app/payments', icon: PaymentsIcon },
   { key: 'catalogs', labelKey: 'nav.catalogs', to: '/app/catalogs', icon: StorefrontIcon },
   { key: 'favorites', labelKey: 'nav.savedTalent', to: '/app/saved', icon: FavoriteIcon },
+  { key: 'categories', labelKey: 'nav.categories', to: '/app/categories', icon: LabelOutlinedIcon },
+  { key: 'support', labelKey: 'nav.support', to: '/app/support', icon: HelpOutlineIcon },
   { key: 'disputes', labelKey: 'nav.disputes', to: '/app/disputes', icon: GavelIcon },
 ];
 
@@ -56,6 +60,8 @@ export const SEEKER_NAV: NavItemConfig[] = [
   { key: 'payments', labelKey: 'nav.wallet', to: '/app/payments', icon: PaymentsIcon },
   { key: 'catalogs', labelKey: 'nav.myCatalog', to: '/app/catalogs', icon: StorefrontIcon },
   { key: 'favorites', labelKey: 'nav.savedJobs', to: '/app/saved', icon: FavoriteIcon },
+  { key: 'categories', labelKey: 'nav.categories', to: '/app/categories', icon: LabelOutlinedIcon },
+  { key: 'support', labelKey: 'nav.support', to: '/app/support', icon: HelpOutlineIcon },
   { key: 'disputes', labelKey: 'nav.disputes', to: '/app/disputes', icon: GavelIcon },
 ];
 

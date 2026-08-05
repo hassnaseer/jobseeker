@@ -1,10 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import { store } from '@/app/store';
-import theme from '@/theme';
+import { ThemeModeProvider } from '@/theme/ThemeModeProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import App from './App.tsx';
 import './index.css';
@@ -14,10 +12,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
       <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+        <ThemeModeProvider>
           <App />
-        </ThemeProvider>
+        </ThemeModeProvider>
       </Provider>
     </ErrorBoundary>
   </StrictMode>,

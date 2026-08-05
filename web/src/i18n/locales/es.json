@@ -162,12 +162,15 @@
     "categories": "Categorías",
     "analytics": "Analítica",
     "config": "Comisión y configuración",
-    "team": "Equipo"
+    "team": "Equipo",
+    "support": "Ayuda y soporte"
   },
   "shell": {
     "signOut": "Cerrar sesión",
     "switchTo": "Cambiar a {{role}}",
-    "profileSettings": "Perfil y ajustes"
+    "profileSettings": "Perfil y ajustes",
+    "switchToLight": "Cambiar a modo claro",
+    "switchToDark": "Cambiar a modo oscuro"
   },
   "dashboard": {
     "title": "Panel",
@@ -185,7 +188,16 @@
     "completeProfileBody": "Completa el proceso de incorporación para desbloquear toda la experiencia de JobLinxs.",
     "completeProfileCta": "Completar perfil",
     "rejectedProfileBody": "Tu perfil necesita cambios: {{reason}}",
-    "pendingProfileBody": "Tu perfil está en revisión. Te notificaremos cuando sea aprobado."
+    "pendingProfileBody": "Tu perfil está en revisión. Te notificaremos cuando sea aprobado.",
+    "newApplications": "Nuevas postulaciones",
+    "proposalsSent": "Propuestas enviadas",
+    "avgRating": "Calificación media",
+    "noNotifications": "Aún no hay notificaciones.",
+    "recommendedFreelancers": "Freelancers recomendados",
+    "trendingFreelancers": "Freelancers en tendencia",
+    "recommendedForYou": "Recomendado para ti",
+    "newAndTrending": "Nuevo y en tendencia",
+    "viewAll": "Ver todo"
   },
   "comingSoon": {
     "body": "Esta pantalla está en construcción."
@@ -698,5 +710,41 @@
     "comment": "Comentario",
     "noReviewsReceived": "Aún no has recibido reseñas.",
     "reviewCount": "{{count}} reseñas"
+  },
+  "categories": {
+    "title": "Categorías",
+    "yourCategories": "Tus categorías",
+    "subtitle": "Selecciona las categorías que describen tu trabajo. Puedes añadir en cualquier momento; una categoría con trabajo activo no se puede eliminar.",
+    "save": "Guardar categorías"
+  },
+  "support": {
+    "title": "Ayuda y soporte",
+    "subtitle": "¿Preguntas frecuentes? ¿No encuentras lo que necesitas? Contáctanos directamente.",
+    "emailSupport": "Enviar correo a soporte",
+    "faq": {
+      "getPaid": {
+        "q": "¿Cómo me pagan?",
+        "a": "Una vez que un cliente libera un hito o aprueba tus horas, los fondos se transfieren a tu billetera de JobLinxs. Desde allí puedes solicitar un retiro a tu cuenta bancaria vinculada."
+      },
+      "escrow": {
+        "q": "¿Cómo funciona el depósito en garantía?",
+        "a": "Los clientes financian un contrato o hito por adelantado. El dinero se retiene en garantía hasta que se aprueba el trabajo, luego se libera al freelancer."
+      },
+      "disputes": {
+        "q": "¿Qué pasa si hay un desacuerdo?",
+        "a": "Cualquiera de las partes puede iniciar una disputa desde el contrato. Nuestro equipo de soporte revisa las pruebas y la resuelve."
+      },
+      "switchRole": {
+        "q": "¿Cómo cambio entre modo cliente y freelancer?",
+        "a": "Abre el menú de tu perfil y usa \"Cambiar a modo cliente/freelancer\" — disponible una vez que tengas ambos roles en tu cuenta."
+      }
+    }
+  },
+  "talent": {
+    "title": "Explorar talento",
+    "sortRating": "Mejor calificados",
+    "sortRate": "Mejor pagados",
+    "sortJobs": "En tendencia",
+    "empty": "Aún no hay freelancers para este filtro."
   }
 }

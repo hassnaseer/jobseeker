@@ -16,11 +16,14 @@ import {
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import SwapHorizOutlinedIcon from '@mui/icons-material/SwapHorizOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { logout, switchRole } from '@/features/auth/actions';
 import { useNavForRole } from './navConfig';
 import { fetchUnreadCount } from '@/features/notifications/actions';
 import { fetchTotalUnread } from '@/features/chat/actions';
+import { useThemeMode } from '@/theme/ThemeModeProvider';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import PageTransition from '@/components/PageTransition';
 
@@ -32,6 +35,7 @@ export default function AppLayout() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((s) => s.auth.user);
+  const { resolvedMode, setMode } = useThemeMode();
   const unreadCount = useAppSelector((s) => s.notifications.unreadCount);
   const chatUnread = useAppSelector((s) => s.chat.totalUnread);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
@@ -197,6 +201,11 @@ export default function AppLayout() {
           </Stack>
           <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
             <LanguageSwitcher />
+            <Tooltip title={t(resolvedMode === 'dark' ? 'shell.switchToLight' : 'shell.switchToDark')}>
+              <IconButton onClick={() => setMode(resolvedMode === 'dark' ? 'light' : 'dark')} size="small">
+                {resolvedMode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+              </IconButton>
+            </Tooltip>
             {otherRole && (
               <Tooltip title={t('shell.switchTo', { role: otherRole })}>
                 <IconButton onClick={handleSwitchRole} size="small">

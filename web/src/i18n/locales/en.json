@@ -162,12 +162,15 @@
     "categories": "Categories",
     "analytics": "Analytics",
     "config": "Commission & Config",
-    "team": "Team & Permissions"
+    "team": "Team & Permissions",
+    "support": "Help & Support"
   },
   "shell": {
     "signOut": "Sign out",
     "switchTo": "Switch to {{role}}",
-    "profileSettings": "Profile & settings"
+    "profileSettings": "Profile & settings",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -185,7 +188,16 @@
     "completeProfileBody": "Complete onboarding to unlock the full JobLinxs experience.",
     "completeProfileCta": "Complete profile",
     "rejectedProfileBody": "Your profile submission needs changes: {{reason}}",
-    "pendingProfileBody": "Your profile is under review. We'll notify you once it's approved."
+    "pendingProfileBody": "Your profile is under review. We'll notify you once it's approved.",
+    "newApplications": "New applications",
+    "proposalsSent": "Proposals sent",
+    "avgRating": "Avg. rating",
+    "noNotifications": "No notifications yet.",
+    "recommendedFreelancers": "Recommended Freelancers",
+    "trendingFreelancers": "Trending Freelancers",
+    "recommendedForYou": "Recommended For You",
+    "newAndTrending": "New & Trending",
+    "viewAll": "View all"
   },
   "comingSoon": {
     "body": "This screen is under construction."
@@ -698,5 +710,41 @@
     "comment": "Comment",
     "noReviewsReceived": "No reviews received yet.",
     "reviewCount": "{{count}} reviews"
+  },
+  "categories": {
+    "title": "Categories",
+    "yourCategories": "Your categories",
+    "subtitle": "Select the categories that describe your work. You can add anytime; a category with active work can't be removed.",
+    "save": "Save categories"
+  },
+  "support": {
+    "title": "Help & Support",
+    "subtitle": "Frequently asked questions — can't find what you need? Reach out to us directly.",
+    "emailSupport": "Email support",
+    "faq": {
+      "getPaid": {
+        "q": "How do I get paid?",
+        "a": "Once a client releases a milestone or approves your hours, funds move to your JobLinxs wallet. From there you can request a withdrawal to your linked bank account."
+      },
+      "escrow": {
+        "q": "How does escrow work?",
+        "a": "Clients fund a contract or milestone up front. The money is held in escrow until the work is approved, then released to the freelancer."
+      },
+      "disputes": {
+        "q": "What happens if there is a disagreement?",
+        "a": "Either party can raise a dispute from the contract. Our support team reviews the evidence and resolves it."
+      },
+      "switchRole": {
+        "q": "How do I switch between client and freelancer mode?",
+        "a": "Open your profile menu and use \"Switch to Client/Freelancer mode\" — available once you hold both roles on your account."
+      }
+    }
+  },
+  "talent": {
+    "title": "Browse Talent",
+    "sortRating": "Top rated",
+    "sortRate": "Highly paid",
+    "sortJobs": "Trending",
+    "empty": "No freelancers match this filter yet."
   }
 }

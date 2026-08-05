@@ -162,12 +162,15 @@
     "categories": "Catégories",
     "analytics": "Analytique",
     "config": "Commission et configuration",
-    "team": "Équipe"
+    "team": "Équipe",
+    "support": "Aide et assistance"
   },
   "shell": {
     "signOut": "Se déconnecter",
     "switchTo": "Passer en {{role}}",
-    "profileSettings": "Profil et paramètres"
+    "profileSettings": "Profil et paramètres",
+    "switchToLight": "Passer en mode clair",
+    "switchToDark": "Passer en mode sombre"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -185,7 +188,16 @@
     "completeProfileBody": "Terminez l'intégration pour débloquer toute l'expérience JobLinxs.",
     "completeProfileCta": "Compléter le profil",
     "rejectedProfileBody": "Votre profil nécessite des modifications : {{reason}}",
-    "pendingProfileBody": "Votre profil est en cours d'examen. Nous vous notifierons une fois approuvé."
+    "pendingProfileBody": "Votre profil est en cours d'examen. Nous vous notifierons une fois approuvé.",
+    "newApplications": "Nouvelles candidatures",
+    "proposalsSent": "Propositions envoyées",
+    "avgRating": "Note moyenne",
+    "noNotifications": "Pas encore de notifications.",
+    "recommendedFreelancers": "Freelances recommandés",
+    "trendingFreelancers": "Freelances tendance",
+    "recommendedForYou": "Recommandé pour vous",
+    "newAndTrending": "Nouveau et tendance",
+    "viewAll": "Tout voir"
   },
   "comingSoon": {
     "body": "Cet écran est en construction."
@@ -698,5 +710,41 @@
     "comment": "Commentaire",
     "noReviewsReceived": "Aucun avis reçu pour le moment.",
     "reviewCount": "{{count}} avis"
+  },
+  "categories": {
+    "title": "Catégories",
+    "yourCategories": "Vos catégories",
+    "subtitle": "Sélectionnez les catégories qui décrivent votre travail. Vous pouvez en ajouter à tout moment ; une catégorie avec un travail actif ne peut pas être supprimée.",
+    "save": "Enregistrer les catégories"
+  },
+  "support": {
+    "title": "Aide et assistance",
+    "subtitle": "Questions fréquentes — vous ne trouvez pas ce qu'il vous faut ? Contactez-nous directement.",
+    "emailSupport": "Envoyer un e-mail au support",
+    "faq": {
+      "getPaid": {
+        "q": "Comment suis-je payé ?",
+        "a": "Une fois qu'un client libère un jalon ou approuve vos heures, les fonds sont transférés vers votre portefeuille JobLinxs. Vous pouvez ensuite demander un retrait vers votre compte bancaire lié."
+      },
+      "escrow": {
+        "q": "Comment fonctionne le séquestre ?",
+        "a": "Les clients financent un contrat ou un jalon à l'avance. L'argent est conservé en séquestre jusqu'à ce que le travail soit approuvé, puis libéré au freelance."
+      },
+      "disputes": {
+        "q": "Que se passe-t-il en cas de désaccord ?",
+        "a": "Chaque partie peut ouvrir un litige depuis le contrat. Notre équipe d'assistance examine les preuves et le résout."
+      },
+      "switchRole": {
+        "q": "Comment basculer entre le mode client et freelance ?",
+        "a": "Ouvrez le menu de votre profil et utilisez \"Passer en mode client/freelance\" — disponible dès que vous détenez les deux rôles sur votre compte."
+      }
+    }
+  },
+  "talent": {
+    "title": "Explorer les talents",
+    "sortRating": "Les mieux notés",
+    "sortRate": "Les mieux payés",
+    "sortJobs": "Tendance",
+    "empty": "Aucun freelance ne correspond à ce filtre pour l'instant."
   }
 }

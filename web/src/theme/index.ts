@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, type PaletteMode, type Theme } from '@mui/material/styles';
 
 /**
  * Palette extracted from the JobLinxs Claude Design prototype (hardcoded
@@ -7,7 +7,7 @@ import { createTheme } from '@mui/material/styles';
  * in the exported HTML, so these are reconstructed from the literal
  * colors used across cards, badges, and status pills).
  */
-export const palette = {
+export const lightPalette = {
   primary: '#5B5FEF',
   primaryDark: '#4347C4',
   page: '#EFEEFA',
@@ -28,77 +28,107 @@ export const palette = {
   infoBg: '#EAF2FF',
 };
 
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: { main: palette.primary, dark: palette.primaryDark, contrastText: '#fff' },
-    success: { main: palette.success },
-    error: { main: palette.error },
-    warning: { main: palette.warning },
-    info: { main: palette.info },
-    background: { default: palette.page, paper: palette.surface },
-    text: { primary: palette.text, secondary: palette.textSecondary },
-    divider: palette.border,
-  },
-  typography: {
-    fontFamily: "'Roboto', sans-serif",
-    h1: { fontWeight: 800 },
-    h2: { fontWeight: 800 },
-    h3: { fontWeight: 700 },
-    h4: { fontWeight: 700 },
-    h5: { fontWeight: 700 },
-    h6: { fontWeight: 700 },
-    button: { fontWeight: 600, textTransform: 'none' },
-  },
-  shape: { borderRadius: 12 },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: { borderRadius: 12, padding: '10px 20px' },
-      },
+/** Dark counterpart — same brand primary, inverted surfaces/text. */
+export const darkPalette = {
+  primary: '#7B7FFB',
+  primaryDark: '#5B5FEF',
+  page: '#131320',
+  surface: '#1B1B2B',
+  surfaceAlt: '#22223500',
+  border: '#33334A',
+  borderLight: '#2A2A3D',
+  text: '#F1F0F7',
+  textSecondary: '#B4B2C4',
+  textMuted: '#7C7A8F',
+  success: '#5FCB6E',
+  successBg: '#183A20',
+  error: '#E3707A',
+  errorBg: '#3C1E22',
+  warning: '#E3A24E',
+  warningBg: '#3B2C11',
+  info: '#6FA6F5',
+  infoBg: '#132A47',
+};
+
+export const palette = lightPalette;
+
+export function getTheme(mode: PaletteMode): Theme {
+  const p = mode === 'dark' ? darkPalette : lightPalette;
+
+  return createTheme({
+    palette: {
+      mode,
+      primary: { main: p.primary, dark: p.primaryDark, contrastText: '#fff' },
+      success: { main: p.success },
+      error: { main: p.error },
+      warning: { main: p.warning },
+      info: { main: p.info },
+      background: { default: p.page, paper: p.surface },
+      text: { primary: p.text, secondary: p.textSecondary },
+      divider: p.border,
     },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          border: `1px solid ${palette.border}`,
-          boxShadow: 'none',
+    typography: {
+      fontFamily: "'Roboto', sans-serif",
+      h1: { fontWeight: 800 },
+      h2: { fontWeight: 800 },
+      h3: { fontWeight: 700 },
+      h4: { fontWeight: 700 },
+      h5: { fontWeight: 700 },
+      h6: { fontWeight: 700 },
+      button: { fontWeight: 600, textTransform: 'none' },
+    },
+    shape: { borderRadius: 12 },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: { borderRadius: 12, padding: '10px 20px' },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            borderRadius: 16,
+            border: `1px solid ${p.border}`,
+            boxShadow: 'none',
+          },
+        },
+      },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: 16,
+            border: `1px solid ${p.border}`,
+            boxShadow: 'none',
+          },
+        },
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: { fontWeight: 600 },
+        },
+      },
+      MuiTextField: {
+        defaultProps: { size: 'small' },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: { borderRadius: 12 },
+        },
+      },
+      MuiAppBar: {
+        styleOverrides: {
+          root: {
+            backgroundColor: p.surface,
+            color: p.text,
+            boxShadow: 'none',
+            borderBottom: `1px solid ${p.border}`,
+          },
         },
       },
     },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          border: `1px solid ${palette.border}`,
-          boxShadow: 'none',
-        },
-      },
-    },
-    MuiChip: {
-      styleOverrides: {
-        root: { fontWeight: 600 },
-      },
-    },
-    MuiTextField: {
-      defaultProps: { size: 'small' },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: { borderRadius: 12 },
-      },
-    },
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: palette.surface,
-          color: palette.text,
-          boxShadow: 'none',
-          borderBottom: `1px solid ${palette.border}`,
-        },
-      },
-    },
-  },
-});
+  });
+}
+
+const theme = getTheme('light');
 
 export default theme;
