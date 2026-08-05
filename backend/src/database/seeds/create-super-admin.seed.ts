@@ -20,6 +20,11 @@ async function main() {
   }
 
   await dataSource.initialize();
+
+  if (process.env.NODE_ENV !== 'production') {
+    await dataSource.synchronize();
+  }
+
   const userRepository = dataSource.getRepository(User);
 
   const passwordHash = await bcrypt.hash(password, 12);

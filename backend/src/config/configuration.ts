@@ -1,6 +1,6 @@
 export default () => ({
   env: process.env.NODE_ENV ?? 'development',
-  port: parseInt(process.env.PORT ?? '3000', 10),
+  port: parseInt(process.env.PORT ?? '3002', 10),
   apiPrefix: process.env.API_PREFIX ?? 'api/v1',
   corsOrigins: (process.env.CORS_ORIGINS ?? '').split(',').filter(Boolean),
 
