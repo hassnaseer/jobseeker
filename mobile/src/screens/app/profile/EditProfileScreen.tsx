@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Star, Trash2 } from 'lucide-react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { Camera, Star, Trash2 } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -15,6 +27,7 @@ import {
   upsertSeekerProfile,
 } from '@/api/profiles';
 import { listReviewsReceivedBy } from '@/api/reviews';
+import { uploadAvatar } from '@/api/users';
 import { extractErrorMessage } from '@/api/client';
 import type {
   CertificationItem,
@@ -44,6 +57,7 @@ function WorkHistoryEditor({
   onChange: (items: WorkHistoryItem[]) => void;
 }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [company, setCompany] = useState('');
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -68,7 +82,7 @@ function WorkHistoryEditor({
             </Text>
             <Text style={[styles.listItemMeta, { color: theme.textSecondary }]}>
               {item.startDate}
-              {item.endDate ? ` – ${item.endDate}` : item.isCurrent ? ' – Present' : ''}
+              {item.endDate ? ` – ${item.endDate}` : item.isCurrent ? ` – ${t('profile', 'present')}` : ''}
             </Text>
           </View>
           <Pressable
@@ -80,11 +94,11 @@ function WorkHistoryEditor({
           </Pressable>
         </View>
       ))}
-      <TextField label="Company" value={company} onChangeText={setCompany} />
-      <TextField label="Title" value={title} onChangeText={setTitle} />
-      <TextField label="Start date" value={startDate} onChangeText={setStartDate} placeholder="2022" />
-      <TextField label="End date (optional)" value={endDate} onChangeText={setEndDate} placeholder="2024" />
-      <Button title="+ Add experience" variant="secondary" onPress={handleAdd} style={styles.addButton} />
+      <TextField label={t('profile', 'company')} value={company} onChangeText={setCompany} />
+      <TextField label={t('profile', 'jobTitle')} value={title} onChangeText={setTitle} />
+      <TextField label={t('profile', 'startDate')} value={startDate} onChangeText={setStartDate} placeholder="2022" />
+      <TextField label={t('profile', 'endDate')} value={endDate} onChangeText={setEndDate} placeholder="2024" />
+      <Button title={t('profile', 'addExperience')} variant="secondary" onPress={handleAdd} style={styles.addButton} />
     </View>
   );
 }
@@ -97,6 +111,7 @@ function CertificationsEditor({
   onChange: (items: CertificationItem[]) => void;
 }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [name, setName] = useState('');
   const [issuer, setIssuer] = useState('');
 
@@ -124,17 +139,22 @@ function CertificationsEditor({
           </View>
         ))}
       </View>
-      <TextField label="Certification / achievement" value={name} onChangeText={setName} />
-      <TextField label="Issuer" value={issuer} onChangeText={setIssuer} />
-      <Button title="+ Add certification" variant="secondary" onPress={handleAdd} style={styles.addButton} />
+      <TextField label={t('profile', 'certName')} value={name} onChangeText={setName} />
+      <TextField label={t('profile', 'certIssuer')} value={issuer} onChangeText={setIssuer} />
+      <Button title={t('profile', 'addCertification')} variant="secondary" onPress={handleAdd} style={styles.addButton} />
     </View>
   );
 }
 
 export function EditProfileScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
+  const patchUser = useAuthStore((s) => s.patchUser);
   const isClient = user?.activeRole === 'CLIENT';
+
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
 
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [firstName, setFirstName] = useState('');
@@ -200,6 +220,27 @@ export function EditProfileScreen() {
     }
   }, [user]);
 
+  async function handlePickAvatar() {
+    const result = await launchImageLibrary({ mediaType: 'photo', quality: 0.8 });
+    const asset = result.assets?.[0];
+    if (!asset?.uri) return;
+
+    setUploadingAvatar(true);
+    setAvatarError(null);
+    try {
+      const { avatarUrl } = await uploadAvatar({
+        uri: asset.uri,
+        type: asset.type ?? 'image/jpeg',
+        name: asset.fileName ?? 'avatar.jpg',
+      });
+      patchUser({ avatarUrl });
+    } catch (err) {
+      setAvatarError(extractErrorMessage(err));
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
+
   async function handleSave() {
     setError(null);
     setSaved(false);
@@ -243,6 +284,30 @@ export function EditProfileScreen() {
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={[styles.title, { color: theme.text }]}>Edit profile</Text>
 
+          <View style={styles.avatarRow}>
+            <Pressable onPress={handlePickAvatar} disabled={uploadingAvatar}>
+              <View style={[styles.avatarCircle, { backgroundColor: theme.selectedChipBg, borderColor: theme.border }]}>
+                {user?.avatarUrl ? (
+                  <Image source={{ uri: user.avatarUrl }} style={styles.avatarImage} />
+                ) : (
+                  <Text style={[styles.avatarInitial, { color: theme.primary }]}>{firstName[0] ?? '?'}</Text>
+                )}
+                <View style={[styles.avatarBadge, { backgroundColor: theme.primary }]}>
+                  {uploadingAvatar ? (
+                    <ActivityIndicator size="small" color={theme.white} />
+                  ) : (
+                    <Camera size={14} color={theme.white} />
+                  )}
+                </View>
+              </View>
+            </Pressable>
+            <View style={styles.avatarText}>
+              <Text style={[styles.avatarLabel, { color: theme.text }]}>{t('profile', 'changePhoto')}</Text>
+              <Text style={[styles.avatarHint, { color: theme.textSecondary }]}>{t('profile', 'photoHint')}</Text>
+            </View>
+          </View>
+          {avatarError ? <Text style={[styles.errorText, { color: theme.error }]}>{avatarError}</Text> : null}
+
           <Text style={[styles.sectionTitle, { color: theme.text }]}>Basic info</Text>
           <TextField label="First name" value={firstName} onChangeText={setFirstName} />
           <TextField label="Last name" value={lastName} onChangeText={setLastName} />
@@ -269,16 +334,16 @@ export function EditProfileScreen() {
                 <View style={[styles.ratingCard, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
                   <StarRow rating={Math.round(ratingSummary.avgRating)} />
                   <Text style={[styles.ratingText, { color: theme.textSecondary }]}>
-                    {ratingSummary.avgRating.toFixed(1)} · {ratingSummary.totalJobs} jobs completed ·{' '}
-                    {ratingSummary.totalReviews} reviews
+                    {ratingSummary.avgRating.toFixed(1)} · {ratingSummary.totalJobs} {t('profile', 'jobsCompleted')} ·{' '}
+                    {ratingSummary.totalReviews} {t('profile', 'reviewsCount')}
                   </Text>
                 </View>
               ) : null}
 
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Work experience</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('profile', 'workExperience')}</Text>
               <WorkHistoryEditor items={workHistory} onChange={setWorkHistory} />
 
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Certifications & achievements</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('profile', 'certifications')}</Text>
               <CertificationsEditor items={certifications} onChange={setCertifications} />
             </>
           )}
@@ -296,7 +361,7 @@ export function EditProfileScreen() {
 
           {!isClient && reviews.length > 0 ? (
             <>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Reviews ({reviews.length})</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('reviews', 'title')} ({reviews.length})</Text>
               {reviews.map((r) => (
                 <View key={r.id} style={[styles.reviewCard, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
                   <StarRow rating={r.rating} />
@@ -320,6 +385,31 @@ const styles = StyleSheet.create({
   center: { alignItems: 'center', justifyContent: 'center' },
   content: { padding: spacing.xl, paddingBottom: spacing.xxl },
   title: { fontSize: typography.sizes.xxl, fontWeight: typography.weights.bold, marginBottom: spacing.lg },
+  avatarRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.md },
+  avatarCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: radius.full,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'visible',
+  },
+  avatarImage: { width: 64, height: 64, borderRadius: radius.full },
+  avatarInitial: { fontSize: typography.sizes.xl, fontWeight: typography.weights.bold },
+  avatarBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: 22,
+    height: 22,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarText: { flex: 1 },
+  avatarLabel: { fontSize: typography.sizes.base, fontWeight: typography.weights.medium },
+  avatarHint: { fontSize: typography.sizes.xs, marginTop: 2 },
   sectionTitle: { fontSize: typography.sizes.base, fontWeight: typography.weights.medium, marginBottom: spacing.sm, marginTop: spacing.md },
   textarea: { height: 100, textAlignVertical: 'top', paddingTop: spacing.sm },
   statusNote: { fontSize: typography.sizes.sm, marginTop: spacing.md },

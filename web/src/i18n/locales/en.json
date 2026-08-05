@@ -319,7 +319,9 @@
     "revokeOtherSessions": "Sign out of all other devices",
     "updatePassword": "Update password",
     "passwordChanged": "Your password has been updated.",
-    "managePayoutMethods": "Manage payout methods"
+    "managePayoutMethods": "Manage payout methods",
+    "changePhoto": "Change photo",
+    "photoHint": "JPEG, PNG, WEBP, or GIF. Max 5MB."
   },
   "jobs": {
     "myJobsTitle": "My Jobs",

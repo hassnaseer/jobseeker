@@ -319,7 +319,9 @@
     "revokeOtherSessions": "Cerrar sesión en todos los demás dispositivos",
     "updatePassword": "Actualizar contraseña",
     "passwordChanged": "Tu contraseña ha sido actualizada.",
-    "managePayoutMethods": "Administrar métodos de pago"
+    "managePayoutMethods": "Administrar métodos de pago",
+    "changePhoto": "Cambiar foto",
+    "photoHint": "JPEG, PNG, WEBP o GIF. Máx. 5MB."
   },
   "jobs": {
     "myJobsTitle": "Mis empleos",

@@ -22,6 +22,7 @@ interface AuthState {
   switchRole: (role: UserRole) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
+  patchUser: (fields: Partial<User>) => void;
 }
 
 export interface SignupInput {
@@ -116,4 +117,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  patchUser: (fields) => set((state) => (state.user ? { user: { ...state.user, ...fields } } : state)),
 }));

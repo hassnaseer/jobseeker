@@ -319,7 +319,9 @@
     "revokeOtherSessions": "Se déconnecter de tous les autres appareils",
     "updatePassword": "Mettre à jour le mot de passe",
     "passwordChanged": "Votre mot de passe a été mis à jour.",
-    "managePayoutMethods": "Gérer les méthodes de paiement"
+    "managePayoutMethods": "Gérer les méthodes de paiement",
+    "changePhoto": "Changer la photo",
+    "photoHint": "JPEG, PNG, WEBP ou GIF. 5 Mo max."
   },
   "jobs": {
     "myJobsTitle": "Mes offres",

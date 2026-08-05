@@ -219,7 +219,7 @@ export default function AppLayout() {
               </Badge>
             </IconButton>
             <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} size="small">
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 13 }}>
+              <Avatar src={user.avatarUrl ?? undefined} sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 13 }}>
                 {initials}
               </Avatar>
             </IconButton>
