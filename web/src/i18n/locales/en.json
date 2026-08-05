@@ -304,7 +304,22 @@
     "issueDate": "Issue date",
     "expiryDate": "Expiry date",
     "credentialUrl": "Credential URL",
-    "saveProfile": "Save profile"
+    "saveProfile": "Save profile",
+    "settingsTitle": "Settings",
+    "tabProfile": "Profile",
+    "tabPayoutSecurity": "Payout & Security",
+    "becomeClient": "Become a Client",
+    "becomeFreelancer": "Become a Freelancer",
+    "becomeClientBody": "Add the Client role to your account so you can post jobs and hire freelancers. Your freelancer profile stays exactly as it is.",
+    "becomeFreelancerBody": "Add the Freelancer role to your account so you can browse and apply to jobs. Your client profile stays exactly as it is.",
+    "security": "Security",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "revokeOtherSessions": "Sign out of all other devices",
+    "updatePassword": "Update password",
+    "passwordChanged": "Your password has been updated.",
+    "managePayoutMethods": "Manage payout methods"
   },
   "jobs": {
     "myJobsTitle": "My Jobs",

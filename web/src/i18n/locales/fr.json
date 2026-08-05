@@ -304,7 +304,22 @@
     "issueDate": "Date d'émission",
     "expiryDate": "Date d'expiration",
     "credentialUrl": "URL de l'attestation",
-    "saveProfile": "Enregistrer le profil"
+    "saveProfile": "Enregistrer le profil",
+    "settingsTitle": "Paramètres",
+    "tabProfile": "Profil",
+    "tabPayoutSecurity": "Paiement et sécurité",
+    "becomeClient": "Devenir client",
+    "becomeFreelancer": "Devenir freelance",
+    "becomeClientBody": "Ajoutez le rôle client à votre compte pour publier des offres et embaucher des freelances. Votre profil freelance reste inchangé.",
+    "becomeFreelancerBody": "Ajoutez le rôle freelance à votre compte pour parcourir et postuler à des offres. Votre profil client reste inchangé.",
+    "security": "Sécurité",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmNewPassword": "Confirmer le nouveau mot de passe",
+    "revokeOtherSessions": "Se déconnecter de tous les autres appareils",
+    "updatePassword": "Mettre à jour le mot de passe",
+    "passwordChanged": "Votre mot de passe a été mis à jour.",
+    "managePayoutMethods": "Gérer les méthodes de paiement"
   },
   "jobs": {
     "myJobsTitle": "Mes offres",

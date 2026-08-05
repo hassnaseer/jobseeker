@@ -87,6 +87,18 @@ export async function resetPassword(
   return data;
 }
 
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  revokeOtherSessions?: boolean;
+}
+
+export async function changePassword(dto: ChangePasswordInput): Promise<{ message: string }> {
+  const { data } = await apiClient.patch<{ message: string }>('/auth/password', dto);
+  return data;
+}
+
 export function switchRole(role: UserRole): AuthThunk {
   return async (dispatch) => {
     dispatch({ type: AUTH_REQUEST });

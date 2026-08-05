@@ -304,7 +304,22 @@
     "issueDate": "Fecha de emisión",
     "expiryDate": "Fecha de vencimiento",
     "credentialUrl": "URL de la credencial",
-    "saveProfile": "Guardar perfil"
+    "saveProfile": "Guardar perfil",
+    "settingsTitle": "Configuración",
+    "tabProfile": "Perfil",
+    "tabPayoutSecurity": "Pagos y seguridad",
+    "becomeClient": "Convertirme en cliente",
+    "becomeFreelancer": "Convertirme en freelancer",
+    "becomeClientBody": "Agrega el rol de cliente a tu cuenta para publicar empleos y contratar freelancers. Tu perfil de freelancer permanece igual.",
+    "becomeFreelancerBody": "Agrega el rol de freelancer a tu cuenta para explorar y postularte a empleos. Tu perfil de cliente permanece igual.",
+    "security": "Seguridad",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmNewPassword": "Confirmar nueva contraseña",
+    "revokeOtherSessions": "Cerrar sesión en todos los demás dispositivos",
+    "updatePassword": "Actualizar contraseña",
+    "passwordChanged": "Tu contraseña ha sido actualizada.",
+    "managePayoutMethods": "Administrar métodos de pago"
   },
   "jobs": {
     "myJobsTitle": "Mis empleos",
