@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import configuration from '@/config/configuration';
 import { validationSchema } from '@/config/validation';
 import { AdminModule } from '@/modules/admin/admin.module';
+import { AdminTeamModule } from '@/modules/admin-team/admin-team.module';
 import { AiModule } from '@/modules/ai/ai.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CatalogsModule } from '@/modules/catalogs/catalogs.module';
@@ -65,6 +66,7 @@ import { UsersModule } from '@/modules/users/users.module';
     UsersModule,
     MailModule,
     FirebaseModule,
+    AdminTeamModule,
     AuthModule,
     CategoriesModule,
     ProfilesModule,

@@ -17,6 +17,9 @@ import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/common/enums/user-role.enum';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
+import { RequireAdminPermission } from '@/modules/admin-team/decorators/require-admin-permission.decorator';
+import { AdminPermission } from '@/modules/admin-team/enums/admin-permission.enum';
+import { AdminPermissionGuard } from '@/modules/admin-team/guards/admin-permission.guard';
 import { CategoriesService } from '@/modules/categories/categories.service';
 import { AddUserCategoryDto } from '@/modules/categories/dto/add-user-category.dto';
 import { CreateCategoryDto } from '@/modules/categories/dto/create-category.dto';
@@ -56,7 +59,8 @@ export class CategoriesController {
 
   @ApiBearerAuth()
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.CATEGORIES)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Get('admin/all')
   adminList() {
     return this.categoriesService.findAllFlat({ includeInactive: true });
@@ -64,7 +68,8 @@ export class CategoriesController {
 
   @ApiBearerAuth()
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.CATEGORIES)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Post()
   create(@Body() dto: CreateCategoryDto) {
     return this.categoriesService.create(dto);
@@ -112,7 +117,8 @@ export class CategoriesController {
 
   @ApiBearerAuth()
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.CATEGORIES)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Patch(':id')
   update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateCategoryDto) {
     return this.categoriesService.update(id, dto);
@@ -120,7 +126,8 @@ export class CategoriesController {
 
   @ApiBearerAuth()
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.CATEGORIES)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoriesService.remove(id);

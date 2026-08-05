@@ -17,6 +17,9 @@ import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/common/enums/user-role.enum';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
+import { RequireAdminPermission } from '@/modules/admin-team/decorators/require-admin-permission.decorator';
+import { AdminPermission } from '@/modules/admin-team/enums/admin-permission.enum';
+import { AdminPermissionGuard } from '@/modules/admin-team/guards/admin-permission.guard';
 import { RejectProfileDto } from '@/modules/profiles/dto/reject-profile.dto';
 import { SubmitForReviewDto } from '@/modules/profiles/dto/submit-for-review.dto';
 import { SubmitKycDto } from '@/modules/profiles/dto/submit-kyc.dto';
@@ -84,21 +87,24 @@ export class ProfilesController {
   // ---- SA review queue ----
 
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.KYC)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Get('admin/pending')
   listPending(@Query('role') role?: string) {
     return this.profilesService.listPending(role ? this.parseReviewableRole(role) : undefined);
   }
 
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.KYC)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Get('admin/:userId/:role')
   reviewDetail(@Param('userId', ParseUUIDPipe) userId: string, @Param('role') role: string) {
     return this.profilesService.getReviewDetail(userId, this.parseReviewableRole(role));
   }
 
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.KYC)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Post('admin/:userId/:role/approve')
   approve(
     @CurrentUser() admin: User,
@@ -109,7 +115,8 @@ export class ProfilesController {
   }
 
   @Roles(UserRole.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireAdminPermission(AdminPermission.KYC)
+  @UseGuards(JwtAuthGuard, RolesGuard, AdminPermissionGuard)
   @Post('admin/:userId/:role/reject')
   reject(
     @CurrentUser() admin: User,
