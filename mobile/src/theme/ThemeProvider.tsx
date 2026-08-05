@@ -5,6 +5,7 @@ import { darkTheme, lightTheme, type Theme } from './colors';
 interface ThemeContextValue {
   theme: Theme;
   mode: 'light' | 'dark';
+  preference: 'light' | 'dark' | 'system';
   setMode: (mode: 'light' | 'dark' | 'system') => void;
 }
 
@@ -20,9 +21,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     () => ({
       theme: mode === 'dark' ? darkTheme : lightTheme,
       mode,
+      preference,
       setMode: setPreference,
     }),
-    [mode],
+    [mode, preference],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
