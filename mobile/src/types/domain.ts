@@ -172,3 +172,254 @@ export interface TimesheetPeriod {
   status: TimesheetPeriodStatus;
   approvedAt: string | null;
 }
+
+export interface Wallet {
+  id: string;
+  userId: string;
+  currency: string;
+  balance: number;
+  pendingBalance: number;
+}
+
+export type PayoutMethodType = 'STRIPE_CONNECT' | 'BANK' | 'WALLET';
+export type ConnectStatus = 'NOT_STARTED' | 'PENDING' | 'ACTIVE' | 'RESTRICTED';
+
+export interface PayoutMethod {
+  id: string;
+  userId: string;
+  type: PayoutMethodType;
+  stripeAccountId: string | null;
+  connectStatus: ConnectStatus | null;
+  bankName: string | null;
+  accountHolder: string | null;
+  accountNumber: string | null;
+  swiftOrRouting: string | null;
+  currency: string | null;
+  isDefault: boolean;
+  createdAt: string;
+}
+
+export type WithdrawalStatus = 'REQUESTED' | 'PROCESSING' | 'PAID' | 'FAILED';
+
+export interface WithdrawalRequest {
+  id: string;
+  userId: string;
+  walletId: string;
+  amount: number;
+  currency: string;
+  payoutMethodId: string;
+  status: WithdrawalStatus;
+  failureReason: string | null;
+  requestedAt: string;
+  processedAt: string | null;
+}
+
+export type TransactionType =
+  | 'ESCROW_FUND'
+  | 'ESCROW_RELEASE'
+  | 'HOURLY_CHARGE'
+  | 'CATALOG_ORDER'
+  | 'REFUND'
+  | 'PARTIAL_REFUND'
+  | 'WITHDRAWAL'
+  | 'COMMISSION';
+export type TransactionStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
+
+export interface Transaction {
+  id: string;
+  contractId: string | null;
+  milestoneId: string | null;
+  payerId: string | null;
+  payeeId: string | null;
+  type: TransactionType;
+  amount: number;
+  clientFee: number;
+  seekerFee: number;
+  netAmount: number;
+  currency: string;
+  status: TransactionStatus;
+  failureReason: string | null;
+  createdAt: string;
+}
+
+export interface Invoice {
+  id: string;
+  contractId: string;
+  transactionId: string;
+  partyId: string;
+  number: string;
+  amount: number;
+  taxAmount: number;
+  currency: string;
+  pdfUrl: string | null;
+  issuedAt: string;
+}
+
+export type CatalogStatus = 'DRAFT' | 'ACTIVE' | 'PAUSED';
+
+export interface CatalogFaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface CatalogTier {
+  id: string;
+  catalogId: string;
+  name: string;
+  price: number;
+  currency: string;
+  deliveryDays: number;
+  revisions: number;
+  features: string[];
+}
+
+export interface ProjectCatalog {
+  id: string;
+  seekerId: string;
+  title: string;
+  categoryId: string;
+  description: string;
+  gallery: string[];
+  faq: CatalogFaqItem[];
+  status: CatalogStatus;
+  tiers?: CatalogTier[];
+  createdAt: string;
+}
+
+export type SavedTargetType = 'JOB' | 'SEEKER';
+
+export interface SavedItem {
+  id: string;
+  userId: string;
+  targetType: SavedTargetType;
+  targetId: string;
+  createdAt: string;
+}
+
+export type MessageType = 'TEXT' | 'IMAGE' | 'FILE' | 'SYSTEM';
+
+export interface Conversation {
+  id: string;
+  jobId: string | null;
+  contractId: string | null;
+  clientId: string;
+  seekerId: string;
+  initiatedBy: string;
+  isBlocked: boolean;
+  blockedBy: string | null;
+  lastMessageAt: string | null;
+  createdAt: string;
+  unreadCount: number;
+}
+
+export interface Message {
+  id: string;
+  conversationId: string;
+  senderId: string | null;
+  content: string | null;
+  type: MessageType;
+  attachments: string[];
+  isRead: boolean;
+  readAt: string | null;
+  isEdited: boolean;
+  isDeleted: boolean;
+  replyToId: string | null;
+  createdAt: string;
+}
+
+export type ReportTargetType = 'MESSAGE' | 'CONVERSATION' | 'REVIEW';
+
+export type NotificationEventType =
+  | 'PROFILE_APPROVED'
+  | 'PROFILE_REJECTED'
+  | 'APPLICATION_RECEIVED'
+  | 'APPLICATION_ACCEPTED'
+  | 'APPLICATION_REJECTED'
+  | 'ESCROW_FUNDED'
+  | 'DELIVERABLE_SUBMITTED'
+  | 'DELIVERABLE_APPROVED'
+  | 'DELIVERABLE_REVISION_REQUESTED'
+  | 'MILESTONE_RELEASED'
+  | 'TIMESHEET_SUBMITTED'
+  | 'HOURS_DISPUTED'
+  | 'HOURS_APPROVED'
+  | 'CONTRACT_COMPLETED'
+  | 'WITHDRAWAL_STATUS_CHANGED'
+  | 'NEW_MESSAGE'
+  | 'CHAT_UNREAD_DIGEST'
+  | 'DISPUTE_OPENED'
+  | 'DISPUTE_RESOLVED'
+  | 'REVIEW_RECEIVED';
+
+export interface Notification {
+  id: string;
+  userId: string;
+  type: NotificationEventType;
+  title: string;
+  message: string;
+  link: string | null;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export interface NotificationPreference {
+  id: string;
+  userId: string;
+  eventType: NotificationEventType;
+  emailEnabled: boolean;
+  inAppEnabled: boolean;
+  pushEnabled: boolean;
+}
+
+export interface RecommendedJob {
+  job: Job;
+  score: number;
+  reasons: string[];
+}
+
+export interface ScoredApplicant {
+  applicationId: string;
+  seekerId: string;
+  score: number;
+  reasons: string[];
+  autoShortlisted: boolean;
+}
+
+export interface AiMatchScore {
+  id: string;
+  seekerId: string;
+  jobId: string;
+  score: number;
+  reasons: string[];
+  modelVersion: string;
+  computedAt: string;
+}
+
+export type DisputeStatus = 'OPEN' | 'UNDER_REVIEW' | 'RESOLVED';
+export type DisputeResolutionType = 'REFUND_CLIENT' | 'RELEASE_SEEKER' | 'SPLIT';
+
+export interface Dispute {
+  id: string;
+  contractId: string;
+  milestoneId: string | null;
+  raisedBy: string;
+  reason: string;
+  evidence: string[];
+  status: DisputeStatus;
+  resolutionType: DisputeResolutionType | null;
+  resolutionNote: string | null;
+  resolvedBy: string | null;
+  resolvedAt: string | null;
+  createdAt: string;
+}
+
+export interface Review {
+  id: string;
+  contractId: string;
+  reviewerId: string;
+  revieweeId: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  editedAt: string | null;
+}

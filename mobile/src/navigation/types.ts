@@ -14,6 +14,27 @@ export type AppTabParamList = {
   Profile: undefined;
 };
 
+export type ProfileStackParamList = {
+  ProfileHome: undefined;
+  EditProfile: undefined;
+  Wallet: undefined;
+  Withdraw: undefined;
+  Categories: undefined;
+  Favorites: undefined;
+  Support: undefined;
+  Settings: undefined;
+  AdminDashboard: undefined;
+  AdminApprovals: undefined;
+  AdminDisputes: undefined;
+  AdminCategories: undefined;
+  AdminConfig: undefined;
+};
+
+export type MessagesStackParamList = {
+  ConversationsList: undefined;
+  ChatThread: { conversationId: string };
+};
+
 export type ContractsStackParamList = {
   ContractsList: undefined;
   ContractDetail: { contractId: string };
