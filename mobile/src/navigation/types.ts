@@ -28,6 +28,7 @@ export type ProfileStackParamList = {
   AdminDisputes: undefined;
   AdminCategories: undefined;
   AdminConfig: undefined;
+  AdminTeam: undefined;
 };
 
 export type MessagesStackParamList = {

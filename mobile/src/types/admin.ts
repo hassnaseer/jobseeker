@@ -16,6 +16,20 @@ export interface Report {
   createdAt: string;
 }
 
+export type AdminPermission = 'KYC' | 'DISPUTES' | 'CATEGORIES' | 'SUPPORT';
+export type AdminTeamMemberStatus = 'PENDING' | 'ACTIVE';
+
+export interface AdminTeamMember {
+  id: string;
+  name: string;
+  email: string;
+  userId: string | null;
+  permissions: AdminPermission[];
+  status: AdminTeamMemberStatus;
+  invitedBy: string;
+  createdAt: string;
+}
+
 export type AiAutonomyLevel = 'SUGGEST' | 'SHORTLIST' | 'AUTO_HIRE';
 
 export interface PlatformConfig {

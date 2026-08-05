@@ -14,6 +14,7 @@ import { AdminApprovalsScreen } from '@/screens/app/admin/AdminApprovalsScreen';
 import { AdminDisputesScreen } from '@/screens/app/admin/AdminDisputesScreen';
 import { AdminCategoriesScreen } from '@/screens/app/admin/AdminCategoriesScreen';
 import { AdminConfigScreen } from '@/screens/app/admin/AdminConfigScreen';
+import { AdminTeamScreen } from '@/screens/app/admin/AdminTeamScreen';
 
 const Stack = createStackNavigator<ProfileStackParamList>();
 
@@ -33,6 +34,7 @@ export function ProfileNavigator() {
       <Stack.Screen name="AdminDisputes" component={AdminDisputesScreen} />
       <Stack.Screen name="AdminCategories" component={AdminCategoriesScreen} />
       <Stack.Screen name="AdminConfig" component={AdminConfigScreen} />
+      <Stack.Screen name="AdminTeam" component={AdminTeamScreen} />
     </Stack.Navigator>
   );
 }

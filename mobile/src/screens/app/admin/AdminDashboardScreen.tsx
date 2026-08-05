@@ -59,6 +59,7 @@ export function AdminDashboardScreen({ navigation }: Props) {
           <Button title="Disputes queue" onPress={() => navigation.navigate('AdminDisputes')} style={styles.navButton} />
           <Button title="Manage categories" onPress={() => navigation.navigate('AdminCategories')} style={styles.navButton} />
           <Button title="Platform config" onPress={() => navigation.navigate('AdminConfig')} style={styles.navButton} />
+          <Button title="Team & Permissions" onPress={() => navigation.navigate('AdminTeam')} style={styles.navButton} />
         </View>
       </ScrollView>
     </SafeAreaView>

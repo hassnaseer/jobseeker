@@ -1,5 +1,12 @@
 import { apiClient } from '@/api/client';
-import type { AnalyticsOverview, DisputeResolutionType, DisputeStatus, PlatformConfig } from '@/types/admin';
+import type {
+  AdminPermission,
+  AdminTeamMember,
+  AnalyticsOverview,
+  DisputeResolutionType,
+  DisputeStatus,
+  PlatformConfig,
+} from '@/types/admin';
 import type { Dispute } from '@/types/domain';
 import type { MyProfile, RoleProfileStatusInfo } from '@/types/profile';
 
@@ -77,4 +84,32 @@ export async function getPlatformConfig(): Promise<PlatformConfig> {
 export async function updatePlatformConfig(dto: Partial<PlatformConfig>): Promise<PlatformConfig> {
   const { data } = await apiClient.post<PlatformConfig>('/payments/admin/config', dto);
   return data;
+}
+
+// ---- Team & permissions ----
+
+export async function listTeamMembers(): Promise<AdminTeamMember[]> {
+  const { data } = await apiClient.get<AdminTeamMember[]>('/admin/team');
+  return data;
+}
+
+export async function inviteTeamMember(dto: {
+  name: string;
+  email: string;
+  permissions: AdminPermission[];
+}): Promise<AdminTeamMember> {
+  const { data } = await apiClient.post<AdminTeamMember>('/admin/team/invite', dto);
+  return data;
+}
+
+export async function updateTeamMemberPermissions(
+  id: string,
+  permissions: AdminPermission[],
+): Promise<AdminTeamMember> {
+  const { data } = await apiClient.patch<AdminTeamMember>(`/admin/team/${id}/permissions`, { permissions });
+  return data;
+}
+
+export async function removeTeamMember(id: string): Promise<void> {
+  await apiClient.delete(`/admin/team/${id}`);
 }
