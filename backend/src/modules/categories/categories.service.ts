@@ -204,11 +204,25 @@ export class CategoriesService {
 
   // ---- User selections (spec §4) ----
 
-  async getUserCategories(userId: string, role?: UserRole): Promise<UserCategory[]> {
-    return this.userCategoryRepository.find({
+  async getUserCategories(
+    userId: string,
+    role?: UserRole,
+  ): Promise<(UserCategory & { locked: boolean })[]> {
+    const selections = await this.userCategoryRepository.find({
       where: role ? { userId, role } : { userId },
       relations: { category: true },
     });
+
+    return Promise.all(
+      selections.map(async (selection) => ({
+        ...selection,
+        locked: !(await this.removalGuardRegistry.isRemovable({
+          userId,
+          role: selection.role,
+          categoryId: selection.categoryId,
+        })),
+      })),
+    );
   }
 
   /** Adding a category selection is always allowed per spec §4.1. */

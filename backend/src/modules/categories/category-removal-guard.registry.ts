@@ -24,4 +24,14 @@ export class CategoryRemovalGuardRegistry {
       await guard.check(params);
     }
   }
+
+  /** Same checks as assertRemovable, but reports the result instead of throwing — for UI hints (e.g. a lock icon). */
+  async isRemovable(params: CategoryRemovalCheckParams): Promise<boolean> {
+    try {
+      await this.assertRemovable(params);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }

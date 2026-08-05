@@ -11,6 +11,7 @@ import { ProfileStatus } from '@/common/enums/profile-status.enum';
 import { UserRole } from '@/common/enums/user-role.enum';
 import { NotificationEventType } from '@/modules/notifications/enums/notification-event-type.enum';
 import { NotificationsService } from '@/modules/notifications/notifications.service';
+import { QuerySeekersDto, SeekerSortBy } from '@/modules/profiles/dto/query-seekers.dto';
 import { RejectProfileDto } from '@/modules/profiles/dto/reject-profile.dto';
 import { SubmitKycDto } from '@/modules/profiles/dto/submit-kyc.dto';
 import { UpdateBasicInfoDto } from '@/modules/profiles/dto/update-basic-info.dto';
@@ -24,6 +25,20 @@ import { User } from '@/modules/users/entities/user.entity';
 import { UsersService } from '@/modules/users/users.service';
 
 type ReviewableRole = UserRole.CLIENT | UserRole.SEEKER;
+
+export interface SeekerCard {
+  userId: string;
+  firstName: string | null;
+  lastName: string | null;
+  avatarUrl: string | null;
+  title: string;
+  skills: string[];
+  hourlyRate: number | null;
+  currency: string;
+  avgRating: number;
+  totalReviews: number;
+  totalJobs: number;
+}
 
 @Injectable()
 export class ProfilesService {
@@ -259,5 +274,80 @@ export class ProfilesService {
     });
 
     return status;
+  }
+
+  // ---- Public browse: recommended/trending freelancers for the client dashboard ----
+
+  async browseSeekers(query: QuerySeekersDto): Promise<SeekerCard[]> {
+    const limit = query.limit ?? 8;
+    const qb = this.seekerProfileRepository
+      .createQueryBuilder('s')
+      .innerJoin('users', 'u', 'u.id = s.user_id')
+      .innerJoin(
+        'role_profile_statuses',
+        'rps',
+        "rps.user_id = s.user_id AND rps.role = 'SEEKER' AND rps.profile_status = 'APPROVED'",
+      )
+      .where('s.is_available = true')
+      .andWhere('u.deleted_at IS NULL')
+      .andWhere('u.is_active = true')
+      .andWhere('u.is_banned = false')
+      .select([
+        's.user_id AS "userId"',
+        'u.first_name AS "firstName"',
+        'u.last_name AS "lastName"',
+        'u.avatar_url AS "avatarUrl"',
+        's.title AS title',
+        's.skills AS skills',
+        's.hourly_rate AS "hourlyRate"',
+        's.currency AS currency',
+        's.avg_rating AS "avgRating"',
+        's.total_reviews AS "totalReviews"',
+        's.total_jobs AS "totalJobs"',
+      ]);
+
+    if (query.categoryId) {
+      qb.innerJoin(
+        'user_categories',
+        'uc',
+        "uc.user_id = s.user_id AND uc.role = 'SEEKER' AND uc.category_id = :categoryId",
+        { categoryId: query.categoryId },
+      );
+    }
+
+    switch (query.sortBy) {
+      case SeekerSortBy.RATE:
+        qb.orderBy('s.hourly_rate', 'DESC', 'NULLS LAST');
+        break;
+      case SeekerSortBy.JOBS:
+        qb.orderBy('s.total_jobs', 'DESC');
+        break;
+      default:
+        qb.orderBy('s.avg_rating', 'DESC').addOrderBy('s.total_reviews', 'DESC');
+    }
+
+    qb.limit(limit);
+
+    const rows = await qb.getRawMany<{
+      userId: string;
+      firstName: string | null;
+      lastName: string | null;
+      avatarUrl: string | null;
+      title: string;
+      skills: string[];
+      hourlyRate: string | null;
+      currency: string;
+      avgRating: string;
+      totalReviews: number;
+      totalJobs: number;
+    }>();
+
+    return rows.map((row) => ({
+      ...row,
+      hourlyRate: row.hourlyRate !== null ? Number(row.hourlyRate) : null,
+      avgRating: Number(row.avgRating),
+      totalReviews: Number(row.totalReviews),
+      totalJobs: Number(row.totalJobs),
+    }));
   }
 }

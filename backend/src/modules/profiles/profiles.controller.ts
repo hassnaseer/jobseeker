@@ -20,6 +20,7 @@ import { RolesGuard } from '@/common/guards/roles.guard';
 import { RequireAdminPermission } from '@/modules/admin-team/decorators/require-admin-permission.decorator';
 import { AdminPermission } from '@/modules/admin-team/enums/admin-permission.enum';
 import { AdminPermissionGuard } from '@/modules/admin-team/guards/admin-permission.guard';
+import { QuerySeekersDto } from '@/modules/profiles/dto/query-seekers.dto';
 import { RejectProfileDto } from '@/modules/profiles/dto/reject-profile.dto';
 import { SubmitForReviewDto } from '@/modules/profiles/dto/submit-for-review.dto';
 import { SubmitKycDto } from '@/modules/profiles/dto/submit-kyc.dto';
@@ -44,6 +45,13 @@ export class ProfilesController {
       );
     }
     return role as UserRole.CLIENT | UserRole.SEEKER;
+  }
+
+  // ---- Public browse: recommended/trending freelancers for the client dashboard ----
+
+  @Get('seekers')
+  browseSeekers(@Query() query: QuerySeekersDto) {
+    return this.profilesService.browseSeekers(query);
   }
 
   // ---- Self-service onboarding ----
