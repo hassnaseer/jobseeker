@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Star } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -27,6 +28,7 @@ function StarRow({ rating }: { rating: number }) {
 
 export function ReviewsSection({ contract, currentUserId }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -49,13 +51,13 @@ export function ReviewsSection({ contract, currentUserId }: Props) {
 
   return (
     <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-      <Text style={[styles.sectionTitle, { color: theme.text }]}>Reviews</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('reviews', 'title')}</Text>
 
       <View style={styles.block}>
         <View style={styles.blockHeader}>
-          <Text style={[styles.blockLabel, { color: theme.text }]}>Your review</Text>
+          <Text style={[styles.blockLabel, { color: theme.text }]}>{t('reviews', 'yourReview')}</Text>
           <Button
-            title={myReview ? 'Edit' : 'Leave review'}
+            title={myReview ? t('reviews', 'editReview') : t('reviews', 'leaveReview')}
             variant={myReview ? 'ghost' : 'secondary'}
             onPress={() => setModalOpen(true)}
             style={styles.editButton}
@@ -67,19 +69,19 @@ export function ReviewsSection({ contract, currentUserId }: Props) {
             <Text style={[styles.comment, { color: theme.textSecondary }]}>{myReview.comment}</Text>
           </>
         ) : (
-          <Text style={[styles.placeholder, { color: theme.textMuted }]}>You haven&apos;t left a review yet.</Text>
+          <Text style={[styles.placeholder, { color: theme.textMuted }]}>{t('reviews', 'noReviewYet')}</Text>
         )}
       </View>
 
       <View style={styles.block}>
-        <Text style={[styles.blockLabel, { color: theme.text }]}>Their review</Text>
+        <Text style={[styles.blockLabel, { color: theme.text }]}>{t('reviews', 'theirReview')}</Text>
         {theirReview ? (
           <>
             <StarRow rating={theirReview.rating} />
             <Text style={[styles.comment, { color: theme.textSecondary }]}>{theirReview.comment}</Text>
           </>
         ) : (
-          <Text style={[styles.placeholder, { color: theme.textMuted }]}>Waiting for their review.</Text>
+          <Text style={[styles.placeholder, { color: theme.textMuted }]}>{t('reviews', 'waitingForReview')}</Text>
         )}
       </View>
 

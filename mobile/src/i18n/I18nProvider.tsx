@@ -14,7 +14,11 @@ type NamespaceKey = keyof TranslationDict;
 interface I18nContextValue {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: <NS extends NamespaceKey>(ns: NS, key: keyof TranslationDict[NS]) => string;
+  t: <NS extends NamespaceKey>(
+    ns: NS,
+    key: keyof TranslationDict[NS],
+    vars?: Record<string, string | number>,
+  ) => string;
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null);
@@ -37,10 +41,14 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     () => ({
       language,
       setLanguage,
-      t: (ns, key) => {
+      t: (ns, key, vars) => {
         const dict = DICTS[language];
-        const entry = (dict[ns] as Record<string, string>)[key as string];
-        return entry ?? String(key);
+        const entry = (dict[ns] as Record<string, string>)[key as string] ?? String(key);
+        if (!vars) return entry;
+        return Object.entries(vars).reduce(
+          (str, [varKey, value]) => str.replace(`{{${varKey}}}`, String(value)),
+          entry,
+        );
       },
     }),
     [language],

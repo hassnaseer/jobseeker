@@ -94,24 +94,24 @@ export function SettingsScreen() {
           notifications bell.
         </Text>
 
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Security</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('settings', 'security')}</Text>
         {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
-        {success ? <Text style={[styles.successText, { color: theme.success }]}>Password updated.</Text> : null}
+        {success ? <Text style={[styles.successText, { color: theme.success }]}>{t('settings', 'passwordUpdated')}</Text> : null}
         <TextField
-          label="Current password"
+          label={t('settings', 'currentPassword')}
           value={currentPassword}
           onChangeText={setCurrentPassword}
           secureTextEntry
         />
-        <TextField label="New password" value={newPassword} onChangeText={setNewPassword} secureTextEntry />
+        <TextField label={t('settings', 'newPassword')} value={newPassword} onChangeText={setNewPassword} secureTextEntry />
         <TextField
-          label="Confirm new password"
+          label={t('settings', 'confirmNewPassword')}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
         <Button
-          title="Update password"
+          title={t('settings', 'updatePassword')}
           onPress={handleChangePassword}
           loading={saving}
           disabled={!currentPassword || !newPassword || newPassword !== confirmPassword}

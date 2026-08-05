@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -19,6 +20,7 @@ interface Props {
 
 export function RaiseDisputeModal({ visible, onClose, contractId, milestones }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [milestoneId, setMilestoneId] = useState('');
   const [reason, setReason] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -48,13 +50,13 @@ export function RaiseDisputeModal({ visible, onClose, contractId, milestones }: 
     <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
       <View style={styles.overlay}>
         <View style={[styles.card, { backgroundColor: theme.surface }]}>
-          <Text style={[styles.title, { color: theme.text }]}>Raise a dispute</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('disputes', 'raiseDisputeTitle')}</Text>
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
           {milestones && milestones.length > 0 ? (
             <View style={[styles.pickerWrap, { borderColor: theme.inputBorder }]}>
               <Picker selectedValue={milestoneId} onValueChange={setMilestoneId} dropdownIconColor={theme.text}>
-                <Picker.Item label="Whole contract" value="" />
+                <Picker.Item label={t('disputes', 'wholeContract')} value="" />
                 {milestones.map((m) => (
                   <Picker.Item key={m.id} label={m.title} value={m.id} />
                 ))}
@@ -63,7 +65,7 @@ export function RaiseDisputeModal({ visible, onClose, contractId, milestones }: 
           ) : null}
 
           <TextField
-            label="Reason"
+            label={t('disputes', 'reason')}
             value={reason}
             onChangeText={setReason}
             multiline
@@ -72,9 +74,9 @@ export function RaiseDisputeModal({ visible, onClose, contractId, milestones }: 
           />
 
           <View style={styles.actionsRow}>
-            <Button title="Cancel" variant="ghost" onPress={handleClose} style={styles.actionButtonFlex} />
+            <Button title={t('common', 'cancel')} variant="ghost" onPress={handleClose} style={styles.actionButtonFlex} />
             <Button
-              title="Raise dispute"
+              title={t('disputes', 'raiseDispute')}
               onPress={handleSubmit}
               loading={submitting}
               disabled={reason.trim().length < 5}

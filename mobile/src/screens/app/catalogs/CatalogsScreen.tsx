@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from '
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -23,6 +24,7 @@ const STATUS_TONE: Record<ProjectCatalog['status'], 'neutral' | 'success' | 'war
 
 export function CatalogsScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const isSeeker = user?.activeRole === 'SEEKER';
 
@@ -58,10 +60,12 @@ export function CatalogsScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>{isSeeker ? 'My catalogs' : 'Browse catalogs'}</Text>
+        <Text style={[styles.title, { color: theme.text }]}>
+          {isSeeker ? t('catalogs', 'myCatalogsTitle') : t('catalogs', 'browseTitle')}
+        </Text>
         {isSeeker ? (
           <Button
-            title="+ New"
+            title={t('catalogs', 'newButton')}
             onPress={() => navigation.navigate('CatalogForm', {})}
             style={styles.newButton}
           />
@@ -79,7 +83,7 @@ export function CatalogsScreen({ navigation }: Props) {
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             <Text style={[styles.empty, { color: theme.textMuted }]}>
-              {isSeeker ? 'No catalogs yet.' : 'No published catalogs yet.'}
+              {isSeeker ? t('catalogs', 'noCatalogs') : t('catalogs', 'noPublicCatalogs')}
             </Text>
           }
           renderItem={({ item }) => (
@@ -97,14 +101,14 @@ export function CatalogsScreen({ navigation }: Props) {
               {isSeeker ? (
                 <View style={styles.actionsRow}>
                   <Button
-                    title="Edit"
+                    title={t('catalogs', 'edit')}
                     variant="ghost"
                     onPress={() => navigation.navigate('CatalogForm', { catalogId: item.id })}
                     style={styles.actionButton}
                   />
                   {item.status === 'DRAFT' ? (
                     <Button
-                      title="Publish"
+                      title={t('catalogs', 'publish')}
                       onPress={() => handleTransition(item, 'publish')}
                       loading={busyId === item.id}
                       style={styles.actionButton}
@@ -112,7 +116,7 @@ export function CatalogsScreen({ navigation }: Props) {
                   ) : null}
                   {item.status === 'ACTIVE' ? (
                     <Button
-                      title="Pause"
+                      title={t('catalogs', 'pause')}
                       variant="secondary"
                       onPress={() => handleTransition(item, 'pause')}
                       loading={busyId === item.id}
@@ -121,7 +125,7 @@ export function CatalogsScreen({ navigation }: Props) {
                   ) : null}
                   {item.status === 'PAUSED' ? (
                     <Button
-                      title="Resume"
+                      title={t('catalogs', 'resume')}
                       variant="secondary"
                       onPress={() => handleTransition(item, 'resume')}
                       loading={busyId === item.id}

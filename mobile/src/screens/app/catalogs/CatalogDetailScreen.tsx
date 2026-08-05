@@ -3,6 +3,7 @@ import { ActivityIndicator, Modal, ScrollView, StyleSheet, Text, View } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -18,6 +19,7 @@ type Props = StackScreenProps<ProfileStackParamList, 'CatalogDetail'>;
 export function CatalogDetailScreen({ route, navigation }: Props) {
   const { catalogId } = route.params;
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const isClient = user?.activeRole === 'CLIENT';
 
@@ -69,7 +71,7 @@ export function CatalogDetailScreen({ route, navigation }: Props) {
         {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
         {ordered ? (
           <Text style={[styles.successText, { color: theme.success }]}>
-            Order placed — find the new contract in the Contracts tab.
+            {t('catalogs', 'orderedMessage')}
           </Text>
         ) : null}
 
@@ -78,7 +80,7 @@ export function CatalogDetailScreen({ route, navigation }: Props) {
 
         {isOwner ? (
           <Button
-            title="Edit catalog"
+            title={t('catalogs', 'editCatalogTitle')}
             variant="secondary"
             onPress={() => navigation.navigate('CatalogForm', { catalogId: catalog.id })}
             style={styles.editButton}
@@ -90,7 +92,7 @@ export function CatalogDetailScreen({ route, navigation }: Props) {
             <Text style={[styles.tierName, { color: theme.text }]}>{tier.name}</Text>
             <Text style={[styles.tierPrice, { color: theme.primary }]}>{formatMoney(tier.price, tier.currency)}</Text>
             <Text style={[styles.tierMeta, { color: theme.textSecondary }]}>
-              {tier.deliveryDays} days · {tier.revisions} revisions
+              {tier.deliveryDays} {t('catalogs', 'deliveryDays').toLowerCase()} · {tier.revisions} {t('catalogs', 'revisions').toLowerCase()}
             </Text>
             {tier.features.map((f) => (
               <Text key={f} style={[styles.feature, { color: theme.text }]}>
@@ -98,7 +100,7 @@ export function CatalogDetailScreen({ route, navigation }: Props) {
               </Text>
             ))}
             {isClient ? (
-              <Button title="Order" onPress={() => setOrderTarget(tier)} style={styles.orderButton} />
+              <Button title={t('catalogs', 'order')} onPress={() => setOrderTarget(tier)} style={styles.orderButton} />
             ) : null}
           </View>
         ))}
@@ -107,13 +109,13 @@ export function CatalogDetailScreen({ route, navigation }: Props) {
       <Modal visible={!!orderTarget} transparent animationType="fade" onRequestClose={() => setOrderTarget(null)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalCard, { backgroundColor: theme.surface }]}>
-            <Text style={[styles.modalTitle, { color: theme.text }]}>Order this tier?</Text>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>{t('catalogs', 'orderTitle')}</Text>
             <Text style={[styles.modalBody, { color: theme.textSecondary }]}>
-              This creates a contract with the seeker for {orderTarget?.name}.
+              {t('catalogs', 'orderBody', { tier: orderTarget?.name ?? '' })}
             </Text>
             <View style={styles.actionsRow}>
-              <Button title="Cancel" variant="ghost" onPress={() => setOrderTarget(null)} style={styles.actionButtonFlex} />
-              <Button title="Order" onPress={handleOrder} loading={ordering} style={styles.actionButtonFlex} />
+              <Button title={t('common', 'cancel')} variant="ghost" onPress={() => setOrderTarget(null)} style={styles.actionButtonFlex} />
+              <Button title={t('catalogs', 'order')} onPress={handleOrder} loading={ordering} style={styles.actionButtonFlex} />
             </View>
           </View>
         </View>

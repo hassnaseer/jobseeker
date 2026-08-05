@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -14,6 +15,7 @@ import type { Job, SavedItem } from '@/types/domain';
 
 export function FavoritesScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const isClient = user?.activeRole === 'CLIENT';
 
@@ -63,7 +65,7 @@ export function FavoritesScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
-      <Text style={[styles.title, { color: theme.text }]}>{isClient ? 'Saved talent' : 'Favorites'}</Text>
+      <Text style={[styles.title, { color: theme.text }]}>{isClient ? t('profile', 'savedTalent') : t('profile', 'favorites')}</Text>
       {loading ? (
         <ActivityIndicator style={styles.loader} color={theme.primary} />
       ) : isClient ? (
@@ -73,13 +75,13 @@ export function FavoritesScreen() {
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             <Text style={[styles.empty, { color: error ? theme.error : theme.textMuted }]}>
-              {error ?? 'No saved talent yet.'}
+              {error ?? t('profile', 'noSavedTalent')}
             </Text>
           }
           renderItem={({ item }) => (
             <View style={[styles.talentRow, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
-              <Text style={[styles.talentLabel, { color: theme.text }]}>Saved talent #{item.targetId.slice(0, 8)}</Text>
-              <Button title="Remove" variant="ghost" onPress={() => handleUnsaveTalent(item)} style={styles.removeButton} />
+              <Text style={[styles.talentLabel, { color: theme.text }]}>{t('profile', 'savedTalentLabel')} #{item.targetId.slice(0, 8)}</Text>
+              <Button title={t('common', 'remove')} variant="ghost" onPress={() => handleUnsaveTalent(item)} style={styles.removeButton} />
             </View>
           )}
         />
@@ -90,7 +92,7 @@ export function FavoritesScreen() {
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             <Text style={[styles.empty, { color: error ? theme.error : theme.textMuted }]}>
-              {error ?? 'No saved jobs yet.'}
+              {error ?? t('profile', 'noSavedJobs')}
             </Text>
           }
           renderItem={({ item }) => <JobCard job={item} onPress={() => handleUnsaveJob(item.id)} />}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Star } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -20,6 +21,7 @@ interface Props {
 
 export function ReviewModal({ visible, onClose, contractId, existing, onSaved }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [rating, setRating] = useState(existing?.rating ?? 0);
   const [comment, setComment] = useState(existing?.comment ?? '');
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,9 @@ export function ReviewModal({ visible, onClose, contractId, existing, onSaved }:
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={[styles.card, { backgroundColor: theme.surface }]}>
-          <Text style={[styles.title, { color: theme.text }]}>{existing ? 'Edit review' : 'Leave a review'}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>
+            {existing ? t('reviews', 'editReviewTitle') : t('reviews', 'leaveReviewTitle')}
+          </Text>
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
           <View style={styles.starsRow}>
@@ -65,7 +69,7 @@ export function ReviewModal({ visible, onClose, contractId, existing, onSaved }:
           </View>
 
           <TextField
-            label="Comment"
+            label={t('reviews', 'comment')}
             value={comment}
             onChangeText={setComment}
             multiline
@@ -74,9 +78,9 @@ export function ReviewModal({ visible, onClose, contractId, existing, onSaved }:
           />
 
           <View style={styles.actionsRow}>
-            <Button title="Cancel" variant="ghost" onPress={onClose} style={styles.actionButtonFlex} />
+            <Button title={t('common', 'cancel')} variant="ghost" onPress={onClose} style={styles.actionButtonFlex} />
             <Button
-              title="Submit"
+              title={t('reviews', 'submit')}
               onPress={handleSubmit}
               loading={saving}
               disabled={rating < 1 || comment.trim().length < 3}

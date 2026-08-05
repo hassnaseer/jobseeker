@@ -15,6 +15,7 @@ import {
 } from 'lucide-react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -53,6 +54,7 @@ function Row({
 
 export function ProfileHomeScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const switchRole = useAuthStore((s) => s.switchRole);
@@ -78,14 +80,14 @@ export function ProfileHomeScreen({ navigation }: Props) {
 
         {canSwitch ? (
           <Button
-            title={`Switch to ${otherRole === 'CLIENT' ? 'Client' : 'Freelancer'} mode`}
+            title={otherRole === 'CLIENT' ? t('profile', 'switchToClient') : t('profile', 'switchToFreelancer')}
             variant="secondary"
             onPress={() => switchRole(otherRole as 'CLIENT' | 'SEEKER')}
             style={styles.switchButton}
           />
         ) : (
           <Button
-            title={`Become a ${otherRole === 'CLIENT' ? 'Client' : 'Freelancer'}`}
+            title={otherRole === 'CLIENT' ? t('profile', 'becomeClient') : t('profile', 'becomeFreelancer')}
             variant="secondary"
             onPress={() => switchRole(otherRole as 'CLIENT' | 'SEEKER').then(() => navigation.navigate('EditProfile'))}
             style={styles.switchButton}

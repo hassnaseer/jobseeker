@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Lock } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -13,6 +14,7 @@ import type { Category } from '@/types/domain';
 
 export function CategoriesScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const role = user?.activeRole === 'CLIENT' ? 'CLIENT' : 'SEEKER';
 
@@ -70,13 +72,12 @@ export function CategoriesScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>Categories</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('categoriesPage', 'title')}</Text>
 
         <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-          <Text style={[styles.cardTitle, { color: theme.text }]}>Your categories</Text>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>{t('categoriesPage', 'yourCategories')}</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-            Select the categories that describe your work. You can add anytime; a category with active work
-            can&apos;t be removed.
+            {t('categoriesPage', 'subtitle')}
           </Text>
 
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
@@ -117,7 +118,7 @@ export function CategoriesScreen() {
           )}
 
           <Button
-            title="Save categories"
+            title={t('categoriesPage', 'save')}
             onPress={handleSave}
             loading={saving}
             disabled={!dirty}

@@ -3,6 +3,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -22,6 +23,7 @@ const STATUS_TONE: Record<DisputeStatus, 'neutral' | 'success' | 'warning' | 'in
 export function DisputeDetailScreen({ route }: Props) {
   const { disputeId } = route.params;
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [dispute, setDispute] = useState<Dispute | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +48,7 @@ export function DisputeDetailScreen({ route }: Props) {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
           <View style={styles.headerRow}>
-            <Text style={[styles.title, { color: theme.text }]}>Contract #{dispute.contractId.slice(0, 8)}</Text>
+            <Text style={[styles.title, { color: theme.text }]}>{t('disputes', 'contract')} #{dispute.contractId.slice(0, 8)}</Text>
             <Badge label={dispute.status.replace(/_/g, ' ')} tone={STATUS_TONE[dispute.status]} />
           </View>
           <Text style={[styles.date, { color: theme.textSecondary }]}>{new Date(dispute.createdAt).toLocaleString()}</Text>
@@ -54,7 +56,7 @@ export function DisputeDetailScreen({ route }: Props) {
 
           {dispute.evidence.length > 0 ? (
             <View style={styles.evidenceSection}>
-              <Text style={[styles.sectionLabel, { color: theme.text }]}>Evidence</Text>
+              <Text style={[styles.sectionLabel, { color: theme.text }]}>{t('disputes', 'evidence')}</Text>
               {dispute.evidence.map((url, i) => (
                 <Text key={i} style={[styles.evidenceLink, { color: theme.primary }]}>
                   {url}
@@ -66,7 +68,7 @@ export function DisputeDetailScreen({ route }: Props) {
 
         {dispute.status === 'RESOLVED' ? (
           <View style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
-            <Text style={[styles.sectionLabel, { color: theme.text }]}>Resolution</Text>
+            <Text style={[styles.sectionLabel, { color: theme.text }]}>{t('disputes', 'resolution')}</Text>
             {dispute.resolutionType ? (
               <Badge label={dispute.resolutionType.replace(/_/g, ' ')} tone="info" />
             ) : null}

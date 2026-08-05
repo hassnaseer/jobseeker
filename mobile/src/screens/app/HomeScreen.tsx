@@ -3,6 +3,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Sparkles, User as UserIcon } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -35,11 +36,12 @@ function SectionHeader({ title }: { title: string }) {
 
 function NotificationsPreview({ items }: { items: Notification[] }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   return (
     <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border, marginBottom: spacing.lg }]}>
-      <Text style={[styles.cardTitle, { color: theme.text }]}>Notifications</Text>
+      <Text style={[styles.cardTitle, { color: theme.text }]}>{t('notifications', 'title')}</Text>
       {items.length === 0 ? (
-        <Text style={[styles.cardBody, { color: theme.textSecondary }]}>No notifications yet.</Text>
+        <Text style={[styles.cardBody, { color: theme.textSecondary }]}>{t('notifications', 'empty')}</Text>
       ) : (
         items.map((n) => (
           <View key={n.id} style={styles.notificationRow}>
@@ -99,6 +101,7 @@ function JobTile({ job }: { job: Job }) {
 
 export function HomeScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const jobs = useJobsStore((s) => s.mine);
   const fetchMyJobs = useJobsStore((s) => s.fetchMine);
@@ -182,14 +185,14 @@ export function HomeScreen() {
 
         {isClient ? (
           <>
-            <SectionHeader title="Recommended Freelancers" />
+            <SectionHeader title={t('dashboard', 'recommendedFreelancers')} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tilesRow}>
               {recommendedSeekers.map((s) => (
                 <SeekerTile key={s.userId} seeker={s} />
               ))}
             </ScrollView>
 
-            <SectionHeader title="Trending Freelancers" />
+            <SectionHeader title={t('dashboard', 'trendingFreelancers')} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tilesRow}>
               {trendingSeekers.map((s) => (
                 <SeekerTile key={s.userId} seeker={s} />
@@ -198,14 +201,14 @@ export function HomeScreen() {
           </>
         ) : (
           <>
-            <SectionHeader title="Recommended For You" />
+            <SectionHeader title={t('dashboard', 'recommendedForYou')} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tilesRow}>
               {recommendedJobs.map((job) => (
                 <JobTile key={job.id} job={job} />
               ))}
             </ScrollView>
 
-            <SectionHeader title="New & Trending" />
+            <SectionHeader title={t('dashboard', 'newAndTrending')} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tilesRow}>
               {newJobs.map((job) => (
                 <JobTile key={job.id} job={job} />

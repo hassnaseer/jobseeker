@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -28,6 +29,7 @@ export function CatalogFormScreen({ route, navigation }: Props) {
   const catalogId = route.params?.catalogId;
   const isEdit = !!catalogId;
   const { theme } = useTheme();
+  const { t } = useI18n();
 
   const [categories, setCategories] = useState<{ id: string; label: string }[]>([]);
   const [catalog, setCatalog] = useState<ProjectCatalog | null>(null);
@@ -95,7 +97,7 @@ export function CatalogFormScreen({ route, navigation }: Props) {
     if (!catalogId) return;
     try {
       await removeTier(catalogId, tier.id);
-      setCatalog((prev) => (prev ? { ...prev, tiers: (prev.tiers ?? []).filter((t) => t.id !== tier.id) } : prev));
+      setCatalog((prev) => (prev ? { ...prev, tiers: (prev.tiers ?? []).filter((tr) => tr.id !== tier.id) } : prev));
     } catch (err) {
       setError(extractErrorMessage(err));
     }
@@ -108,15 +110,17 @@ export function CatalogFormScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>{isEdit ? 'Edit catalog' : 'New catalog'}</Text>
+        <Text style={[styles.title, { color: theme.text }]}>
+          {isEdit ? t('catalogs', 'editCatalogTitle') : t('catalogs', 'newCatalogTitle')}
+        </Text>
         {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
-        <TextField label="Title" value={title} onChangeText={setTitle} />
+        <TextField label={t('catalogs', 'titleField')} value={title} onChangeText={setTitle} />
 
-        <Text style={[styles.label, { color: theme.textSecondary }]}>Category</Text>
+        <Text style={[styles.label, { color: theme.textSecondary }]}>{t('catalogs', 'category')}</Text>
         <View style={[styles.pickerWrap, { borderColor: theme.inputBorder }]}>
           <Picker selectedValue={categoryId} onValueChange={(v) => setCategoryId(v)} dropdownIconColor={theme.text}>
-            <Picker.Item label="Select a category" value="" />
+            <Picker.Item label={t('catalogs', 'categoryPlaceholder')} value="" />
             {categories.map((c) => (
               <Picker.Item key={c.id} label={c.label} value={c.id} />
             ))}
@@ -124,7 +128,7 @@ export function CatalogFormScreen({ route, navigation }: Props) {
         </View>
 
         <TextField
-          label="Description"
+          label={t('catalogs', 'description')}
           value={description}
           onChangeText={setDescription}
           multiline
@@ -132,19 +136,19 @@ export function CatalogFormScreen({ route, navigation }: Props) {
           style={styles.multiline}
         />
 
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>FAQ</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('catalogs', 'faq')}</Text>
         {faq.map((item, i) => (
           <View key={i} style={[styles.faqCard, { borderColor: theme.border }]}>
-            <TextField label="Question" value={item.question} onChangeText={(v) => updateFaqItem(i, { question: v })} />
+            <TextField label={t('catalogs', 'question')} value={item.question} onChangeText={(v) => updateFaqItem(i, { question: v })} />
             <TextField
-              label="Answer"
+              label={t('catalogs', 'answer')}
               value={item.answer}
               onChangeText={(v) => updateFaqItem(i, { answer: v })}
               multiline
               numberOfLines={2}
             />
             <Button
-              title="Remove"
+              title={t('common', 'remove')}
               variant="ghost"
               onPress={() => setFaq((items) => items.filter((_, idx) => idx !== i))}
               style={styles.removeFaqButton}
@@ -152,48 +156,48 @@ export function CatalogFormScreen({ route, navigation }: Props) {
           </View>
         ))}
         <Button
-          title="+ Add FAQ item"
+          title={t('catalogs', 'addFaqItem')}
           variant="secondary"
           onPress={() => setFaq((items) => [...items, { question: '', answer: '' }])}
           style={styles.addFaqButton}
         />
 
-        <Button title="Save" onPress={handleSave} loading={saving} style={styles.saveButton} />
+        <Button title={t('common', 'save')} onPress={handleSave} loading={saving} style={styles.saveButton} />
 
         {isEdit && catalog ? (
           <View style={styles.tiersSection}>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>Tiers</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('catalogs', 'tiers')}</Text>
             {(catalog.tiers ?? []).map((tier) => (
               <View key={tier.id} style={[styles.tierCard, { borderColor: theme.border }]}>
                 <Text style={[styles.tierName, { color: theme.text }]}>{tier.name}</Text>
                 <Text style={[styles.tierMeta, { color: theme.textSecondary }]}>
-                  {formatMoney(tier.price, tier.currency)} · {tier.deliveryDays}d · {tier.revisions} revisions
+                  {formatMoney(tier.price, tier.currency)} · {tier.deliveryDays}d · {tier.revisions} {t('catalogs', 'revisions').toLowerCase()}
                 </Text>
-                <Button title="Delete" variant="ghost" onPress={() => handleRemoveTier(tier)} style={styles.removeFaqButton} />
+                <Button title={t('common', 'delete')} variant="ghost" onPress={() => handleRemoveTier(tier)} style={styles.removeFaqButton} />
               </View>
             ))}
 
             <View style={[styles.tierCard, { borderColor: theme.border }]}>
-              <TextField label="Tier name" value={newTier.name} onChangeText={(v) => setNewTier((t) => ({ ...t, name: v }))} />
+              <TextField label={t('catalogs', 'tierName')} value={newTier.name} onChangeText={(v) => setNewTier((prev) => ({ ...prev, name: v }))} />
               <TextField
-                label="Price"
+                label={t('catalogs', 'price')}
                 keyboardType="numeric"
                 value={String(newTier.price)}
-                onChangeText={(v) => setNewTier((t) => ({ ...t, price: Number(v) || 0 }))}
+                onChangeText={(v) => setNewTier((prev) => ({ ...prev, price: Number(v) || 0 }))}
               />
               <TextField
-                label="Delivery days"
+                label={t('catalogs', 'deliveryDays')}
                 keyboardType="numeric"
                 value={String(newTier.deliveryDays)}
-                onChangeText={(v) => setNewTier((t) => ({ ...t, deliveryDays: Number(v) || 0 }))}
+                onChangeText={(v) => setNewTier((prev) => ({ ...prev, deliveryDays: Number(v) || 0 }))}
               />
               <TextField
-                label="Revisions"
+                label={t('catalogs', 'revisions')}
                 keyboardType="numeric"
                 value={String(newTier.revisions ?? 0)}
-                onChangeText={(v) => setNewTier((t) => ({ ...t, revisions: Number(v) || 0 }))}
+                onChangeText={(v) => setNewTier((prev) => ({ ...prev, revisions: Number(v) || 0 }))}
               />
-              <Button title="Add tier" onPress={handleAddTier} loading={addingTier} disabled={!newTier.name.trim()} />
+              <Button title={t('catalogs', 'addTier')} onPress={handleAddTier} loading={addingTier} disabled={!newTier.name.trim()} />
             </View>
           </View>
         ) : null}
