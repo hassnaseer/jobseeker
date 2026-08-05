@@ -10,6 +10,7 @@ import { HomeScreen } from '@/screens/app/HomeScreen';
 import { PlaceholderScreen } from '@/screens/app/PlaceholderScreen';
 import { ProfileScreen } from '@/screens/app/ProfileScreen';
 import { JobsNavigator } from './JobsNavigator';
+import { ContractsNavigator } from './ContractsNavigator';
 
 type TabKey = keyof AppTabParamList;
 
@@ -50,7 +51,7 @@ export function AppShell() {
         ) : null}
         {visited.has('Contracts') ? (
           <View style={[StyleSheet.absoluteFill, active !== 'Contracts' && styles.hidden]}>
-            <PlaceholderScreen title="Contracts" />
+            <ContractsNavigator />
           </View>
         ) : null}
         {visited.has('Messages') ? (

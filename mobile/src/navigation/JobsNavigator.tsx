@@ -8,6 +8,7 @@ import { JobDetailScreen } from '@/screens/app/jobs/JobDetailScreen';
 import { PostJobScreen } from '@/screens/app/jobs/PostJobScreen';
 import { JobApplyScreen } from '@/screens/app/jobs/JobApplyScreen';
 import { JobApplicantsScreen } from '@/screens/app/jobs/JobApplicantsScreen';
+import { HireApplicantScreen } from '@/screens/app/jobs/HireApplicantScreen';
 
 const Stack = createStackNavigator<JobsStackParamList>();
 
@@ -22,6 +23,7 @@ export function JobsNavigator() {
       <Stack.Screen name="PostJob" component={PostJobScreen} />
       <Stack.Screen name="JobApply" component={JobApplyScreen} />
       <Stack.Screen name="JobApplicants" component={JobApplicantsScreen} />
+      <Stack.Screen name="HireApplicant" component={HireApplicantScreen} />
     </Stack.Navigator>
   );
 }

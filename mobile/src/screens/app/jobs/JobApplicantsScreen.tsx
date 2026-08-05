@@ -28,7 +28,7 @@ const STATUS_TONE: Record<ApplicationStatus, 'neutral' | 'success' | 'warning' |
   WITHDRAWN: 'neutral',
 };
 
-export function JobApplicantsScreen({ route }: Props) {
+export function JobApplicantsScreen({ route, navigation }: Props) {
   const { jobId } = route.params;
   const { theme } = useTheme();
   const [applications, setApplications] = useState<Application[]>([]);
@@ -115,6 +115,14 @@ export function JobApplicantsScreen({ route }: Props) {
                     style={styles.actionButton}
                   />
                 </View>
+              ) : null}
+
+              {item.status === 'ACCEPTED' ? (
+                <Button
+                  title="Hire"
+                  onPress={() => navigation.navigate('HireApplicant', { jobId, applicationId: item.id })}
+                  style={styles.actionButton}
+                />
               ) : null}
             </View>
           )}

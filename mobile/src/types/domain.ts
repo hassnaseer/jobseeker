@@ -82,3 +82,93 @@ export interface Category {
   isActive: boolean;
   children?: Category[];
 }
+
+export type ContractStatus =
+  | 'PENDING_FUNDING'
+  | 'ACTIVE'
+  | 'SUBMITTED'
+  | 'REVISION'
+  | 'COMPLETED'
+  | 'CANCELLED'
+  | 'DISPUTED';
+
+export interface Contract {
+  id: string;
+  jobId: string;
+  job?: Job;
+  clientId: string;
+  seekerId: string;
+  applicationId: string;
+  type: JobType;
+  pricingModel: PricingModel | null;
+  agreedAmount: number | null;
+  agreedHourlyRate: number | null;
+  currency: string;
+  trackingMode: TrackingMode | null;
+  weeklyHourLimit: number | null;
+  checkinRequired: boolean;
+  status: ContractStatus;
+  startedAt: string | null;
+  completedAt: string | null;
+  createdAt: string;
+}
+
+export type MilestoneStatus = 'PENDING' | 'FUNDED' | 'SUBMITTED' | 'APPROVED' | 'RELEASED' | 'DISPUTED';
+
+export interface Milestone {
+  id: string;
+  contractId: string;
+  title: string;
+  description: string | null;
+  amount: number;
+  currency: string;
+  sequence: number;
+  status: MilestoneStatus;
+  fundedAt: string | null;
+  releasedAt: string | null;
+}
+
+export type DeliverableStatus = 'SUBMITTED' | 'APPROVED' | 'REVISION_REQUESTED';
+
+export interface Deliverable {
+  id: string;
+  contractId: string;
+  milestoneId: string | null;
+  description: string;
+  attachments: string[];
+  status: DeliverableStatus;
+  feedback: string | null;
+  submittedAt: string;
+  reviewedAt: string | null;
+}
+
+export type TimeLogEntryType = 'MANUAL' | 'TIMER';
+export type TimeLogEntryStatus = 'PENDING' | 'APPROVED' | 'DISPUTED';
+
+export interface TimeLogEntry {
+  id: string;
+  timesheetId: string;
+  contractId: string;
+  entryType: TimeLogEntryType;
+  startTime: string | null;
+  endTime: string | null;
+  hours: number | null;
+  description: string | null;
+  screenshotUrls: string[];
+  status: TimeLogEntryStatus;
+  createdAt: string;
+}
+
+export type TimesheetPeriodStatus = 'OPEN' | 'CLOSED' | 'APPROVED' | 'DISPUTED';
+
+export interface TimesheetPeriod {
+  id: string;
+  contractId: string;
+  periodStart: string;
+  periodEnd: string;
+  totalHours: number;
+  totalAmount: number;
+  currency: string;
+  status: TimesheetPeriodStatus;
+  approvedAt: string | null;
+}
