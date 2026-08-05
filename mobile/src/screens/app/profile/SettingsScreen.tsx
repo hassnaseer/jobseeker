@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -7,6 +7,9 @@ import { typography } from '@/theme/typography';
 import { useI18n, type Language } from '@/i18n/I18nProvider';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/Button';
+import { TextField } from '@/components/TextField';
+import { changePassword } from '@/api/auth';
+import { extractErrorMessage } from '@/api/client';
 
 const LANGUAGES: { code: Language; label: string }[] = [
   { code: 'en', label: 'English' },
@@ -42,6 +45,30 @@ export function SettingsScreen() {
   const { language, setLanguage, t } = useI18n();
   const logout = useAuthStore((s) => s.logout);
 
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  async function handleChangePassword() {
+    setSaving(true);
+    setError(null);
+    setSuccess(false);
+    try {
+      await changePassword({ currentPassword, newPassword, confirmPassword });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setSuccess(true);
+    } catch (err) {
+      setError(extractErrorMessage(err));
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -67,6 +94,30 @@ export function SettingsScreen() {
           notifications bell.
         </Text>
 
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Security</Text>
+        {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
+        {success ? <Text style={[styles.successText, { color: theme.success }]}>Password updated.</Text> : null}
+        <TextField
+          label="Current password"
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+          secureTextEntry
+        />
+        <TextField label="New password" value={newPassword} onChangeText={setNewPassword} secureTextEntry />
+        <TextField
+          label="Confirm new password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+        />
+        <Button
+          title="Update password"
+          onPress={handleChangePassword}
+          loading={saving}
+          disabled={!currentPassword || !newPassword || newPassword !== confirmPassword}
+          style={styles.updatePasswordButton}
+        />
+
         <Button title={t('common', 'logout')} variant="ghost" onPress={logout} style={styles.logout} />
       </ScrollView>
     </SafeAreaView>
@@ -81,5 +132,8 @@ const styles = StyleSheet.create({
   optionsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   optionRow: { borderWidth: 1, borderRadius: radius.md, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
   note: { fontSize: typography.sizes.sm },
+  errorText: { marginBottom: spacing.sm },
+  successText: { marginBottom: spacing.sm },
+  updatePasswordButton: { marginTop: spacing.sm },
   logout: { marginTop: spacing.xxl },
 });

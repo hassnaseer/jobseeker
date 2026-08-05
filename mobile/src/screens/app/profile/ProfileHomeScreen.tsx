@@ -83,7 +83,14 @@ export function ProfileHomeScreen({ navigation }: Props) {
             onPress={() => switchRole(otherRole as 'CLIENT' | 'SEEKER')}
             style={styles.switchButton}
           />
-        ) : null}
+        ) : (
+          <Button
+            title={`Become a ${otherRole === 'CLIENT' ? 'Client' : 'Freelancer'}`}
+            variant="secondary"
+            onPress={() => switchRole(otherRole as 'CLIENT' | 'SEEKER').then(() => navigation.navigate('EditProfile'))}
+            style={styles.switchButton}
+          />
+        )}
 
         <View style={styles.section}>
           <Row icon={User} label="Edit profile" onPress={() => navigation.navigate('EditProfile')} />

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Star, Trash2 } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
-import { spacing } from '@/theme/spacing';
+import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
 import { Button } from '@/components/Button';
@@ -13,8 +14,122 @@ import {
   upsertClientProfile,
   upsertSeekerProfile,
 } from '@/api/profiles';
+import { listReviewsReceivedBy } from '@/api/reviews';
 import { extractErrorMessage } from '@/api/client';
-import type { ClientProfile, MyProfile, SeekerProfile } from '@/types/profile';
+import type {
+  CertificationItem,
+  ClientProfile,
+  MyProfile,
+  SeekerProfile,
+  WorkHistoryItem,
+} from '@/types/profile';
+import type { Review } from '@/types/domain';
+
+function StarRow({ rating }: { rating: number }) {
+  const { theme } = useTheme();
+  return (
+    <View style={styles.starRow}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star key={n} size={14} color={theme.warning} fill={n <= rating ? theme.warning : 'transparent'} />
+      ))}
+    </View>
+  );
+}
+
+function WorkHistoryEditor({
+  items,
+  onChange,
+}: {
+  items: WorkHistoryItem[];
+  onChange: (items: WorkHistoryItem[]) => void;
+}) {
+  const { theme } = useTheme();
+  const [company, setCompany] = useState('');
+  const [title, setTitle] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  function handleAdd() {
+    if (!company.trim() || !title.trim()) return;
+    onChange([...items, { company: company.trim(), title: title.trim(), startDate, endDate: endDate || undefined }]);
+    setCompany('');
+    setTitle('');
+    setStartDate('');
+    setEndDate('');
+  }
+
+  return (
+    <View>
+      {items.map((item, i) => (
+        <View key={i} style={[styles.listItem, { borderColor: theme.border }]}>
+          <View style={styles.listItemText}>
+            <Text style={[styles.listItemTitle, { color: theme.text }]}>
+              {item.title} · {item.company}
+            </Text>
+            <Text style={[styles.listItemMeta, { color: theme.textSecondary }]}>
+              {item.startDate}
+              {item.endDate ? ` – ${item.endDate}` : item.isCurrent ? ' – Present' : ''}
+            </Text>
+          </View>
+          <Pressable
+            onPress={() => onChange(items.filter((_, idx) => idx !== i))}
+            style={styles.deleteIconButton}
+            hitSlop={8}
+          >
+            <Trash2 size={16} color={theme.error} />
+          </Pressable>
+        </View>
+      ))}
+      <TextField label="Company" value={company} onChangeText={setCompany} />
+      <TextField label="Title" value={title} onChangeText={setTitle} />
+      <TextField label="Start date" value={startDate} onChangeText={setStartDate} placeholder="2022" />
+      <TextField label="End date (optional)" value={endDate} onChangeText={setEndDate} placeholder="2024" />
+      <Button title="+ Add experience" variant="secondary" onPress={handleAdd} style={styles.addButton} />
+    </View>
+  );
+}
+
+function CertificationsEditor({
+  items,
+  onChange,
+}: {
+  items: CertificationItem[];
+  onChange: (items: CertificationItem[]) => void;
+}) {
+  const { theme } = useTheme();
+  const [name, setName] = useState('');
+  const [issuer, setIssuer] = useState('');
+
+  function handleAdd() {
+    if (!name.trim() || !issuer.trim()) return;
+    onChange([...items, { name: name.trim(), issuer: issuer.trim() }]);
+    setName('');
+    setIssuer('');
+  }
+
+  return (
+    <View>
+      <View style={styles.chipRow}>
+        {items.map((item, i) => (
+          <View key={i} style={[styles.chip, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
+            <Text style={{ color: theme.text }}>
+              {item.name} · {item.issuer}
+            </Text>
+            <Text
+              onPress={() => onChange(items.filter((_, idx) => idx !== i))}
+              style={{ color: theme.error, marginLeft: spacing.xs, fontWeight: typography.weights.bold }}
+            >
+              ×
+            </Text>
+          </View>
+        ))}
+      </View>
+      <TextField label="Certification / achievement" value={name} onChangeText={setName} />
+      <TextField label="Issuer" value={issuer} onChangeText={setIssuer} />
+      <Button title="+ Add certification" variant="secondary" onPress={handleAdd} style={styles.addButton} />
+    </View>
+  );
+}
 
 export function EditProfileScreen() {
   const { theme } = useTheme();
@@ -36,6 +151,10 @@ export function EditProfileScreen() {
   const [bio, setBio] = useState('');
   const [skills, setSkills] = useState('');
   const [hourlyRate, setHourlyRate] = useState('');
+  const [workHistory, setWorkHistory] = useState<WorkHistoryItem[]>([]);
+  const [certifications, setCertifications] = useState<CertificationItem[]>([]);
+  const [ratingSummary, setRatingSummary] = useState<{ avgRating: number; totalReviews: number; totalJobs: number } | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -62,11 +181,24 @@ export function EditProfileScreen() {
           setBio(sp?.bio ?? '');
           setSkills((sp?.skills ?? []).join(', '));
           setHourlyRate(sp?.hourlyRate ? String(sp.hourlyRate) : '');
+          setWorkHistory(sp?.workHistory ?? []);
+          setCertifications(sp?.certifications ?? []);
+          if (sp) {
+            setRatingSummary({ avgRating: sp.avgRating, totalReviews: sp.totalReviews, totalJobs: sp.totalJobs });
+          }
         }
       })
       .catch((err) => setError(extractErrorMessage(err)))
       .finally(() => setLoading(false));
   }, [isClient]);
+
+  useEffect(() => {
+    if (user) {
+      listReviewsReceivedBy(user.id)
+        .then(setReviews)
+        .catch(() => undefined);
+    }
+  }, [user]);
 
   async function handleSave() {
     setError(null);
@@ -85,6 +217,8 @@ export function EditProfileScreen() {
             .map((s) => s.trim())
             .filter(Boolean),
           hourlyRate: hourlyRate ? Number(hourlyRate) : undefined,
+          workHistory,
+          certifications,
         });
       }
       setSaved(true);
@@ -130,6 +264,22 @@ export function EditProfileScreen() {
               <TextField label="Bio" value={bio} onChangeText={setBio} multiline numberOfLines={4} style={styles.textarea} />
               <TextField label="Skills (comma-separated)" value={skills} onChangeText={setSkills} placeholder="React, Node.js, SQL" />
               <TextField label="Hourly rate" value={hourlyRate} onChangeText={setHourlyRate} keyboardType="numeric" />
+
+              {ratingSummary ? (
+                <View style={[styles.ratingCard, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
+                  <StarRow rating={Math.round(ratingSummary.avgRating)} />
+                  <Text style={[styles.ratingText, { color: theme.textSecondary }]}>
+                    {ratingSummary.avgRating.toFixed(1)} · {ratingSummary.totalJobs} jobs completed ·{' '}
+                    {ratingSummary.totalReviews} reviews
+                  </Text>
+                </View>
+              ) : null}
+
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Work experience</Text>
+              <WorkHistoryEditor items={workHistory} onChange={setWorkHistory} />
+
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Certifications & achievements</Text>
+              <CertificationsEditor items={certifications} onChange={setCertifications} />
             </>
           )}
 
@@ -143,6 +293,21 @@ export function EditProfileScreen() {
           {saved ? <Text style={[styles.savedText, { color: theme.success }]}>Saved</Text> : null}
 
           <Button title="Save changes" onPress={handleSave} loading={saving} style={styles.submit} />
+
+          {!isClient && reviews.length > 0 ? (
+            <>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>Reviews ({reviews.length})</Text>
+              {reviews.map((r) => (
+                <View key={r.id} style={[styles.reviewCard, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
+                  <StarRow rating={r.rating} />
+                  <Text style={[styles.reviewComment, { color: theme.text }]}>{r.comment}</Text>
+                  <Text style={[styles.reviewDate, { color: theme.textMuted }]}>
+                    {new Date(r.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+              ))}
+            </>
+          ) : null}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -161,4 +326,33 @@ const styles = StyleSheet.create({
   errorText: { marginTop: spacing.md },
   savedText: { marginTop: spacing.md },
   submit: { marginTop: spacing.lg },
+  ratingCard: { borderWidth: 1, borderRadius: radius.md, padding: spacing.md, marginTop: spacing.sm, marginBottom: spacing.sm },
+  ratingText: { fontSize: typography.sizes.sm, marginTop: spacing.xs },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  listItemText: { flex: 1 },
+  listItemTitle: { fontSize: typography.sizes.sm, fontWeight: typography.weights.medium },
+  listItemMeta: { fontSize: typography.sizes.xs, marginTop: 2 },
+  deleteIconButton: { height: 32, width: 32, alignItems: 'center', justifyContent: 'center' },
+  addButton: { marginTop: spacing.sm, marginBottom: spacing.md },
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.sm },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  reviewCard: { borderWidth: 1, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
+  reviewComment: { fontSize: typography.sizes.sm, marginTop: spacing.xs },
+  reviewDate: { fontSize: typography.sizes.xs, marginTop: spacing.xs },
+  starRow: { flexDirection: 'row', gap: 2 },
 });

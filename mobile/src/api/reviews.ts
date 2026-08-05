@@ -20,3 +20,8 @@ export async function editReview(id: string, dto: Partial<ReviewInput>): Promise
   const { data } = await apiClient.patch<Review>(`/reviews/${id}`, dto);
   return data;
 }
+
+export async function listReviewsReceivedBy(userId: string): Promise<Review[]> {
+  const { data } = await apiClient.get<Review[]>(`/users/${userId}/reviews`);
+  return data;
+}
