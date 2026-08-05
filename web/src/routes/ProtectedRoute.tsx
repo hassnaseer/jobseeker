@@ -35,7 +35,11 @@ export default function ProtectedRoute() {
   }
 
   if (needsProfile) {
-    if (profile.status === 'idle' || profile.status === 'loading') {
+    // Only gate on the *first* load. profile.status flips back to 'loading'
+    // whenever anything re-fetches (e.g. OnboardingPage's own effect) — if we
+    // re-hid the Outlet on every such flip, that would unmount OnboardingPage,
+    // which re-fetches on remount, which flips status again: an infinite loop.
+    if (!profile.data && (profile.status === 'idle' || profile.status === 'loading')) {
       return (
         <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress />
