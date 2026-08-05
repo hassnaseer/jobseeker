@@ -1,6 +1,29 @@
 import { apiClient } from '@/api/client';
 import type { Category } from '@/types/domain';
 
+export interface UserCategorySelection {
+  id: string;
+  userId: string;
+  role: 'CLIENT' | 'SEEKER';
+  categoryId: string;
+  category: Category;
+  locked: boolean;
+}
+
+export async function getMyCategories(role: 'CLIENT' | 'SEEKER'): Promise<UserCategorySelection[]> {
+  const { data } = await apiClient.get<UserCategorySelection[]>('/categories/mine', { params: { role } });
+  return data;
+}
+
+export async function addMyCategory(role: 'CLIENT' | 'SEEKER', categoryId: string): Promise<UserCategorySelection> {
+  const { data } = await apiClient.post<UserCategorySelection>('/categories/mine', { role, categoryId });
+  return data;
+}
+
+export async function removeMyCategory(role: 'CLIENT' | 'SEEKER', categoryId: string): Promise<void> {
+  await apiClient.delete(`/categories/mine/${categoryId}`, { params: { role } });
+}
+
 export async function getCategoryTree(): Promise<Category[]> {
   const { data } = await apiClient.get<Category[]>('/categories/tree');
   return data;

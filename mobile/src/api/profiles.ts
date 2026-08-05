@@ -84,3 +84,24 @@ export async function submitForReview(role: ReviewableRole): Promise<RoleProfile
   const { data } = await apiClient.post<RoleProfileStatusInfo>('/profiles/me/submit', { role });
   return data;
 }
+
+export type SeekerSortBy = 'RATING' | 'RATE' | 'JOBS';
+
+export interface SeekerCard {
+  userId: string;
+  firstName: string | null;
+  lastName: string | null;
+  avatarUrl: string | null;
+  title: string;
+  skills: string[];
+  hourlyRate: number | null;
+  currency: string;
+  avgRating: number;
+  totalReviews: number;
+  totalJobs: number;
+}
+
+export async function browseSeekers(params: { sortBy?: SeekerSortBy; limit?: number }): Promise<SeekerCard[]> {
+  const { data } = await apiClient.get<SeekerCard[]>('/profiles/seekers', { params });
+  return data;
+}

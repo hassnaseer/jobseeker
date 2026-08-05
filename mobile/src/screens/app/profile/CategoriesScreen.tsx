@@ -1,74 +1,151 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Lock } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
-import { getCategoryTree } from '@/api/categories';
+import { Button } from '@/components/Button';
+import { addMyCategory, getCategoryTree, getMyCategories, removeMyCategory } from '@/api/categories';
 import { extractErrorMessage } from '@/api/client';
+import { useAuthStore } from '@/store/authStore';
 import type { Category } from '@/types/domain';
-
-function CategoryNode({ category, depth }: { category: Category; depth: number }) {
-  const { theme } = useTheme();
-  return (
-    <View>
-      <View style={[styles.row, { borderColor: theme.border, backgroundColor: theme.cardBg, marginLeft: depth * spacing.lg }]}>
-        <Text style={[styles.rowLabel, { color: theme.text }]}>{category.name}</Text>
-      </View>
-      {category.children?.map((child) => (
-        <CategoryNode key={child.id} category={child} depth={depth + 1} />
-      ))}
-    </View>
-  );
-}
 
 export function CategoriesScreen() {
   const { theme } = useTheme();
+  const user = useAuthStore((s) => s.user);
+  const role = user?.activeRole === 'CLIENT' ? 'CLIENT' : 'SEEKER';
+
   const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [lockedIds, setLockedIds] = useState<Set<string>>(new Set());
+  const [initialIds, setInitialIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getCategoryTree()
-      .then(setCategories)
+    Promise.all([getCategoryTree(), getMyCategories(role)])
+      .then(([tree, mine]) => {
+        setCategories(tree);
+        const ids = new Set(mine.map((m) => m.categoryId));
+        setSelectedIds(ids);
+        setInitialIds(ids);
+        setLockedIds(new Set(mine.filter((m) => m.locked).map((m) => m.categoryId)));
+      })
       .catch((err) => setError(extractErrorMessage(err)))
       .finally(() => setLoading(false));
-  }, []);
+  }, [role]);
+
+  function toggle(categoryId: string) {
+    if (lockedIds.has(categoryId)) return;
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(categoryId)) next.delete(categoryId);
+      else next.add(categoryId);
+      return next;
+    });
+  }
+
+  async function handleSave() {
+    setSaving(true);
+    setError(null);
+    try {
+      const toAdd = [...selectedIds].filter((id) => !initialIds.has(id));
+      const toRemove = [...initialIds].filter((id) => !selectedIds.has(id));
+      await Promise.all([
+        ...toAdd.map((id) => addMyCategory(role, id)),
+        ...toRemove.map((id) => removeMyCategory(role, id)),
+      ]);
+      setInitialIds(new Set(selectedIds));
+    } catch (err) {
+      setError(extractErrorMessage(err));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const dirty = selectedIds.size !== initialIds.size || [...selectedIds].some((id) => !initialIds.has(id));
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
-      <Text style={[styles.title, { color: theme.text }]}>Categories</Text>
-      {loading ? (
-        <ActivityIndicator style={styles.loader} color={theme.primary} />
-      ) : (
-        <FlatList
-          data={categories}
-          keyExtractor={(c) => c.id}
-          contentContainerStyle={styles.listContent}
-          ListEmptyComponent={
-            <Text style={[styles.empty, { color: error ? theme.error : theme.textMuted }]}>
-              {error ?? 'No categories yet.'}
-            </Text>
-          }
-          renderItem={({ item }) => <CategoryNode category={item} depth={0} />}
-        />
-      )}
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={[styles.title, { color: theme.text }]}>Categories</Text>
+
+        <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+          <Text style={[styles.cardTitle, { color: theme.text }]}>Your categories</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+            Select the categories that describe your work. You can add anytime; a category with active work
+            can&apos;t be removed.
+          </Text>
+
+          {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
+
+          {loading ? (
+            <ActivityIndicator color={theme.primary} style={styles.loader} />
+          ) : (
+            <View style={styles.chipRow}>
+              {categories.map((cat) => {
+                const selected = selectedIds.has(cat.id);
+                const locked = lockedIds.has(cat.id);
+                return (
+                  <Pressable
+                    key={cat.id}
+                    onPress={() => toggle(cat.id)}
+                    style={[
+                      styles.chip,
+                      {
+                        borderColor: selected ? theme.primary : theme.border,
+                        backgroundColor: selected ? theme.selectedChipBg : theme.cardBg,
+                      },
+                    ]}
+                  >
+                    {locked ? <Lock size={13} color={selected ? theme.primary : theme.textMuted} /> : null}
+                    <Text
+                      style={{
+                        color: selected ? theme.primary : theme.text,
+                        fontWeight: typography.weights.medium,
+                        marginLeft: locked ? spacing.xs : 0,
+                      }}
+                    >
+                      {cat.name}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          )}
+
+          <Button
+            title="Save categories"
+            onPress={handleSave}
+            loading={saving}
+            disabled={!dirty}
+            style={styles.saveButton}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  title: {
-    fontSize: typography.sizes.xxl,
-    fontWeight: typography.weights.bold,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
-    marginBottom: spacing.md,
+  content: { padding: spacing.xl, paddingBottom: spacing.xxl },
+  title: { fontSize: typography.sizes.xxl, fontWeight: typography.weights.bold, marginBottom: spacing.lg },
+  card: { borderWidth: 1, borderRadius: radius.lg, padding: spacing.lg },
+  cardTitle: { fontSize: typography.sizes.base, fontWeight: typography.weights.bold, marginBottom: spacing.xs },
+  subtitle: { fontSize: typography.sizes.sm, marginBottom: spacing.lg },
+  errorText: { marginBottom: spacing.md },
+  loader: { marginVertical: spacing.lg },
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.lg },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
   },
-  loader: { marginTop: spacing.xxl },
-  listContent: { paddingHorizontal: spacing.xl, paddingBottom: spacing.xxl },
-  empty: { textAlign: 'center', marginTop: spacing.xxl },
-  row: { borderWidth: 1, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
-  rowLabel: { fontSize: typography.sizes.base },
+  saveButton: { alignSelf: 'flex-start', height: 44, paddingHorizontal: spacing.lg },
 });
