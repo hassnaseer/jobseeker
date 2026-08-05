@@ -161,7 +161,8 @@
     "reports": "Reportes",
     "categories": "Categorías",
     "analytics": "Analítica",
-    "config": "Comisión y configuración"
+    "config": "Comisión y configuración",
+    "team": "Equipo"
   },
   "shell": {
     "signOut": "Cerrar sesión",
@@ -642,7 +643,27 @@
     "aiModel": "Modelo de Claude",
     "aiModelHelp": "Deja en blanco para usar el modelo predeterminado del servidor.",
     "aiMonthlySpendCap": "Límite de gasto mensual de IA (USD)",
-    "saveConfig": "Guardar configuración"
+    "saveConfig": "Guardar configuración",
+    "team": {
+      "title": "Equipo y permisos",
+      "subtitle": "Invita administradores con acceso limitado y controla lo que cada uno puede ver.",
+      "invite": "+ Invitar miembro",
+      "inviteTitle": "Invitar miembro del equipo",
+      "sendInvite": "Enviar invitación",
+      "remove": "Eliminar",
+      "pending": "Pendiente",
+      "permissions": "Permisos",
+      "formError": "Se requieren nombre, correo electrónico y al menos un permiso.",
+      "empty": "Aún no hay miembros del equipo.",
+      "removeConfirmTitle": "¿Eliminar a este miembro del equipo?",
+      "removeConfirmBody": "Esto revoca el acceso de administrador de {{name}} de inmediato.",
+      "permission": {
+        "KYC": "KYC",
+        "DISPUTES": "Disputas",
+        "CATEGORIES": "Categorías",
+        "SUPPORT": "Soporte"
+      }
+    }
   },
   "ai": {
     "recommendedTitle": "Recomendado para ti",

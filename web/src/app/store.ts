@@ -12,6 +12,7 @@ import { paymentsReducer } from '@/features/payments/reducer';
 import { chatReducer } from '@/features/chat/reducer';
 import { notificationsReducer } from '@/features/notifications/reducer';
 import { adminReducer } from '@/features/admin/reducer';
+import { adminTeamReducer } from '@/features/adminTeam/reducer';
 import { aiReducer } from '@/features/ai/reducer';
 import { disputesReducer } from '@/features/disputes/reducer';
 import { reviewsReducer } from '@/features/reviews/reducer';
@@ -29,6 +30,7 @@ export const rootReducer = combineReducers({
   chat: chatReducer,
   notifications: notificationsReducer,
   admin: adminReducer,
+  adminTeam: adminTeamReducer,
   ai: aiReducer,
   disputes: disputesReducer,
   reviews: reviewsReducer,

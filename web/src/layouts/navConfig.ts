@@ -16,6 +16,7 @@ import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import BarChartIcon from '@mui/icons-material/BarChartOutlined';
 import TuneIcon from '@mui/icons-material/TuneOutlined';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUserOutlined';
+import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 import type { UserRole } from '@/types/user';
 
@@ -68,6 +69,7 @@ export const SA_NAV: NavItemConfig[] = [
   { key: 'categories', labelKey: 'nav.categories', to: '/app/admin/categories', icon: CategoryIcon },
   { key: 'analytics', labelKey: 'nav.analytics', to: '/app/admin/analytics', icon: BarChartIcon },
   { key: 'config', labelKey: 'nav.config', to: '/app/admin/config', icon: TuneIcon },
+  { key: 'team', labelKey: 'nav.team', to: '/app/admin/team', icon: GroupsIcon },
 ];
 
 function navConfigForRole(role: UserRole): NavItemConfig[] {

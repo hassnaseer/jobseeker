@@ -161,7 +161,8 @@
     "reports": "Reports",
     "categories": "Categories",
     "analytics": "Analytics",
-    "config": "Commission & Config"
+    "config": "Commission & Config",
+    "team": "Team & Permissions"
   },
   "shell": {
     "signOut": "Sign out",
@@ -642,7 +643,27 @@
     "aiModel": "Claude model",
     "aiModelHelp": "Leave blank to use the server's default model.",
     "aiMonthlySpendCap": "AI monthly spend cap (USD)",
-    "saveConfig": "Save configuration"
+    "saveConfig": "Save configuration",
+    "team": {
+      "title": "Team & Permissions",
+      "subtitle": "Invite scoped sub-admins and control what each of them can access.",
+      "invite": "+ Invite team member",
+      "inviteTitle": "Invite team member",
+      "sendInvite": "Send invite",
+      "remove": "Remove",
+      "pending": "Pending",
+      "permissions": "Permissions",
+      "formError": "Name, email, and at least one permission are required.",
+      "empty": "No team members yet.",
+      "removeConfirmTitle": "Remove this team member?",
+      "removeConfirmBody": "This revokes {{name}}'s admin access immediately.",
+      "permission": {
+        "KYC": "KYC",
+        "DISPUTES": "Disputes",
+        "CATEGORIES": "Categories",
+        "SUPPORT": "Support"
+      }
+    }
   },
   "ai": {
     "recommendedTitle": "Recommended for you",

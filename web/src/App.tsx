@@ -42,6 +42,7 @@ import AdminDisputesPage from '@/pages/app/admin/AdminDisputesPage';
 import AdminCategoriesPage from '@/pages/app/admin/AdminCategoriesPage';
 import AdminAnalyticsPage from '@/pages/app/admin/AdminAnalyticsPage';
 import AdminConfigPage from '@/pages/app/admin/AdminConfigPage';
+import AdminTeamPage from '@/pages/app/admin/AdminTeamPage';
 import AiRecruiterPage from '@/pages/app/ai/AiRecruiterPage';
 import DisputesListPage from '@/pages/app/disputes/DisputesListPage';
 import DisputeDetailPage from '@/pages/app/disputes/DisputeDetailPage';
@@ -100,6 +101,7 @@ const router = createBrowserRouter([
               { path: 'categories', element: <AdminCategoriesPage /> },
               { path: 'analytics', element: <AdminAnalyticsPage /> },
               { path: 'config', element: <AdminConfigPage /> },
+              { path: 'team', element: <AdminTeamPage /> },
             ],
           },
         ],
