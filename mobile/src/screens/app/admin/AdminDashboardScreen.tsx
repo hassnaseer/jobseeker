@@ -60,6 +60,7 @@ export function AdminDashboardScreen({ navigation }: Props) {
           <Button title={t('admin', 'pendingApprovals')} onPress={() => navigation.navigate('AdminApprovals')} style={styles.navButton} />
           <Button title={t('admin', 'disputesQueue')} onPress={() => navigation.navigate('AdminDisputes')} style={styles.navButton} />
           <Button title={t('admin', 'manageCategories')} onPress={() => navigation.navigate('AdminCategories')} style={styles.navButton} />
+          <Button title={t('admin', 'supportInbox')} onPress={() => navigation.navigate('AdminSupport')} style={styles.navButton} />
           <Button title={t('admin', 'platformConfig')} onPress={() => navigation.navigate('AdminConfig')} style={styles.navButton} />
           <Button title={t('admin', 'teamPermissions')} onPress={() => navigation.navigate('AdminTeam')} style={styles.navButton} />
         </View>

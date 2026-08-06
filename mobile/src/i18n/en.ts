@@ -185,6 +185,11 @@ const en = {
     totalUsers: 'Total users',
     disputesQueue: 'Disputes queue',
     teamPermissions: 'Team & Permissions',
+    supportInbox: 'Support Inbox',
+    noTicketsYet: 'No support tickets yet.',
+    replyAsSupport: 'Reply as support…',
+    resolveTicket: 'Mark resolved',
+    reopenTicket: 'Reopen',
   },
   supportScreen: {
     title: 'Support',

@@ -187,6 +187,11 @@ const es: TranslationDict = {
     totalUsers: 'Usuarios totales',
     disputesQueue: 'Cola de disputas',
     teamPermissions: 'Equipo y permisos',
+    supportInbox: 'Bandeja de soporte',
+    noTicketsYet: 'Aún no hay tickets de soporte.',
+    replyAsSupport: 'Responder como soporte…',
+    resolveTicket: 'Marcar resuelto',
+    reopenTicket: 'Reabrir',
   },
   supportScreen: {
     title: 'Soporte',

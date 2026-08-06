@@ -187,6 +187,11 @@ const fr: TranslationDict = {
     totalUsers: 'Utilisateurs totaux',
     disputesQueue: 'File des litiges',
     teamPermissions: 'Équipe et permissions',
+    supportInbox: 'Boîte de support',
+    noTicketsYet: "Aucun ticket de support pour l'instant.",
+    replyAsSupport: 'Répondre en tant que support…',
+    resolveTicket: 'Marquer comme résolu',
+    reopenTicket: 'Rouvrir',
   },
   supportScreen: {
     title: 'Support',

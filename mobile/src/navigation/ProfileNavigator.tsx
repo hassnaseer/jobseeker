@@ -15,6 +15,8 @@ import { AdminDisputesScreen } from '@/screens/app/admin/AdminDisputesScreen';
 import { AdminCategoriesScreen } from '@/screens/app/admin/AdminCategoriesScreen';
 import { AdminConfigScreen } from '@/screens/app/admin/AdminConfigScreen';
 import { AdminTeamScreen } from '@/screens/app/admin/AdminTeamScreen';
+import { AdminSupportScreen } from '@/screens/app/admin/AdminSupportScreen';
+import { AdminSupportDetailScreen } from '@/screens/app/admin/AdminSupportDetailScreen';
 import { CatalogsScreen } from '@/screens/app/catalogs/CatalogsScreen';
 import { CatalogDetailScreen } from '@/screens/app/catalogs/CatalogDetailScreen';
 import { CatalogFormScreen } from '@/screens/app/catalogs/CatalogFormScreen';
@@ -45,6 +47,8 @@ export function ProfileNavigator() {
       <Stack.Screen name="AdminCategories" component={AdminCategoriesScreen} />
       <Stack.Screen name="AdminConfig" component={AdminConfigScreen} />
       <Stack.Screen name="AdminTeam" component={AdminTeamScreen} />
+      <Stack.Screen name="AdminSupport" component={AdminSupportScreen} />
+      <Stack.Screen name="AdminSupportDetail" component={AdminSupportDetailScreen} />
     </Stack.Navigator>
   );
 }

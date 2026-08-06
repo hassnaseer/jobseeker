@@ -34,6 +34,8 @@ export type ProfileStackParamList = {
   AdminCategories: undefined;
   AdminConfig: undefined;
   AdminTeam: undefined;
+  AdminSupport: undefined;
+  AdminSupportDetail: { ticketId: string };
 };
 
 export type MessagesStackParamList = {
