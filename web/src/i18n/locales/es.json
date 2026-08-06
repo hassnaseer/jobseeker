@@ -163,7 +163,8 @@
     "analytics": "Analítica",
     "config": "Comisión y configuración",
     "team": "Equipo",
-    "support": "Ayuda y soporte"
+    "support": "Ayuda y soporte",
+    "supportInbox": "Bandeja de soporte"
   },
   "shell": {
     "signOut": "Cerrar sesión",
@@ -755,7 +756,20 @@
         "q": "¿Cómo cambio entre modo cliente y freelancer?",
         "a": "Abre el menú de tu perfil y usa \"Cambiar a modo cliente/freelancer\" — disponible una vez que tengas ambos roles en tu cuenta."
       }
-    }
+    },
+    "contactTitle": "Contactar con soporte",
+    "myTickets": "Mis tickets",
+    "newTicket": "Nuevo ticket",
+    "subject": "Asunto",
+    "message": "Mensaje",
+    "submit": "Enviar",
+    "noTickets": "Aún no has contactado con soporte.",
+    "statusOpen": "Abierto",
+    "statusResolved": "Resuelto",
+    "reply": "Responder",
+    "replyPlaceholder": "Escribe una respuesta…",
+    "ticketCreated": "Ticket enviado — te responderemos pronto.",
+    "backToTickets": "← Volver a tickets"
   },
   "talent": {
     "title": "Explorar talento",
@@ -763,5 +777,16 @@
     "sortRate": "Mejor pagados",
     "sortJobs": "En tendencia",
     "empty": "Aún no hay freelancers para este filtro."
+  },
+  "adminSupport": {
+    "title": "Bandeja de soporte",
+    "empty": "Aún no hay tickets de soporte.",
+    "jobSeeker": "Freelancer",
+    "client": "Cliente",
+    "replyPlaceholder": "Responder como soporte…",
+    "reply": "Responder",
+    "resolve": "Marcar resuelto",
+    "reopen": "Reabrir",
+    "selectTicket": "Selecciona un ticket para ver la conversación."
   }
 }

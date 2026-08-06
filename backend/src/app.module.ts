@@ -27,6 +27,7 @@ import { PaymentsModule } from '@/modules/payments/payments.module';
 import { ProfilesModule } from '@/modules/profiles/profiles.module';
 import { ReviewsModule } from '@/modules/reviews/reviews.module';
 import { SavedItemsModule } from '@/modules/saved-items/saved-items.module';
+import { SupportModule } from '@/modules/support/support.module';
 import { UsersModule } from '@/modules/users/users.module';
 
 @Module({
@@ -81,6 +82,7 @@ import { UsersModule } from '@/modules/users/users.module';
     ReviewsModule,
     CatalogsModule,
     SavedItemsModule,
+    SupportModule,
     AdminModule,
     AiModule,
   ],

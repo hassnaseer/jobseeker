@@ -163,7 +163,8 @@
     "analytics": "Analytique",
     "config": "Commission et configuration",
     "team": "Équipe",
-    "support": "Aide et assistance"
+    "support": "Aide et assistance",
+    "supportInbox": "Boîte de support"
   },
   "shell": {
     "signOut": "Se déconnecter",
@@ -755,7 +756,20 @@
         "q": "Comment basculer entre le mode client et freelance ?",
         "a": "Ouvrez le menu de votre profil et utilisez \"Passer en mode client/freelance\" — disponible dès que vous détenez les deux rôles sur votre compte."
       }
-    }
+    },
+    "contactTitle": "Contacter le support",
+    "myTickets": "Mes tickets",
+    "newTicket": "Nouveau ticket",
+    "subject": "Sujet",
+    "message": "Message",
+    "submit": "Envoyer",
+    "noTickets": "Vous n'avez pas encore contacté le support.",
+    "statusOpen": "Ouvert",
+    "statusResolved": "Résolu",
+    "reply": "Répondre",
+    "replyPlaceholder": "Écrire une réponse…",
+    "ticketCreated": "Ticket envoyé — nous vous répondrons bientôt.",
+    "backToTickets": "← Retour aux tickets"
   },
   "talent": {
     "title": "Explorer les talents",
@@ -763,5 +777,16 @@
     "sortRate": "Les mieux payés",
     "sortJobs": "Tendance",
     "empty": "Aucun freelance ne correspond à ce filtre pour l'instant."
+  },
+  "adminSupport": {
+    "title": "Boîte de support",
+    "empty": "Aucun ticket de support pour l'instant.",
+    "jobSeeker": "Freelance",
+    "client": "Client",
+    "replyPlaceholder": "Répondre en tant que support…",
+    "reply": "Répondre",
+    "resolve": "Marquer comme résolu",
+    "reopen": "Rouvrir",
+    "selectTicket": "Sélectionnez un ticket pour voir la conversation."
   }
 }

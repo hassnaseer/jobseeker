@@ -163,7 +163,8 @@
     "analytics": "Analytics",
     "config": "Commission & Config",
     "team": "Team & Permissions",
-    "support": "Help & Support"
+    "support": "Help & Support",
+    "supportInbox": "Support Inbox"
   },
   "shell": {
     "signOut": "Sign out",
@@ -755,7 +756,20 @@
         "q": "How do I switch between client and freelancer mode?",
         "a": "Open your profile menu and use \"Switch to Client/Freelancer mode\" — available once you hold both roles on your account."
       }
-    }
+    },
+    "contactTitle": "Contact support",
+    "myTickets": "My tickets",
+    "newTicket": "New ticket",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Submit",
+    "noTickets": "You haven't contacted support yet.",
+    "statusOpen": "Open",
+    "statusResolved": "Resolved",
+    "reply": "Reply",
+    "replyPlaceholder": "Type a reply…",
+    "ticketCreated": "Ticket submitted — we'll get back to you soon.",
+    "backToTickets": "← Back to tickets"
   },
   "talent": {
     "title": "Browse Talent",
@@ -763,5 +777,16 @@
     "sortRate": "Highly paid",
     "sortJobs": "Trending",
     "empty": "No freelancers match this filter yet."
+  },
+  "adminSupport": {
+    "title": "Support Inbox",
+    "empty": "No support tickets yet.",
+    "jobSeeker": "Job Seeker",
+    "client": "Client",
+    "replyPlaceholder": "Reply as support…",
+    "reply": "Reply",
+    "resolve": "Mark resolved",
+    "reopen": "Reopen",
+    "selectTicket": "Select a ticket to view the conversation."
   }
 }

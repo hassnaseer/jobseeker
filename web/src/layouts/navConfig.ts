@@ -73,6 +73,7 @@ export const SA_NAV: NavItemConfig[] = [
   { key: 'reports', labelKey: 'nav.reports', to: '/app/admin/reports', icon: FlagIcon },
   { key: 'disputes', labelKey: 'nav.disputes', to: '/app/admin/disputes', icon: GavelIcon },
   { key: 'categories', labelKey: 'nav.categories', to: '/app/admin/categories', icon: CategoryIcon },
+  { key: 'support', labelKey: 'nav.supportInbox', to: '/app/admin/support', icon: HelpOutlineIcon },
   { key: 'analytics', labelKey: 'nav.analytics', to: '/app/admin/analytics', icon: BarChartIcon },
   { key: 'config', labelKey: 'nav.config', to: '/app/admin/config', icon: TuneIcon },
   { key: 'team', labelKey: 'nav.team', to: '/app/admin/team', icon: GroupsIcon },

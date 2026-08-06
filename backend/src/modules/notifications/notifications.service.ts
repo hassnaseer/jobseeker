@@ -43,6 +43,7 @@ const DEFAULT_CHANNELS: Record<NotificationEventType, ChannelDefaults> = {
   [NotificationEventType.DISPUTE_OPENED]: { email: true, inApp: true, push: true },
   [NotificationEventType.DISPUTE_RESOLVED]: { email: true, inApp: true, push: true },
   [NotificationEventType.REVIEW_RECEIVED]: { email: true, inApp: true, push: true },
+  [NotificationEventType.SUPPORT_REPLY]: { email: true, inApp: true, push: true },
 };
 
 export interface NotifyInput {
