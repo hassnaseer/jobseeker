@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -17,6 +18,7 @@ import type { PayoutMethod, Wallet } from '@/types/domain';
 
 export function WithdrawScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [methods, setMethods] = useState<PayoutMethod[]>([]);
   const [selectedMethodId, setSelectedMethodId] = useState('');
@@ -74,7 +76,7 @@ export function WithdrawScreen() {
   async function handleWithdraw() {
     setError(null);
     if (!selectedMethodId || !amount) {
-      setError('Choose a payout method and enter an amount');
+      setError(t('wallet', 'chooseMethodAndAmount'));
       return;
     }
     setSubmitting(true);
@@ -104,9 +106,9 @@ export function WithdrawScreen() {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
         <View style={styles.doneContent}>
-          <Text style={[styles.title, { color: theme.text }]}>Withdrawal requested</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('wallet', 'withdrawalRequested')}</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-            We'll process this and notify you once it's paid out.
+            {t('wallet', 'withdrawalRequestedBody')}
           </Text>
         </View>
       </SafeAreaView>
@@ -116,14 +118,14 @@ export function WithdrawScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>Withdraw funds</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('wallet', 'withdrawFunds')}</Text>
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          Available: {wallets[0] ? `${wallets[0].currency} ${wallets[0].balance}` : '—'}
+          {t('wallet', 'available')}: {wallets[0] ? `${wallets[0].currency} ${wallets[0].balance}` : '—'}
         </Text>
 
-        <TextField label="Amount" value={amount} onChangeText={setAmount} keyboardType="numeric" placeholder="100" />
+        <TextField label={t('wallet', 'amount')} value={amount} onChangeText={setAmount} keyboardType="numeric" placeholder="100" />
 
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Payout method</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('wallet', 'payoutMethod')}</Text>
         {methods.map((m) => (
           <Pressable
             key={m.id}
@@ -143,7 +145,7 @@ export function WithdrawScreen() {
         ))}
 
         <Button
-          title={showNewMethod ? 'Cancel new method' : 'Add bank account'}
+          title={showNewMethod ? t('wallet', 'cancelNewMethod') : t('wallet', 'addBankAccount')}
           variant="ghost"
           onPress={() => setShowNewMethod((v) => !v)}
           style={styles.addMethodButton}
@@ -151,12 +153,12 @@ export function WithdrawScreen() {
 
         {showNewMethod ? (
           <View style={[styles.newMethodCard, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
-            <TextField label="Bank name" value={bankName} onChangeText={setBankName} />
-            <TextField label="Account holder" value={accountHolder} onChangeText={setAccountHolder} />
-            <TextField label="Account number" value={accountNumber} onChangeText={setAccountNumber} keyboardType="numeric" />
-            <TextField label="SWIFT / Routing" value={swiftOrRouting} onChangeText={setSwiftOrRouting} />
+            <TextField label={t('wallet', 'bankName')} value={bankName} onChangeText={setBankName} />
+            <TextField label={t('wallet', 'accountHolder')} value={accountHolder} onChangeText={setAccountHolder} />
+            <TextField label={t('wallet', 'accountNumber')} value={accountNumber} onChangeText={setAccountNumber} keyboardType="numeric" />
+            <TextField label={t('wallet', 'swiftRouting')} value={swiftOrRouting} onChangeText={setSwiftOrRouting} />
             <Button
-              title="Save payout method"
+              title={t('wallet', 'savePayoutMethod')}
               onPress={handleCreateMethod}
               loading={creatingMethod}
               disabled={!bankName || !accountHolder || !accountNumber}
@@ -167,7 +169,7 @@ export function WithdrawScreen() {
         {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
         <Button
-          title="Request withdrawal"
+          title={t('wallet', 'requestWithdrawal')}
           onPress={handleWithdraw}
           loading={submitting}
           disabled={!selectedMethodId || !amount}

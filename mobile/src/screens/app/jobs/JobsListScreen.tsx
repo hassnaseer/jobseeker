@@ -5,6 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Plus } from 'lucide-react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -20,6 +21,7 @@ type SortBy = 'NEWEST' | 'BUDGET_HIGH' | 'BUDGET_LOW';
 
 export function JobsListScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const { list, listMeta, status, fetchList } = useJobsStore();
 
@@ -63,24 +65,24 @@ export function JobsListScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Browse Jobs</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('jobs', 'browseTitle')}</Text>
         {isClient ? (
           <Pressable
             onPress={() => navigation.navigate('PostJob')}
             style={[styles.postButton, { backgroundColor: theme.primary }]}
           >
             <Plus size={16} color={theme.white} />
-            <Text style={styles.postButtonText}>Post a job</Text>
+            <Text style={styles.postButtonText}>{t('jobs', 'postAJob')}</Text>
           </Pressable>
         ) : null}
       </View>
 
       <View style={styles.filters}>
-        <TextField placeholder="Search jobs" value={keyword} onChangeText={setKeyword} />
+        <TextField placeholder={t('jobs', 'searchPlaceholder')} value={keyword} onChangeText={setKeyword} />
         <View style={styles.pickerRow}>
           <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
             <Picker selectedValue={categoryId} onValueChange={setCategoryId} dropdownIconColor={theme.text}>
-              <Picker.Item label="All categories" value="" />
+              <Picker.Item label={t('jobs', 'allCategories')} value="" />
               {categories.map((c) => (
                 <Picker.Item key={c.id} label={c.label} value={c.id} />
               ))}
@@ -88,17 +90,17 @@ export function JobsListScreen({ navigation }: Props) {
           </View>
           <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
             <Picker selectedValue={jobType} onValueChange={setJobType} dropdownIconColor={theme.text}>
-              <Picker.Item label="Any type" value="" />
-              <Picker.Item label="Fixed price" value="FIXED" />
-              <Picker.Item label="Hourly" value="HOURLY" />
+              <Picker.Item label={t('jobs', 'anyType')} value="" />
+              <Picker.Item label={t('jobs', 'fixedPrice')} value="FIXED" />
+              <Picker.Item label={t('jobs', 'hourly')} value="HOURLY" />
             </Picker>
           </View>
         </View>
         <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
           <Picker selectedValue={sortBy} onValueChange={(v) => setSortBy(v as SortBy)} dropdownIconColor={theme.text}>
-            <Picker.Item label="Newest" value="NEWEST" />
-            <Picker.Item label="Highest budget" value="BUDGET_HIGH" />
-            <Picker.Item label="Lowest budget" value="BUDGET_LOW" />
+            <Picker.Item label={t('jobs', 'newest')} value="NEWEST" />
+            <Picker.Item label={t('jobs', 'highestBudget')} value="BUDGET_HIGH" />
+            <Picker.Item label={t('jobs', 'lowestBudget')} value="BUDGET_LOW" />
           </Picker>
         </View>
       </View>
@@ -118,7 +120,7 @@ export function JobsListScreen({ navigation }: Props) {
         onRefresh={() => loadPage(1)}
         ListEmptyComponent={
           status !== 'loading' ? (
-            <Text style={[styles.empty, { color: theme.textMuted }]}>No jobs match your filters yet.</Text>
+            <Text style={[styles.empty, { color: theme.textMuted }]}>{t('jobs', 'noJobsMatch')}</Text>
           ) : null
         }
       />

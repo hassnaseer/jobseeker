@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { Sparkles, X } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -23,6 +24,7 @@ function scoreTone(score: number): 'success' | 'info' | 'warning' {
 
 function SeekerView() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [jobs, setJobs] = useState<RecommendedJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +48,7 @@ function SeekerView() {
           <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
         ) : (
           <Text style={[styles.empty, { color: theme.textMuted }]}>
-            No recommendations yet — complete your profile to get matched.
+            {t('ai', 'noRecommendationsYet')}
           </Text>
         )
       }
@@ -70,6 +72,7 @@ function SeekerView() {
 
 function ClientView() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const jobs = useJobsStore((s) => s.mine);
   const fetchMine = useJobsStore((s) => s.fetchMine);
   const [jobId, setJobId] = useState('');
@@ -111,31 +114,31 @@ function ClientView() {
   return (
     <ScrollView contentContainerStyle={styles.listContent}>
       {jobs.length === 0 ? (
-        <Text style={[styles.empty, { color: theme.textMuted }]}>Post a job first to run AI shortlisting.</Text>
+        <Text style={[styles.empty, { color: theme.textMuted }]}>{t('ai', 'postJobFirst')}</Text>
       ) : (
         <>
           <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
             <Picker selectedValue={jobId} onValueChange={setJobId} dropdownIconColor={theme.text}>
-              <Picker.Item label="Pick a job" value="" />
+              <Picker.Item label={t('ai', 'pickAJob')} value="" />
               {jobs.map((j) => (
                 <Picker.Item key={j.id} label={`${j.title} (${j.applicationsCount})`} value={j.id} />
               ))}
             </Picker>
           </View>
-          <Button title="Run AI shortlist" onPress={handleRun} loading={busy} disabled={!jobId} style={styles.runButton} />
+          <Button title={t('ai', 'runAiShortlist')} onPress={handleRun} loading={busy} disabled={!jobId} style={styles.runButton} />
 
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
           {ran && shortlistResult.length === 0 ? (
-            <Text style={[styles.empty, { color: theme.textMuted }]}>No candidates matched.</Text>
+            <Text style={[styles.empty, { color: theme.textMuted }]}>{t('ai', 'noCandidatesMatched')}</Text>
           ) : null}
 
           {(ran ? shortlistResult : []).map((result) => (
             <View key={result.applicationId} style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
               <View style={styles.cardHeader}>
-                <Text style={[styles.cardTitle, { color: theme.text }]}>Applicant #{result.seekerId.slice(0, 8)}</Text>
+                <Text style={[styles.cardTitle, { color: theme.text }]}>{t('ai', 'applicant')} #{result.seekerId.slice(0, 8)}</Text>
                 <Badge label={`${result.score}%`} tone={scoreTone(result.score)} />
               </View>
-              {result.autoShortlisted ? <Badge label="Auto-shortlisted" tone="success" /> : null}
+              {result.autoShortlisted ? <Badge label={t('ai', 'autoShortlisted')} tone="success" /> : null}
               {result.reasons.map((reason, i) => (
                 <Text key={i} style={[styles.reason, { color: theme.textMuted }]}>
                   • {reason}
@@ -146,11 +149,11 @@ function ClientView() {
 
           {!ran && jobId && matchScores.length > 0 ? (
             <>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Previous scores</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('ai', 'previousScores')}</Text>
               {matchScores.map((result) => (
                 <View key={result.id} style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
                   <View style={styles.cardHeader}>
-                    <Text style={[styles.cardTitle, { color: theme.text }]}>Applicant #{result.seekerId.slice(0, 8)}</Text>
+                    <Text style={[styles.cardTitle, { color: theme.text }]}>{t('ai', 'applicant')} #{result.seekerId.slice(0, 8)}</Text>
                     <Badge label={`${result.score}%`} tone={scoreTone(result.score)} />
                   </View>
                 </View>
@@ -165,6 +168,7 @@ function ClientView() {
 
 export function AiRecruiterScreen({ onClose }: { onClose: () => void }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const isClient = useAuthStore((s) => s.user?.activeRole === 'CLIENT');
 
   return (
@@ -173,7 +177,7 @@ export function AiRecruiterScreen({ onClose }: { onClose: () => void }) {
         <View style={styles.headerLeft}>
           <Sparkles size={20} color={theme.primary} />
           <Text style={[styles.title, { color: theme.text }]}>
-            {isClient ? 'AI shortlist' : 'Recommended for you'}
+            {isClient ? t('ai', 'clientTitle') : t('ai', 'seekerTitle')}
           </Text>
         </View>
         <Pressable onPress={onClose} hitSlop={12}>

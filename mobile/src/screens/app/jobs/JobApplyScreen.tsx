@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -17,6 +18,7 @@ type Props = StackScreenProps<JobsStackParamList, 'JobApply'>;
 export function JobApplyScreen({ route, navigation }: Props) {
   const { jobId } = route.params;
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { detail, fetchDetail } = useJobsStore();
 
   const [coverLetter, setCoverLetter] = useState('');
@@ -37,7 +39,7 @@ export function JobApplyScreen({ route, navigation }: Props) {
   async function handleSubmit() {
     setError(null);
     if (!coverLetter.trim()) {
-      setError('Please write a short cover letter');
+      setError(t('jobs', 'coverLetterRequired'));
       return;
     }
     setSubmitting(true);
@@ -59,11 +61,11 @@ export function JobApplyScreen({ route, navigation }: Props) {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
         <View style={styles.doneContent}>
-          <Text style={[styles.title, { color: theme.text }]}>Application sent</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('jobs', 'applicationSent')}</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-            The client will review your proposal and get back to you.
+            {t('jobs', 'applicationSentBody')}
           </Text>
-          <Button title="Back to job" onPress={() => navigation.goBack()} style={styles.submit} />
+          <Button title={t('jobs', 'backToJob')} onPress={() => navigation.goBack()} style={styles.submit} />
         </View>
       </SafeAreaView>
     );
@@ -73,13 +75,15 @@ export function JobApplyScreen({ route, navigation }: Props) {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={[styles.title, { color: theme.text }]}>Apply to {detail?.title ?? 'this job'}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>
+            {t('jobs', 'applyTo', { title: detail?.title ?? t('jobs', 'thisJob') })}
+          </Text>
 
           <TextField
-            label="Cover letter"
+            label={t('jobs', 'coverLetter')}
             value={coverLetter}
             onChangeText={setCoverLetter}
-            placeholder="Introduce yourself and explain why you're a good fit"
+            placeholder={t('jobs', 'coverLetterPlaceholder')}
             multiline
             numberOfLines={6}
             style={styles.textarea}
@@ -87,19 +91,19 @@ export function JobApplyScreen({ route, navigation }: Props) {
 
           {isHourly ? (
             <TextField
-              label="Proposed hourly rate"
+              label={t('jobs', 'proposedHourlyRate')}
               value={proposedHourlyRate}
               onChangeText={setProposedHourlyRate}
               keyboardType="numeric"
               placeholder="20"
             />
           ) : (
-            <TextField label="Your bid" value={bidAmount} onChangeText={setBidAmount} keyboardType="numeric" placeholder="500" />
+            <TextField label={t('jobs', 'yourBid')} value={bidAmount} onChangeText={setBidAmount} keyboardType="numeric" placeholder="500" />
           )}
 
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
-          <Button title="Submit application" onPress={handleSubmit} loading={submitting} style={styles.submit} />
+          <Button title={t('jobs', 'submitApplication')} onPress={handleSubmit} loading={submitting} style={styles.submit} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

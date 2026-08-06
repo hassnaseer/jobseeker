@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -12,6 +13,7 @@ import type { Category } from '@/types/domain';
 
 export function AdminCategoriesScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,11 +61,11 @@ export function AdminCategoriesScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
-      <Text style={[styles.title, { color: theme.text }]}>Manage categories</Text>
+      <Text style={[styles.title, { color: theme.text }]}>{t('admin', 'manageCategories')}</Text>
 
       <View style={styles.createRow}>
-        <TextField value={newName} onChangeText={setNewName} placeholder="New category name" style={styles.createInput} />
-        <Button title="Add" onPress={handleCreate} loading={creating} disabled={!newName.trim()} style={styles.createButton} />
+        <TextField value={newName} onChangeText={setNewName} placeholder={t('admin', 'newCategoryName')} style={styles.createInput} />
+        <Button title={t('admin', 'add')} onPress={handleCreate} loading={creating} disabled={!newName.trim()} style={styles.createButton} />
       </View>
 
       {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
@@ -75,11 +77,11 @@ export function AdminCategoriesScreen() {
           data={categories}
           keyExtractor={(c) => c.id}
           contentContainerStyle={styles.listContent}
-          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>No categories yet.</Text>}
+          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>{t('admin', 'noCategoriesYet')}</Text>}
           renderItem={({ item }) => (
             <View style={[styles.row, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
               <Text style={[styles.rowLabel, { color: theme.text }]}>{item.name}</Text>
-              <Button title="Delete" variant="ghost" onPress={() => handleDelete(item.id)} loading={busyId === item.id} style={styles.deleteButton} />
+              <Button title={t('common', 'delete')} variant="ghost" onPress={() => handleDelete(item.id)} loading={busyId === item.id} style={styles.deleteButton} />
             </View>
           )}
         />

@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -28,6 +29,7 @@ const POLL_MS = 4000;
 export function ChatThreadScreen({ route }: Props) {
   const { conversationId } = route.params;
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const { current, messages, openConversation, refreshMessages, send, edit, remove, block, unblock, clearCurrent } =
     useChatStore();
@@ -77,10 +79,10 @@ export function ChatThreadScreen({ route }: Props) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <View style={[styles.header, { borderColor: theme.border }]}>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>Conversation</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>{t('messages', 'conversation')}</Text>
         {current ? (
           <Button
-            title={current.isBlocked ? 'Unblock' : 'Block'}
+            title={current.isBlocked ? t('messages', 'unblock') : t('messages', 'block')}
             variant="ghost"
             onPress={() => (current.isBlocked ? unblock(conversationId) : block(conversationId))}
             style={styles.blockButton}
@@ -111,14 +113,14 @@ export function ChatThreadScreen({ route }: Props) {
                     <View>
                       <TextField value={editDraft} onChangeText={setEditDraft} multiline style={styles.editInput} />
                       <View style={styles.editActions}>
-                        <Button title="Cancel" variant="ghost" onPress={() => setEditingId(null)} style={styles.editButton} />
-                        <Button title="Save" onPress={() => handleSaveEdit(item.id)} style={styles.editButton} />
+                        <Button title={t('common', 'cancel')} variant="ghost" onPress={() => setEditingId(null)} style={styles.editButton} />
+                        <Button title={t('common', 'save')} onPress={() => handleSaveEdit(item.id)} style={styles.editButton} />
                       </View>
                     </View>
                   ) : (
                     <Text style={{ color: isMine ? theme.white : theme.text }}>
-                      {item.isDeleted ? 'Message deleted' : item.content}
-                      {item.isEdited && !item.isDeleted ? ' (edited)' : ''}
+                      {item.isDeleted ? t('messages', 'messageDeleted') : item.content}
+                      {item.isEdited && !item.isDeleted ? ` ${t('messages', 'edited')}` : ''}
                     </Text>
                   )}
                 </View>
@@ -130,10 +132,10 @@ export function ChatThreadScreen({ route }: Props) {
                         setEditDraft(item.content ?? '');
                       }}
                     >
-                      <Text style={[styles.msgActionText, { color: theme.textMuted }]}>Edit</Text>
+                      <Text style={[styles.msgActionText, { color: theme.textMuted }]}>{t('common', 'edit')}</Text>
                     </Pressable>
                     <Pressable onPress={() => remove(conversationId, item.id)}>
-                      <Text style={[styles.msgActionText, { color: theme.error }]}>Delete</Text>
+                      <Text style={[styles.msgActionText, { color: theme.error }]}>{t('common', 'delete')}</Text>
                     </Pressable>
                   </View>
                 ) : null}
@@ -144,12 +146,12 @@ export function ChatThreadScreen({ route }: Props) {
 
         {current?.isBlocked ? (
           <Text style={[styles.blockedNotice, { color: theme.textMuted }]}>
-            This conversation is blocked. Unblock to send messages.
+            {t('messages', 'blockedNotice')}
           </Text>
         ) : (
           <View style={[styles.composer, { borderColor: theme.border }]}>
-            <TextField value={draft} onChangeText={setDraft} placeholder="Type a message" style={styles.composerInput} />
-            <Button title="Send" onPress={handleSend} disabled={!draft.trim()} style={styles.sendButton} />
+            <TextField value={draft} onChangeText={setDraft} placeholder={t('messages', 'typeMessage')} style={styles.composerInput} />
+            <Button title={t('messages', 'send')} onPress={handleSend} disabled={!draft.trim()} style={styles.sendButton} />
           </View>
         )}
       </KeyboardAvoidingView>

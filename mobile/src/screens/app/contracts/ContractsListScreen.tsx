@@ -3,6 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -25,6 +26,7 @@ const STATUS_TONE: Record<ContractStatus, 'neutral' | 'success' | 'warning' | 'e
 
 function ContractCard({ contract, onPress }: { contract: Contract; onPress: () => void }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   return (
     <Pressable
       onPress={onPress}
@@ -35,7 +37,7 @@ function ContractCard({ contract, onPress }: { contract: Contract; onPress: () =
     >
       <View style={styles.cardHeader}>
         <Text style={[styles.cardTitle, { color: theme.text }]}>
-          {contract.type === 'FIXED' ? 'Fixed-price contract' : 'Hourly contract'}
+          {contract.type === 'FIXED' ? t('contracts', 'fixedPriceContract') : t('contracts', 'hourlyContract')}
         </Text>
         <Badge label={contract.status.replace(/_/g, ' ')} tone={STATUS_TONE[contract.status]} />
       </View>
@@ -50,6 +52,7 @@ function ContractCard({ contract, onPress }: { contract: Contract; onPress: () =
 
 export function ContractsListScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { mine, status, fetchMine } = useContractsStore();
 
   const load = useCallback(() => {
@@ -63,7 +66,7 @@ export function ContractsListScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
-      <Text style={[styles.title, { color: theme.text }]}>Contracts</Text>
+      <Text style={[styles.title, { color: theme.text }]}>{t('contracts', 'title')}</Text>
       <FlatList
         data={mine}
         keyExtractor={(c) => c.id}
@@ -76,7 +79,7 @@ export function ContractsListScreen({ navigation }: Props) {
         ListEmptyComponent={
           status !== 'loading' ? (
             <Text style={[styles.empty, { color: theme.textMuted }]}>
-              No contracts yet. They appear here once a hire is made.
+              {t('contracts', 'noContractsYet')}
             </Text>
           ) : null
         }

@@ -3,6 +3,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -18,6 +19,7 @@ type Props = StackScreenProps<JobsStackParamList, 'JobDetail'>;
 export function JobDetailScreen({ route, navigation }: Props) {
   const { jobId } = route.params;
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const { detail, status, fetchDetail, publish, pause, resume, close, duplicate, clearDetail } = useJobsStore();
   const [actionError, setActionError] = useState<string | null>(null);
@@ -61,7 +63,7 @@ export function JobDetailScreen({ route, navigation }: Props) {
 
         <View style={styles.metaRow}>
           <Badge label={jobBudgetLabel(detail)} tone="info" />
-          <Badge label={detail.locationType === 'REMOTE' ? 'Remote' : detail.country ?? 'On-site'} />
+          <Badge label={detail.locationType === 'REMOTE' ? t('jobs', 'remote') : detail.country ?? t('jobs', 'onSite')} />
           {detail.experienceLevel ? <Badge label={detail.experienceLevel} /> : null}
         </View>
 
@@ -83,7 +85,7 @@ export function JobDetailScreen({ route, navigation }: Props) {
           <View style={styles.actions}>
             {detail.status === 'DRAFT' ? (
               <Button
-                title="Publish"
+                title={t('jobs', 'publish')}
                 onPress={() => runAction('publish', () => publish(detail.id))}
                 loading={actionLoading === 'publish'}
                 style={styles.actionButton}
@@ -91,7 +93,7 @@ export function JobDetailScreen({ route, navigation }: Props) {
             ) : null}
             {detail.status === 'OPEN' && !detail.isPaused ? (
               <Button
-                title="Pause"
+                title={t('jobs', 'pause')}
                 variant="secondary"
                 onPress={() => runAction('pause', () => pause(detail.id))}
                 loading={actionLoading === 'pause'}
@@ -100,7 +102,7 @@ export function JobDetailScreen({ route, navigation }: Props) {
             ) : null}
             {detail.status === 'OPEN' && detail.isPaused ? (
               <Button
-                title="Resume"
+                title={t('jobs', 'resume')}
                 variant="secondary"
                 onPress={() => runAction('resume', () => resume(detail.id))}
                 loading={actionLoading === 'resume'}
@@ -109,7 +111,7 @@ export function JobDetailScreen({ route, navigation }: Props) {
             ) : null}
             {detail.status === 'OPEN' ? (
               <Button
-                title="Close job"
+                title={t('jobs', 'closeJob')}
                 variant="ghost"
                 onPress={() => runAction('close', () => close(detail.id))}
                 loading={actionLoading === 'close'}
@@ -117,14 +119,14 @@ export function JobDetailScreen({ route, navigation }: Props) {
               />
             ) : null}
             <Button
-              title="Duplicate"
+              title={t('jobs', 'duplicate')}
               variant="ghost"
               onPress={() => runAction('duplicate', () => duplicate(detail.id))}
               loading={actionLoading === 'duplicate'}
               style={styles.actionButton}
             />
             <Button
-              title={`View applicants (${detail.applicationsCount})`}
+              title={t('jobs', 'viewApplicants', { count: detail.applicationsCount })}
               onPress={() => navigation.navigate('JobApplicants', { jobId: detail.id })}
               style={styles.actionButton}
             />
@@ -133,7 +135,7 @@ export function JobDetailScreen({ route, navigation }: Props) {
 
         {!isOwner && isSeeker && detail.status === 'OPEN' ? (
           <Button
-            title="Apply for this job"
+            title={t('jobs', 'applyForJob')}
             onPress={() => navigation.navigate('JobApply', { jobId: detail.id })}
             style={styles.actions}
           />

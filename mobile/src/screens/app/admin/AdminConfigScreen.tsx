@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -11,6 +12,7 @@ import { extractErrorMessage } from '@/api/client';
 
 export function AdminConfigScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [clientCommissionPct, setClientCommissionPct] = useState('');
   const [seekerCommissionPct, setSeekerCommissionPct] = useState('');
   const [minWithdrawal, setMinWithdrawal] = useState('');
@@ -62,17 +64,17 @@ export function AdminConfigScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>Platform config</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('admin', 'platformConfig')}</Text>
 
-        <TextField label="Client commission %" value={clientCommissionPct} onChangeText={setClientCommissionPct} keyboardType="numeric" />
-        <TextField label="Seeker commission %" value={seekerCommissionPct} onChangeText={setSeekerCommissionPct} keyboardType="numeric" />
-        <TextField label="Minimum withdrawal" value={minWithdrawal} onChangeText={setMinWithdrawal} keyboardType="numeric" />
-        <TextField label="Escrow auto-release (days)" value={escrowAutoReleaseDays} onChangeText={setEscrowAutoReleaseDays} keyboardType="numeric" />
+        <TextField label={t('admin', 'clientCommissionPct')} value={clientCommissionPct} onChangeText={setClientCommissionPct} keyboardType="numeric" />
+        <TextField label={t('admin', 'seekerCommissionPct')} value={seekerCommissionPct} onChangeText={setSeekerCommissionPct} keyboardType="numeric" />
+        <TextField label={t('admin', 'minWithdrawal')} value={minWithdrawal} onChangeText={setMinWithdrawal} keyboardType="numeric" />
+        <TextField label={t('admin', 'escrowAutoRelease')} value={escrowAutoReleaseDays} onChangeText={setEscrowAutoReleaseDays} keyboardType="numeric" />
 
         {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
-        {saved ? <Text style={[styles.savedText, { color: theme.success }]}>Saved</Text> : null}
+        {saved ? <Text style={[styles.savedText, { color: theme.success }]}>{t('admin', 'saved')}</Text> : null}
 
-        <Button title="Save config" onPress={handleSave} loading={saving} style={styles.submit} />
+        <Button title={t('admin', 'saveConfig')} onPress={handleSave} loading={saving} style={styles.submit} />
       </ScrollView>
     </SafeAreaView>
   );

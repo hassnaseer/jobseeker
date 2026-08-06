@@ -2,42 +2,32 @@ import React from 'react';
 import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
 
-const FAQ = [
-  {
-    q: 'How do I get paid?',
-    a: 'Once a client releases a milestone or approves your hours, funds move to your JobLinxs wallet. From there you can request a withdrawal to your linked bank account.',
-  },
-  {
-    q: 'How does escrow work?',
-    a: 'Clients fund a contract or milestone up front. The money is held in escrow until the work is approved, then released to the freelancer.',
-  },
-  {
-    q: 'What happens if there is a disagreement?',
-    a: 'Either party can raise a dispute from the contract. Our support team reviews the evidence and resolves it.',
-  },
-  {
-    q: 'How do I switch between client and freelancer mode?',
-    a: 'Open Profile and tap "Switch to Client/Freelancer mode" — available once you have both roles on your account.',
-  },
-];
-
 export function SupportScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
+
+  const FAQ = [
+    { q: t('supportScreen', 'faqGetPaidQ'), a: t('supportScreen', 'faqGetPaidA') },
+    { q: t('supportScreen', 'faqEscrowQ'), a: t('supportScreen', 'faqEscrowA') },
+    { q: t('supportScreen', 'faqDisputesQ'), a: t('supportScreen', 'faqDisputesA') },
+    { q: t('supportScreen', 'faqSwitchRoleQ'), a: t('supportScreen', 'faqSwitchRoleA') },
+  ];
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>Support</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('supportScreen', 'title')}</Text>
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          Frequently asked questions — can't find what you need? Reach out to us directly.
+          {t('supportScreen', 'subtitle')}
         </Text>
 
         <Button
-          title="Email support"
+          title={t('supportScreen', 'emailSupport')}
           onPress={() => Linking.openURL('mailto:support@joblinxs.com')}
           style={styles.emailButton}
         />

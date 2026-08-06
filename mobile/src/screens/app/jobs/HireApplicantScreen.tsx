@@ -3,6 +3,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -17,6 +18,7 @@ type Props = StackScreenProps<JobsStackParamList, 'HireApplicant'>;
 export function HireApplicantScreen({ route, navigation }: Props) {
   const { jobId, applicationId } = route.params;
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { detail, fetchDetail } = useJobsStore();
 
   const [milestones, setMilestones] = useState<MilestoneInput[]>([]);
@@ -68,11 +70,11 @@ export function HireApplicantScreen({ route, navigation }: Props) {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
         <View style={styles.doneContent}>
-          <Text style={[styles.title, { color: theme.text }]}>Contract created</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('jobs', 'contractCreated')}</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-            Open the Contracts tab to fund the work and get started.
+            {t('jobs', 'contractCreatedBody')}
           </Text>
-          <Button title="Back to job" onPress={() => navigation.popToTop()} style={styles.submit} />
+          <Button title={t('jobs', 'backToJob')} onPress={() => navigation.popToTop()} style={styles.submit} />
         </View>
       </SafeAreaView>
     );
@@ -81,14 +83,14 @@ export function HireApplicantScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>Hire this freelancer</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('jobs', 'hireThisFreelancer')}</Text>
 
         {needsMilestones ? (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>Milestones</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('jobs', 'milestones')}</Text>
               <Button
-                title="Add"
+                title={t('jobs', 'add')}
                 variant="ghost"
                 onPress={() => setMilestones((m) => [...m, { title: '', amount: 0 }])}
                 style={styles.addButton}
@@ -97,20 +99,20 @@ export function HireApplicantScreen({ route, navigation }: Props) {
             {milestones.map((m, i) => (
               <View key={i} style={[styles.milestoneCard, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
                 <TextField
-                  label="Title"
+                  label={t('jobs', 'titleField')}
                   value={m.title}
                   onChangeText={(v) => updateMilestone(i, { title: v })}
-                  placeholder="e.g. Design mockups"
+                  placeholder={t('jobs', 'milestoneTitlePlaceholder')}
                 />
                 <TextField
-                  label="Amount"
+                  label={t('jobs', 'amount')}
                   value={m.amount ? String(m.amount) : ''}
                   onChangeText={(v) => updateMilestone(i, { amount: Number(v) || 0 })}
                   keyboardType="numeric"
                   placeholder="200"
                 />
                 <Button
-                  title="Remove"
+                  title={t('common', 'remove')}
                   variant="ghost"
                   onPress={() => setMilestones((list) => list.filter((_, idx) => idx !== i))}
                   style={styles.removeButton}
@@ -119,7 +121,7 @@ export function HireApplicantScreen({ route, navigation }: Props) {
             ))}
             {milestones.length > 0 ? (
               <Text style={[styles.total, { color: theme.textSecondary }]}>
-                Total: {detail.currency} {milestonesTotal}
+                {t('jobs', 'total')}: {detail.currency} {milestonesTotal}
               </Text>
             ) : null}
           </View>
@@ -127,7 +129,7 @@ export function HireApplicantScreen({ route, navigation }: Props) {
 
         {isHourly ? (
           <TextField
-            label="Weekly hour limit (optional)"
+            label={t('jobs', 'weeklyHourLimit')}
             value={weeklyHourLimit}
             onChangeText={setWeeklyHourLimit}
             keyboardType="numeric"
@@ -137,7 +139,7 @@ export function HireApplicantScreen({ route, navigation }: Props) {
 
         {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
-        <Button title="Hire" onPress={handleHire} loading={saving} disabled={!canHire} style={styles.submit} />
+        <Button title={t('jobs', 'hire')} onPress={handleHire} loading={saving} disabled={!canHire} style={styles.submit} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -9,6 +10,7 @@ import { useAuthStore } from '@/store/authStore';
 
 export function ProfileScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const switchRole = useAuthStore((s) => s.switchRole);
@@ -19,7 +21,7 @@ export function ProfileScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>Profile</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('profile', 'title')}</Text>
 
         <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.name, { color: theme.text }]}>
@@ -35,14 +37,14 @@ export function ProfileScreen() {
 
         {canSwitch ? (
           <Button
-            title={`Switch to ${otherRole === 'CLIENT' ? 'Client' : 'Freelancer'} mode`}
+            title={otherRole === 'CLIENT' ? t('profile', 'switchToClient') : t('profile', 'switchToFreelancer')}
             variant="secondary"
             onPress={() => switchRole(otherRole as 'CLIENT' | 'SEEKER')}
             style={styles.action}
           />
         ) : null}
 
-        <Button title="Log out" variant="ghost" onPress={logout} style={styles.action} />
+        <Button title={t('common', 'logout')} variant="ghost" onPress={logout} style={styles.action} />
       </ScrollView>
     </SafeAreaView>
   );

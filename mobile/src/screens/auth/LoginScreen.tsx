@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -15,6 +16,7 @@ type Props = StackScreenProps<AuthStackParamList, 'Login'>;
 
 export function LoginScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const login = useAuthStore((s) => s.login);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,13 +42,13 @@ export function LoginScreen({ navigation }: Props) {
         style={styles.flex}
       >
         <View style={styles.content}>
-          <Text style={[styles.title, { color: theme.text }]}>Welcome back</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('auth', 'welcomeBack')}</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-            Log in to continue to JobLinxs
+            {t('auth', 'loginSubtitle')}
           </Text>
 
           <TextField
-            label="Email"
+            label={t('auth', 'email')}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -54,7 +56,7 @@ export function LoginScreen({ navigation }: Props) {
             placeholder="you@example.com"
           />
           <TextField
-            label="Password"
+            label={t('auth', 'password')}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -63,16 +65,16 @@ export function LoginScreen({ navigation }: Props) {
 
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
-          <Button title="Log in" onPress={handleLogin} loading={loading} style={styles.submit} />
+          <Button title={t('auth', 'logIn')} onPress={handleLogin} loading={loading} style={styles.submit} />
 
           <Button
-            title="Forgot password?"
+            title={t('auth', 'forgotPassword')}
             variant="ghost"
             onPress={() => navigation.navigate('ForgotPassword')}
             style={styles.linkButton}
           />
           <Button
-            title="Create an account"
+            title={t('auth', 'createAccount')}
             variant="secondary"
             onPress={() => navigation.navigate('Signup')}
             style={styles.linkButton}

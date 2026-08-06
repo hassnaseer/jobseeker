@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { TextField } from '@/components/TextField';
@@ -28,6 +29,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export function PostJobScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const createJob = useJobsStore((s) => s.create);
   const publish = useJobsStore((s) => s.publish);
 
@@ -70,7 +72,7 @@ export function PostJobScreen({ navigation }: Props) {
   async function handleSubmit(mode: 'draft' | 'publish') {
     setError(null);
     if (!title.trim() || !description.trim() || !categoryId) {
-      setError('Title, description and category are required');
+      setError(t('jobs', 'titleDescCategoryRequired'));
       return;
     }
     setSubmitting(mode);
@@ -91,27 +93,27 @@ export function PostJobScreen({ navigation }: Props) {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={[styles.title, { color: theme.text }]}>Post a job</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('jobs', 'postJobTitle')}</Text>
 
-          <Field label="Title">
-            <TextField value={title} onChangeText={setTitle} placeholder="e.g. Build a landing page" />
+          <Field label={t('jobs', 'titleField')}>
+            <TextField value={title} onChangeText={setTitle} placeholder={t('jobs', 'titlePlaceholder')} />
           </Field>
 
-          <Field label="Description">
+          <Field label={t('jobs', 'descriptionField')}>
             <TextField
               value={description}
               onChangeText={setDescription}
-              placeholder="Describe the work, deliverables and requirements"
+              placeholder={t('jobs', 'descriptionPlaceholder')}
               multiline
               numberOfLines={5}
               style={styles.textarea}
             />
           </Field>
 
-          <Field label="Category">
+          <Field label={t('jobs', 'category')}>
             <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
               <Picker selectedValue={categoryId} onValueChange={setCategoryId} dropdownIconColor={theme.text}>
-                <Picker.Item label="Select a category" value="" />
+                <Picker.Item label={t('jobs', 'selectCategory')} value="" />
                 {categories.map((c) => (
                   <Picker.Item key={c.id} label={c.label} value={c.id} />
                 ))}
@@ -120,54 +122,54 @@ export function PostJobScreen({ navigation }: Props) {
           </Field>
 
           <View style={styles.row}>
-            <Field label="Pricing">
+            <Field label={t('jobs', 'pricing')}>
               <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
                 <Picker selectedValue={jobType} onValueChange={(v) => setJobType(v as 'FIXED' | 'HOURLY')} dropdownIconColor={theme.text}>
-                  <Picker.Item label="Fixed price" value="FIXED" />
-                  <Picker.Item label="Hourly" value="HOURLY" />
+                  <Picker.Item label={t('jobs', 'fixedPrice')} value="FIXED" />
+                  <Picker.Item label={t('jobs', 'hourly')} value="HOURLY" />
                 </Picker>
               </View>
             </Field>
-            <Field label="Location">
+            <Field label={t('jobs', 'location')}>
               <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
                 <Picker
                   selectedValue={locationType}
                   onValueChange={(v) => setLocationType(v as 'REMOTE' | 'PHYSICAL')}
                   dropdownIconColor={theme.text}
                 >
-                  <Picker.Item label="Remote" value="REMOTE" />
-                  <Picker.Item label="On-site" value="PHYSICAL" />
+                  <Picker.Item label={t('jobs', 'remote')} value="REMOTE" />
+                  <Picker.Item label={t('jobs', 'onSite')} value="PHYSICAL" />
                 </Picker>
               </View>
             </Field>
           </View>
 
           {jobType === 'FIXED' ? (
-            <Field label="Budget (USD)">
+            <Field label={t('jobs', 'budgetUsd')}>
               <TextField value={budgetAmount} onChangeText={setBudgetAmount} keyboardType="numeric" placeholder="500" />
             </Field>
           ) : (
             <View style={styles.row}>
-              <Field label="Min rate / hr">
+              <Field label={t('jobs', 'minRateHr')}>
                 <TextField value={hourlyRateMin} onChangeText={setHourlyRateMin} keyboardType="numeric" placeholder="15" />
               </Field>
-              <Field label="Max rate / hr">
+              <Field label={t('jobs', 'maxRateHr')}>
                 <TextField value={hourlyRateMax} onChangeText={setHourlyRateMax} keyboardType="numeric" placeholder="30" />
               </Field>
             </View>
           )}
 
           <View style={styles.row}>
-            <Field label="Experience level">
+            <Field label={t('jobs', 'experienceLevel')}>
               <View style={[styles.pickerWrap, { borderColor: theme.inputBorder, backgroundColor: theme.surface }]}>
                 <Picker selectedValue={experienceLevel} onValueChange={setExperienceLevel} dropdownIconColor={theme.text}>
-                  <Picker.Item label="Entry" value="ENTRY" />
-                  <Picker.Item label="Intermediate" value="INTERMEDIATE" />
-                  <Picker.Item label="Expert" value="EXPERT" />
+                  <Picker.Item label={t('jobs', 'entry')} value="ENTRY" />
+                  <Picker.Item label={t('jobs', 'intermediate')} value="INTERMEDIATE" />
+                  <Picker.Item label={t('jobs', 'expert')} value="EXPERT" />
                 </Picker>
               </View>
             </Field>
-            <Field label="Openings">
+            <Field label={t('jobs', 'openings')}>
               <TextField value={numberOfOpenings} onChangeText={setNumberOfOpenings} keyboardType="numeric" />
             </Field>
           </View>
@@ -175,14 +177,14 @@ export function PostJobScreen({ navigation }: Props) {
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
           <Button
-            title="Publish job"
+            title={t('jobs', 'publishJob')}
             onPress={() => handleSubmit('publish')}
             loading={submitting === 'publish'}
             disabled={submitting !== null}
             style={styles.submit}
           />
           <Button
-            title="Save as draft"
+            title={t('jobs', 'saveAsDraft')}
             variant="secondary"
             onPress={() => handleSubmit('draft')}
             loading={submitting === 'draft'}

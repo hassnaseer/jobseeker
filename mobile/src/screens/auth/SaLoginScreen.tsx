@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -15,6 +16,7 @@ type Props = StackScreenProps<AuthStackParamList, 'SaLogin'>;
 
 export function SaLoginScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const login = useAuthStore((s) => s.login);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,7 +30,7 @@ export function SaLoginScreen({ navigation }: Props) {
       await login(email.trim(), password);
       const user = useAuthStore.getState().user;
       if (user?.activeRole !== 'SUPER_ADMIN') {
-        setError('This account does not have administrator access');
+        setError(t('auth', 'notAdminAccess'));
         await useAuthStore.getState().logout();
       }
     } catch (err) {
@@ -42,23 +44,23 @@ export function SaLoginScreen({ navigation }: Props) {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page === '#F6F6FB' ? '#181722' : theme.page }]}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <View style={styles.content}>
-          <Text style={styles.title}>Admin Portal</Text>
-          <Text style={styles.subtitle}>Sign in with your super admin credentials</Text>
+          <Text style={styles.title}>{t('auth', 'adminPortal')}</Text>
+          <Text style={styles.subtitle}>{t('auth', 'adminPortalSubtitle')}</Text>
 
           <TextField
-            label="Email"
+            label={t('auth', 'email')}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
             keyboardType="email-address"
             placeholder="admin@joblinxs.com"
           />
-          <TextField label="Password" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
+          <TextField label={t('auth', 'password')} value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
 
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
-          <Button title="Sign in" onPress={handleLogin} loading={loading} style={styles.submit} />
-          <Button title="Back to login" variant="ghost" onPress={() => navigation.navigate('Login')} style={styles.linkButton} />
+          <Button title={t('auth', 'signIn')} onPress={handleLogin} loading={loading} style={styles.submit} />
+          <Button title={t('auth', 'backToLogin')} variant="ghost" onPress={() => navigation.navigate('Login')} style={styles.linkButton} />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -31,6 +32,7 @@ const STATUS_TONE: Record<ApplicationStatus, 'neutral' | 'success' | 'warning' |
 export function JobApplicantsScreen({ route, navigation }: Props) {
   const { jobId } = route.params;
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export function JobApplicantsScreen({ route, navigation }: Props) {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
-      <Text style={[styles.title, { color: theme.text }]}>Applicants</Text>
+      <Text style={[styles.title, { color: theme.text }]}>{t('jobs', 'applicants')}</Text>
       {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
       {loading ? (
@@ -73,7 +75,7 @@ export function JobApplicantsScreen({ route, navigation }: Props) {
           data={applications}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
-          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>No applicants yet.</Text>}
+          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>{t('jobs', 'noApplicants')}</Text>}
           renderItem={({ item }) => (
             <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
               <View style={styles.cardHeader}>
@@ -82,7 +84,7 @@ export function JobApplicantsScreen({ route, navigation }: Props) {
                     ? `${formatMoney(item.proposedHourlyRate, item.currency)}/hr`
                     : item.bidAmount
                       ? formatMoney(item.bidAmount, item.currency)
-                      : 'No bid'}
+                      : t('jobs', 'noBid')}
                 </Text>
                 <Badge label={item.status} tone={STATUS_TONE[item.status]} />
               </View>
@@ -94,7 +96,7 @@ export function JobApplicantsScreen({ route, navigation }: Props) {
                 <View style={styles.actionsRow}>
                   {item.status === 'PENDING' ? (
                     <Button
-                      title="Shortlist"
+                      title={t('jobs', 'shortlist')}
                       variant="secondary"
                       onPress={() => runAction(item, shortlistApplication)}
                       loading={actionId === item.id}
@@ -102,13 +104,13 @@ export function JobApplicantsScreen({ route, navigation }: Props) {
                     />
                   ) : null}
                   <Button
-                    title="Accept"
+                    title={t('jobs', 'accept')}
                     onPress={() => runAction(item, acceptApplication)}
                     loading={actionId === item.id}
                     style={styles.actionButton}
                   />
                   <Button
-                    title="Reject"
+                    title={t('jobs', 'reject')}
                     variant="ghost"
                     onPress={() => runAction(item, rejectApplication)}
                     loading={actionId === item.id}
@@ -119,7 +121,7 @@ export function JobApplicantsScreen({ route, navigation }: Props) {
 
               {item.status === 'ACCEPTED' ? (
                 <Button
-                  title="Hire"
+                  title={t('jobs', 'hire')}
                   onPress={() => navigation.navigate('HireApplicant', { jobId, applicationId: item.id })}
                   style={styles.actionButton}
                 />

@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -15,6 +16,7 @@ type Props = StackScreenProps<AuthStackParamList, 'ForgotPassword'>;
 
 export function ForgotPasswordScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const forgotPassword = useAuthStore((s) => s.forgotPassword);
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -38,18 +40,18 @@ export function ForgotPasswordScreen({ navigation }: Props) {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <View style={styles.content}>
-          <Text style={[styles.title, { color: theme.text }]}>Reset your password</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('auth', 'resetPasswordTitle')}</Text>
           {sent ? (
             <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-              If an account exists for {email}, a reset link has been sent.
+              {t('auth', 'resetLinkSent', { email })}
             </Text>
           ) : (
             <>
               <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-                Enter your email and we'll send you a reset link.
+                {t('auth', 'resetPasswordSubtitle')}
               </Text>
               <TextField
-                label="Email"
+                label={t('auth', 'email')}
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -57,10 +59,10 @@ export function ForgotPasswordScreen({ navigation }: Props) {
                 placeholder="you@example.com"
               />
               {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
-              <Button title="Send reset link" onPress={handleSubmit} loading={loading} style={styles.submit} />
+              <Button title={t('auth', 'sendResetLink')} onPress={handleSubmit} loading={loading} style={styles.submit} />
             </>
           )}
-          <Button title="Back to login" variant="ghost" onPress={() => navigation.navigate('Login')} style={styles.linkButton} />
+          <Button title={t('auth', 'backToLogin')} variant="ghost" onPress={() => navigation.navigate('Login')} style={styles.linkButton} />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

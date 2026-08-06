@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -24,6 +25,7 @@ const STATUS_TONE: Record<TransactionStatus, 'neutral' | 'success' | 'warning' |
 
 export function WalletScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,9 +33,9 @@ export function WalletScreen({ navigation }: Props) {
 
   useEffect(() => {
     Promise.all([listMyWallets(), listMyTransactions()])
-      .then(([w, t]) => {
+      .then(([w, tx]) => {
         setWallets(w);
-        setTransactions(t);
+        setTransactions(tx);
       })
       .catch((err) => setError(extractErrorMessage(err)))
       .finally(() => setLoading(false));
@@ -51,26 +53,26 @@ export function WalletScreen({ navigation }: Props) {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <FlatList
         data={transactions}
-        keyExtractor={(t) => t.id}
+        keyExtractor={(tx) => tx.id}
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <>
-            <Text style={[styles.title, { color: theme.text }]}>Wallet</Text>
+            <Text style={[styles.title, { color: theme.text }]}>{t('wallet', 'title')}</Text>
             {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
             {wallets.map((w) => (
               <View key={w.id} style={[styles.balanceCard, { backgroundColor: theme.primary }]}>
-                <Text style={styles.balanceLabel}>Available balance</Text>
+                <Text style={styles.balanceLabel}>{t('wallet', 'availableBalance')}</Text>
                 <Text style={styles.balanceValue}>{formatMoney(w.balance, w.currency)}</Text>
                 {w.pendingBalance > 0 ? (
-                  <Text style={styles.balancePending}>{formatMoney(w.pendingBalance, w.currency)} pending</Text>
+                  <Text style={styles.balancePending}>{formatMoney(w.pendingBalance, w.currency)} {t('wallet', 'pending')}</Text>
                 ) : null}
               </View>
             ))}
-            <Button title="Withdraw funds" onPress={() => navigation.navigate('Withdraw')} style={styles.withdrawButton} />
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>Transactions</Text>
+            <Button title={t('wallet', 'withdrawFunds')} onPress={() => navigation.navigate('Withdraw')} style={styles.withdrawButton} />
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('wallet', 'transactions')}</Text>
           </>
         }
-        ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>No transactions yet.</Text>}
+        ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>{t('wallet', 'noTransactions')}</Text>}
         renderItem={({ item }) => (
           <View style={[styles.txRow, { borderColor: theme.border }]}>
             <View style={styles.txLeft}>

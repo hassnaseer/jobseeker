@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -12,6 +13,7 @@ import type { RoleProfileStatusInfo } from '@/types/profile';
 
 export function AdminApprovalsScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [items, setItems] = useState<RoleProfileStatusInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export function AdminApprovalsScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
-      <Text style={[styles.title, { color: theme.text }]}>Pending approvals</Text>
+      <Text style={[styles.title, { color: theme.text }]}>{t('admin', 'pendingApprovals')}</Text>
       {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
       {loading ? (
         <ActivityIndicator style={styles.loader} color={theme.primary} />
@@ -62,16 +64,16 @@ export function AdminApprovalsScreen() {
           data={items}
           keyExtractor={(i) => i.id}
           contentContainerStyle={styles.listContent}
-          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>Nothing pending review.</Text>}
+          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>{t('admin', 'nothingPending')}</Text>}
           renderItem={({ item }) => (
             <View style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
               <View style={styles.cardHeader}>
-                <Text style={[styles.cardTitle, { color: theme.text }]}>User #{item.userId.slice(0, 8)}</Text>
+                <Text style={[styles.cardTitle, { color: theme.text }]}>{t('admin', 'user')} #{item.userId.slice(0, 8)}</Text>
                 <Badge label={item.role} tone="info" />
               </View>
               <View style={styles.actionsRow}>
-                <Button title="Approve" onPress={() => handleApprove(item)} loading={busyId === item.id} style={styles.actionButton} />
-                <Button title="Reject" variant="ghost" onPress={() => handleReject(item)} loading={busyId === item.id} style={styles.actionButton} />
+                <Button title={t('admin', 'approve')} onPress={() => handleApprove(item)} loading={busyId === item.id} style={styles.actionButton} />
+                <Button title={t('admin', 'reject')} variant="ghost" onPress={() => handleReject(item)} loading={busyId === item.id} style={styles.actionButton} />
               </View>
             </View>
           )}

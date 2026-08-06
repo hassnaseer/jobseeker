@@ -3,6 +3,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -25,6 +26,7 @@ function StatCard({ label, value }: { label: string; value: number | string }) {
 
 export function AdminDashboardScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,7 +41,7 @@ export function AdminDashboardScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>Admin dashboard</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('admin', 'adminDashboard')}</Text>
 
         {loading ? (
           <ActivityIndicator color={theme.primary} style={styles.loader} />
@@ -47,7 +49,7 @@ export function AdminDashboardScreen({ navigation }: Props) {
           <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text>
         ) : overview ? (
           <View style={styles.statsGrid}>
-            <StatCard label="Total users" value={overview.totalUsers} />
+            <StatCard label={t('admin', 'totalUsers')} value={overview.totalUsers} />
             {overview.grossMerchandiseVolume.map((gmv) => (
               <StatCard key={gmv.currency} label={`GMV (${gmv.currency})`} value={gmv.total} />
             ))}
@@ -55,11 +57,11 @@ export function AdminDashboardScreen({ navigation }: Props) {
         ) : null}
 
         <View style={styles.section}>
-          <Button title="Pending approvals" onPress={() => navigation.navigate('AdminApprovals')} style={styles.navButton} />
-          <Button title="Disputes queue" onPress={() => navigation.navigate('AdminDisputes')} style={styles.navButton} />
-          <Button title="Manage categories" onPress={() => navigation.navigate('AdminCategories')} style={styles.navButton} />
-          <Button title="Platform config" onPress={() => navigation.navigate('AdminConfig')} style={styles.navButton} />
-          <Button title="Team & Permissions" onPress={() => navigation.navigate('AdminTeam')} style={styles.navButton} />
+          <Button title={t('admin', 'pendingApprovals')} onPress={() => navigation.navigate('AdminApprovals')} style={styles.navButton} />
+          <Button title={t('admin', 'disputesQueue')} onPress={() => navigation.navigate('AdminDisputes')} style={styles.navButton} />
+          <Button title={t('admin', 'manageCategories')} onPress={() => navigation.navigate('AdminCategories')} style={styles.navButton} />
+          <Button title={t('admin', 'platformConfig')} onPress={() => navigation.navigate('AdminConfig')} style={styles.navButton} />
+          <Button title={t('admin', 'teamPermissions')} onPress={() => navigation.navigate('AdminTeam')} style={styles.navButton} />
         </View>
       </ScrollView>
     </SafeAreaView>

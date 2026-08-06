@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -36,6 +37,7 @@ interface Props {
 
 export function FixedContractSection({ contract, milestones, deliverables, isOwner, isSeeker }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const {
     fundLump,
     fundOneMilestone,
@@ -91,12 +93,12 @@ export function FixedContractSection({ contract, milestones, deliverables, isOwn
       {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
       {contract.status === 'PENDING_FUNDING' && !isMilestoneContract && isOwner ? (
-        <Button title="Fund contract" onPress={() => run('fund-lump', () => fundLump(contract.id))} loading={busyId === 'fund-lump'} style={styles.section} />
+        <Button title={t('contracts', 'fundContract')} onPress={() => run('fund-lump', () => fundLump(contract.id))} loading={busyId === 'fund-lump'} style={styles.section} />
       ) : null}
 
       {isMilestoneContract ? (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Milestones</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('contracts', 'milestones')}</Text>
           {milestones.map((m) => (
             <View key={m.id} style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
               <View style={styles.cardHeader}>
@@ -105,13 +107,13 @@ export function FixedContractSection({ contract, milestones, deliverables, isOwn
               </View>
               <Text style={[styles.cardBody, { color: theme.textSecondary }]}>{formatMoney(m.amount, m.currency)}</Text>
               {m.status === 'PENDING' && isOwner ? (
-                <Button title="Fund milestone" onPress={() => run(m.id, () => fundOneMilestone(contract.id, m.id))} loading={busyId === m.id} style={styles.actionButton} />
+                <Button title={t('contracts', 'fundMilestone')} onPress={() => run(m.id, () => fundOneMilestone(contract.id, m.id))} loading={busyId === m.id} style={styles.actionButton} />
               ) : null}
               {m.status === 'FUNDED' && isSeeker ? (
-                <Button title="Submit deliverable" onPress={() => setSubmitTarget(m)} style={styles.actionButton} />
+                <Button title={t('contracts', 'submitDeliverable')} onPress={() => setSubmitTarget(m)} style={styles.actionButton} />
               ) : null}
               {m.status === 'SUBMITTED' && isOwner ? (
-                <Button title="Release payment" onPress={() => run(m.id, () => releaseOneMilestone(contract.id, m.id))} loading={busyId === m.id} style={styles.actionButton} />
+                <Button title={t('contracts', 'releasePayment')} onPress={() => run(m.id, () => releaseOneMilestone(contract.id, m.id))} loading={busyId === m.id} style={styles.actionButton} />
               ) : null}
             </View>
           ))}
@@ -119,16 +121,16 @@ export function FixedContractSection({ contract, milestones, deliverables, isOwn
       ) : null}
 
       {!isMilestoneContract && contract.status === 'ACTIVE' && isSeeker ? (
-        <Button title="Submit deliverable" onPress={() => setSubmitTarget('lump')} style={styles.section} />
+        <Button title={t('contracts', 'submitDeliverable')} onPress={() => setSubmitTarget('lump')} style={styles.section} />
       ) : null}
       {!isMilestoneContract && contract.status === 'SUBMITTED' && isOwner ? (
-        <Button title="Release payment" onPress={() => run('release-lump', () => releaseOneLump(contract.id))} loading={busyId === 'release-lump'} style={styles.section} />
+        <Button title={t('contracts', 'releasePayment')} onPress={() => run('release-lump', () => releaseOneLump(contract.id))} loading={busyId === 'release-lump'} style={styles.section} />
       ) : null}
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Deliverables</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('contracts', 'deliverables')}</Text>
         {deliverables.length === 0 ? (
-          <Text style={[styles.empty, { color: theme.textMuted }]}>No deliverables submitted yet.</Text>
+          <Text style={[styles.empty, { color: theme.textMuted }]}>{t('contracts', 'noDeliverables')}</Text>
         ) : null}
         {deliverables.map((d) => (
           <View key={d.id} style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
@@ -140,8 +142,8 @@ export function FixedContractSection({ contract, milestones, deliverables, isOwn
             {d.feedback ? <Text style={[styles.feedback, { color: theme.warning }]}>{d.feedback}</Text> : null}
             {d.status === 'SUBMITTED' && isOwner ? (
               <View style={styles.actionsRow}>
-                <Button title="Approve" onPress={() => run(d.id, () => approveOneDeliverable(contract.id, d.id))} loading={busyId === d.id} style={styles.actionButtonFlex} />
-                <Button title="Request revision" variant="ghost" onPress={() => setRevisionTarget(d)} style={styles.actionButtonFlex} />
+                <Button title={t('contracts', 'approve')} onPress={() => run(d.id, () => approveOneDeliverable(contract.id, d.id))} loading={busyId === d.id} style={styles.actionButtonFlex} />
+                <Button title={t('contracts', 'requestRevision')} variant="ghost" onPress={() => setRevisionTarget(d)} style={styles.actionButtonFlex} />
               </View>
             ) : null}
           </View>
@@ -151,18 +153,18 @@ export function FixedContractSection({ contract, milestones, deliverables, isOwn
       <Modal visible={!!submitTarget} transparent animationType="fade" onRequestClose={() => setSubmitTarget(null)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalCard, { backgroundColor: theme.surface }]}>
-            <Text style={[styles.modalTitle, { color: theme.text }]}>Submit deliverable</Text>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>{t('contracts', 'submitDeliverable')}</Text>
             <TextField
               value={submitText}
               onChangeText={setSubmitText}
-              placeholder="Describe what you're submitting"
+              placeholder={t('contracts', 'describeSubmission')}
               multiline
               numberOfLines={4}
               style={styles.modalTextarea}
             />
             <View style={styles.actionsRow}>
-              <Button title="Cancel" variant="ghost" onPress={() => setSubmitTarget(null)} style={styles.actionButtonFlex} />
-              <Button title="Submit" onPress={handleSubmitDeliverable} loading={busyId === 'submit'} style={styles.actionButtonFlex} />
+              <Button title={t('common', 'cancel')} variant="ghost" onPress={() => setSubmitTarget(null)} style={styles.actionButtonFlex} />
+              <Button title={t('contracts', 'submit')} onPress={handleSubmitDeliverable} loading={busyId === 'submit'} style={styles.actionButtonFlex} />
             </View>
           </View>
         </View>
@@ -171,18 +173,18 @@ export function FixedContractSection({ contract, milestones, deliverables, isOwn
       <Modal visible={!!revisionTarget} transparent animationType="fade" onRequestClose={() => setRevisionTarget(null)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalCard, { backgroundColor: theme.surface }]}>
-            <Text style={[styles.modalTitle, { color: theme.text }]}>Request revision</Text>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>{t('contracts', 'requestRevision')}</Text>
             <TextField
               value={revisionText}
               onChangeText={setRevisionText}
-              placeholder="What needs to change?"
+              placeholder={t('contracts', 'whatNeedsToChange')}
               multiline
               numberOfLines={4}
               style={styles.modalTextarea}
             />
             <View style={styles.actionsRow}>
-              <Button title="Cancel" variant="ghost" onPress={() => setRevisionTarget(null)} style={styles.actionButtonFlex} />
-              <Button title="Send" onPress={handleRequestRevision} loading={busyId === 'revision'} style={styles.actionButtonFlex} />
+              <Button title={t('common', 'cancel')} variant="ghost" onPress={() => setRevisionTarget(null)} style={styles.actionButtonFlex} />
+              <Button title={t('contracts', 'send')} onPress={handleRequestRevision} loading={busyId === 'revision'} style={styles.actionButtonFlex} />
             </View>
           </View>
         </View>

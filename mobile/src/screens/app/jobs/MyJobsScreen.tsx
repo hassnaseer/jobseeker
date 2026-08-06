@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Plus } from 'lucide-react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { JobCard } from '@/components/JobCard';
@@ -14,6 +15,7 @@ type Props = StackScreenProps<JobsStackParamList, 'MyJobs'>;
 
 export function MyJobsScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { mine, status, fetchMine } = useJobsStore();
 
   const load = useCallback(() => {
@@ -28,13 +30,13 @@ export function MyJobsScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>My Jobs</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('jobs', 'myJobsTitle')}</Text>
         <Pressable
           onPress={() => navigation.navigate('PostJob')}
           style={[styles.postButton, { backgroundColor: theme.primary }]}
         >
           <Plus size={16} color={theme.white} />
-          <Text style={styles.postButtonText}>Post a job</Text>
+          <Text style={styles.postButtonText}>{t('jobs', 'postAJob')}</Text>
         </Pressable>
       </View>
 
@@ -50,7 +52,7 @@ export function MyJobsScreen({ navigation }: Props) {
         ListEmptyComponent={
           status !== 'loading' ? (
             <Text style={[styles.empty, { color: theme.textMuted }]}>
-              You haven't posted any jobs yet. Tap "Post a job" to get started.
+              {t('jobs', 'noJobsPosted')}
             </Text>
           ) : null
         }

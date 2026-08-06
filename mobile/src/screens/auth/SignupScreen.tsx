@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -17,6 +18,7 @@ const TOS_VERSION = '1.0';
 
 export function SignupScreen({ navigation }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const signup = useAuthStore((s) => s.signup);
 
   const [email, setEmail] = useState('');
@@ -31,11 +33,11 @@ export function SignupScreen({ navigation }: Props) {
   async function handleSignup() {
     setError(null);
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('auth', 'passwordsMismatch'));
       return;
     }
     if (!tosAccepted) {
-      setError('You must accept the Terms of Service');
+      setError(t('auth', 'tosRequired'));
       return;
     }
     setLoading(true);
@@ -60,11 +62,11 @@ export function SignupScreen({ navigation }: Props) {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]}>
         <View style={styles.content}>
-          <Text style={[styles.title, { color: theme.text }]}>Check your email</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('auth', 'checkYourEmail')}</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-            We sent a verification link to {email}. Verify your email, then log in.
+            {t('auth', 'verificationSent', { email })}
           </Text>
-          <Button title="Back to login" onPress={() => navigation.replace('Login')} style={styles.submit} />
+          <Button title={t('auth', 'backToLogin')} onPress={() => navigation.replace('Login')} style={styles.submit} />
         </View>
       </SafeAreaView>
     );
@@ -74,8 +76,8 @@ export function SignupScreen({ navigation }: Props) {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          <Text style={[styles.title, { color: theme.text }]}>Create your account</Text>
-          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Join JobLinxs as a client or freelancer</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('auth', 'createYourAccount')}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{t('auth', 'signupSubtitle')}</Text>
 
           <View style={styles.roleRow}>
             {(['SEEKER', 'CLIENT'] as const).map((r) => (
@@ -91,23 +93,23 @@ export function SignupScreen({ navigation }: Props) {
                 ]}
               >
                 <Text style={{ color: role === r ? theme.primary : theme.textSecondary, fontWeight: typography.weights.medium }}>
-                  {r === 'SEEKER' ? 'I want to work' : 'I want to hire'}
+                  {r === 'SEEKER' ? t('auth', 'iWantToWork') : t('auth', 'iWantToHire')}
                 </Text>
               </Pressable>
             ))}
           </View>
 
           <TextField
-            label="Email"
+            label={t('auth', 'email')}
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
             keyboardType="email-address"
             placeholder="you@example.com"
           />
-          <TextField label="Password" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
+          <TextField label={t('auth', 'password')} value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
           <TextField
-            label="Confirm password"
+            label={t('auth', 'confirmPassword')}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
@@ -122,14 +124,14 @@ export function SignupScreen({ navigation }: Props) {
               ]}
             />
             <Text style={[styles.tosText, { color: theme.textSecondary }]}>
-              I agree to the Terms of Service and Privacy Policy
+              {t('auth', 'tosAgree')}
             </Text>
           </Pressable>
 
           {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
 
-          <Button title="Sign up" onPress={handleSignup} loading={loading} style={styles.submit} />
-          <Button title="Already have an account? Log in" variant="ghost" onPress={() => navigation.navigate('Login')} style={styles.linkButton} />
+          <Button title={t('auth', 'signUp')} onPress={handleSignup} loading={loading} style={styles.submit} />
+          <Button title={t('auth', 'alreadyHaveAccount')} variant="ghost" onPress={() => navigation.navigate('Login')} style={styles.linkButton} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

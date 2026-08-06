@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Modal, StyleSheet, Text, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -20,6 +21,7 @@ const STATUS_TONE: Record<DisputeStatus, 'neutral' | 'success' | 'warning' | 'er
 
 export function AdminDisputesScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [items, setItems] = useState<Dispute[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +75,7 @@ export function AdminDisputesScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]} edges={['top']}>
-      <Text style={[styles.title, { color: theme.text }]}>Disputes</Text>
+      <Text style={[styles.title, { color: theme.text }]}>{t('admin', 'disputesTitle')}</Text>
       {error ? <Text style={[styles.errorText, { color: theme.error }]}>{error}</Text> : null}
       {loading ? (
         <ActivityIndicator style={styles.loader} color={theme.primary} />
@@ -82,19 +84,19 @@ export function AdminDisputesScreen() {
           data={items}
           keyExtractor={(d) => d.id}
           contentContainerStyle={styles.listContent}
-          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>No disputes in the queue.</Text>}
+          ListEmptyComponent={<Text style={[styles.empty, { color: theme.textMuted }]}>{t('admin', 'noDisputesQueue')}</Text>}
           renderItem={({ item }) => (
             <View style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
               <View style={styles.cardHeader}>
-                <Text style={[styles.cardTitle, { color: theme.text }]}>Contract #{item.contractId.slice(0, 8)}</Text>
+                <Text style={[styles.cardTitle, { color: theme.text }]}>{t('admin', 'contract')} #{item.contractId.slice(0, 8)}</Text>
                 <Badge label={item.status.replace(/_/g, ' ')} tone={STATUS_TONE[item.status]} />
               </View>
               <Text style={[styles.reason, { color: theme.textSecondary }]}>{item.reason}</Text>
               {item.status === 'OPEN' ? (
-                <Button title="Start review" onPress={() => handleUnderReview(item)} loading={busyId === item.id} style={styles.actionButton} />
+                <Button title={t('admin', 'startReview')} onPress={() => handleUnderReview(item)} loading={busyId === item.id} style={styles.actionButton} />
               ) : null}
               {item.status === 'UNDER_REVIEW' ? (
-                <Button title="Resolve" onPress={() => setResolveTarget(item)} style={styles.actionButton} />
+                <Button title={t('admin', 'resolve')} onPress={() => setResolveTarget(item)} style={styles.actionButton} />
               ) : null}
             </View>
           )}
@@ -104,19 +106,19 @@ export function AdminDisputesScreen() {
       <Modal visible={!!resolveTarget} transparent animationType="fade" onRequestClose={() => setResolveTarget(null)}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalCard, { backgroundColor: theme.surface }]}>
-            <Text style={[styles.modalTitle, { color: theme.text }]}>Resolve dispute</Text>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>{t('admin', 'resolveDisputeTitle')}</Text>
             <View style={[styles.pickerWrap, { borderColor: theme.inputBorder }]}>
               <Picker selectedValue={resolutionType} onValueChange={(v) => setResolutionType(v as DisputeResolutionType)} dropdownIconColor={theme.text}>
-                <Picker.Item label="Refund client" value="REFUND_CLIENT" />
-                <Picker.Item label="Release to seeker" value="RELEASE_SEEKER" />
-                <Picker.Item label="Split" value="SPLIT" />
+                <Picker.Item label={t('admin', 'refundClient')} value="REFUND_CLIENT" />
+                <Picker.Item label={t('admin', 'releaseToSeeker')} value="RELEASE_SEEKER" />
+                <Picker.Item label={t('admin', 'split')} value="SPLIT" />
               </Picker>
             </View>
             {resolutionType === 'SPLIT' ? (
-              <TextField label="Seeker amount" value={seekerAmount} onChangeText={setSeekerAmount} keyboardType="numeric" />
+              <TextField label={t('admin', 'seekerAmount')} value={seekerAmount} onChangeText={setSeekerAmount} keyboardType="numeric" />
             ) : null}
             <TextField
-              label="Resolution note"
+              label={t('admin', 'resolutionNote')}
               value={resolutionNote}
               onChangeText={setResolutionNote}
               multiline
@@ -124,8 +126,8 @@ export function AdminDisputesScreen() {
               style={styles.noteInput}
             />
             <View style={styles.actionsRow}>
-              <Button title="Cancel" variant="ghost" onPress={() => setResolveTarget(null)} style={styles.actionButtonFlex} />
-              <Button title="Resolve" onPress={handleResolve} loading={busyId === resolveTarget?.id} disabled={!resolutionNote.trim()} style={styles.actionButtonFlex} />
+              <Button title={t('common', 'cancel')} variant="ghost" onPress={() => setResolveTarget(null)} style={styles.actionButtonFlex} />
+              <Button title={t('admin', 'resolve')} onPress={handleResolve} loading={busyId === resolveTarget?.id} disabled={!resolutionNote.trim()} style={styles.actionButtonFlex} />
             </View>
           </View>
         </View>

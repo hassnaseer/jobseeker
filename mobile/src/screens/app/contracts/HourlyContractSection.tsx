@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Badge } from '@/components/Badge';
@@ -34,6 +35,7 @@ interface Props {
 
 export function HourlyContractSection({ contract, isOwner, isSeeker }: Props) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { activateHourly, completeHourly } = useContractsStore();
   const { entries, periods, activeEntry, fetch, logManual, startTimer, stopTimer, closePeriod } = useTimesheetsStore();
 
@@ -81,7 +83,7 @@ export function HourlyContractSection({ contract, isOwner, isSeeker }: Props) {
 
       {contract.status === 'PENDING_FUNDING' && isOwner ? (
         <Button
-          title="Activate contract"
+          title={t('contracts', 'activateContract')}
           onPress={() => run('activate', () => activateHourly(contract.id))}
           loading={busy === 'activate'}
           style={styles.section}
@@ -94,31 +96,31 @@ export function HourlyContractSection({ contract, isOwner, isSeeker }: Props) {
             <View style={styles.timerRow}>
               <Text style={[styles.timerText, { color: theme.text }]}>{formatElapsed(elapsedMs)}</Text>
               {activeEntry ? (
-                <Button title="Stop" variant="secondary" onPress={() => run('timer', () => stopTimer(contract.id))} loading={busy === 'timer'} />
+                <Button title={t('contracts', 'stop')} variant="secondary" onPress={() => run('timer', () => stopTimer(contract.id))} loading={busy === 'timer'} />
               ) : (
-                <Button title="Start timer" onPress={() => run('timer', () => startTimer(contract.id))} loading={busy === 'timer'} />
+                <Button title={t('contracts', 'startTimer')} onPress={() => run('timer', () => startTimer(contract.id))} loading={busy === 'timer'} />
               )}
             </View>
           ) : null}
 
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Log time manually</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('contracts', 'logTimeManually')}</Text>
           <View style={styles.row}>
             <TextField
               value={hours}
               onChangeText={setHours}
               keyboardType="numeric"
-              placeholder="Hours"
+              placeholder={t('contracts', 'hours')}
               style={styles.hoursInput}
             />
-            <TextField value={description} onChangeText={setDescription} placeholder="What did you work on?" style={styles.descInput} />
+            <TextField value={description} onChangeText={setDescription} placeholder={t('contracts', 'whatDidYouWorkOn')} style={styles.descInput} />
           </View>
-          <Button title="Log time" onPress={handleLogTime} loading={busy === 'log'} disabled={!hours || !description.trim()} />
+          <Button title={t('contracts', 'logTime')} onPress={handleLogTime} loading={busy === 'log'} disabled={!hours || !description.trim()} />
         </View>
       ) : null}
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Timesheet periods</Text>
-        {periods.length === 0 ? <Text style={[styles.empty, { color: theme.textMuted }]}>No periods yet.</Text> : null}
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('contracts', 'timesheetPeriods')}</Text>
+        {periods.length === 0 ? <Text style={[styles.empty, { color: theme.textMuted }]}>{t('contracts', 'noPeriodsYet')}</Text> : null}
         {periods.map((p) => (
           <View key={p.id} style={[styles.card, { borderColor: theme.border, backgroundColor: theme.cardBg }]}>
             <View style={styles.cardHeader}>
@@ -131,14 +133,14 @@ export function HourlyContractSection({ contract, isOwner, isSeeker }: Props) {
               {p.totalHours}h · {p.currency} {p.totalAmount}
             </Text>
             {p.status === 'OPEN' && isSeeker ? (
-              <Button title="Close period" variant="ghost" onPress={() => run(p.id, () => closePeriod(contract.id, p.id))} loading={busy === p.id} style={styles.actionButton} />
+              <Button title={t('contracts', 'closePeriod')} variant="ghost" onPress={() => run(p.id, () => closePeriod(contract.id, p.id))} loading={busy === p.id} style={styles.actionButton} />
             ) : null}
           </View>
         ))}
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Time entries</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('contracts', 'timeEntries')}</Text>
         {entries.map((entry) => (
           <View key={entry.id} style={[styles.entryRow, { borderColor: theme.border }]}>
             <Text style={[styles.entryText, { color: theme.text }]}>
@@ -150,7 +152,7 @@ export function HourlyContractSection({ contract, isOwner, isSeeker }: Props) {
       </View>
 
       {contract.status === 'ACTIVE' && isOwner ? (
-        <Button title="Complete contract" variant="ghost" onPress={() => run('complete', () => completeHourly(contract.id))} loading={busy === 'complete'} style={styles.section} />
+        <Button title={t('contracts', 'completeContract')} variant="ghost" onPress={() => run('complete', () => completeHourly(contract.id))} loading={busy === 'complete'} style={styles.section} />
       ) : null}
     </View>
   );

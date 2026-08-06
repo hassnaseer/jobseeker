@@ -3,6 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useI18n } from '@/i18n/I18nProvider';
 import { radius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { Button } from '@/components/Button';
@@ -12,6 +13,7 @@ import type { Notification } from '@/types/domain';
 
 export function NotificationsScreen({ onClose }: { onClose: () => void }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { items, status, fetch, markRead, markAllRead } = useNotificationsStore();
 
   useEffect(() => {
@@ -25,13 +27,13 @@ export function NotificationsScreen({ onClose }: { onClose: () => void }) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.page }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Notifications</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('notifications', 'title')}</Text>
         <Pressable onPress={onClose} hitSlop={12}>
           <X size={22} color={theme.text} />
         </Pressable>
       </View>
 
-      <Button title="Mark all as read" variant="ghost" onPress={markAllRead} style={styles.markAll} />
+      <Button title={t('notifications', 'markAllRead')} variant="ghost" onPress={markAllRead} style={styles.markAll} />
 
       <FlatList
         data={items}
@@ -41,7 +43,7 @@ export function NotificationsScreen({ onClose }: { onClose: () => void }) {
         onRefresh={fetch}
         ListEmptyComponent={
           status !== 'loading' ? (
-            <Text style={[styles.empty, { color: theme.textMuted }]}>You're all caught up.</Text>
+            <Text style={[styles.empty, { color: theme.textMuted }]}>{t('notifications', 'empty')}</Text>
           ) : null
         }
         renderItem={({ item }) => (
